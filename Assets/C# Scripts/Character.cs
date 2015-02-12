@@ -14,12 +14,23 @@ public class Character : MonoBehaviour {
 	private InputManager inputManager = new InputManager();
 	public Ability currentSpell;
 
+	private Character target;
     private GameObject cube;
-    private Character target;
 	public bool isPaused;
 	public bool isDead = false;
 
     private int status = CharacterStatus.WAITING;
+
+
+	// ---properties---
+	public Character Target {
+		get {return target;} 
+		set {target = value;}
+	}
+
+
+
+
 
 	// Use this for initialization
 	void Start () {
@@ -139,14 +150,14 @@ public class Character : MonoBehaviour {
     public void Generate() {
         character = Instantiate(characterPrefab) as CharacterInstance;
         character.transform.parent = transform;
-        character.transform.localPosition = new Vector3(0f, 0f, 0f);
+        character.transform.localPosition = new Vector3(0f, 0f, -0.5f);
         cube = character.transform.GetChild(0).gameObject;
     }
 
-    public void Generate(Vector3 pos) {
+    public void Generate(float x, float y) {
         character = Instantiate(characterPrefab) as CharacterInstance;
         character.transform.parent = transform;
-        character.transform.localPosition = pos;
+		character.transform.localPosition = new Vector3 (x, y, -0.5f);
         cube = character.transform.GetChild(0).gameObject;
     }
 
@@ -167,11 +178,7 @@ public class Character : MonoBehaviour {
     }
 
     public void setCharacterPosition(Vector3 pos) {
-        transform.localPosition = pos;
-    }
-
-    public void setTarget(Character c) {
-        target = c;
+        character.transform.localPosition = pos;
     }
 
     private int moveToTarget() {

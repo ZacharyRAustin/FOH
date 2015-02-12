@@ -40,7 +40,7 @@ public class GameManager : MonoBehaviour {
 		inputManager.Enemies = enemies;
 		inputManager.Select (playerCharA);
 		enemy.actionQueue.ParentChar = enemy;
-		enemy.Enqueue (playerCharA);
+		//enemy.Enqueue (playerCharA);
 	}
 	
 	// Update is called once per frame
@@ -73,7 +73,7 @@ public class GameManager : MonoBehaviour {
         playerCharA = Instantiate (characterPrefab) as Character;
 		playerCharA.characterPrefab.SetParentChar(playerCharA);
 		playerCharA.characterPrefab.name = "Hero A Prefab";
-		playerCharA.Generate(new Vector3(-2.7f, -5.0f, 0f));
+		playerCharA.Generate(2.7f, -5.0f);
 		playerCharA.actionQueue.ParentChar = playerCharA;
 		playerCharA.tag = "Hero A";
 		playerCharA.name = "Hero A";
@@ -88,7 +88,7 @@ public class GameManager : MonoBehaviour {
 		playerCharB = Instantiate (characterPrefab) as Character;
 		playerCharB.characterPrefab.name = "Hero B Prefab";
 		playerCharB.characterPrefab.SetParentChar(playerCharB);
-		playerCharB.Generate (new Vector3 (-2.7f, 0f, 0f));
+		playerCharB.Generate (2.7f, 0f);
 		playerCharB.actionQueue.ParentChar = playerCharB;
 		playerCharB.tag = "Hero B";
 		playerCharB.name = "Hero B";
@@ -109,7 +109,7 @@ public class GameManager : MonoBehaviour {
 		playerCharC = Instantiate (characterPrefab) as Character;
 		playerCharC.characterPrefab.name = "Hero C Prefab";
 		playerCharC.characterPrefab.SetParentChar(playerCharC);
-		playerCharC.Generate (new Vector3 (-2.7f, 5.0f, 0f));
+		playerCharC.Generate (-2.7f, 5.0f);
 		playerCharC.actionQueue.ParentChar = playerCharC;
 		playerCharC.tag = "Hero C";
 		playerCharC.name = "Hero C";
@@ -124,11 +124,12 @@ public class GameManager : MonoBehaviour {
 		playerCharC.stats.MagicAttack = true;
 		playerCharC.stats.abilities.Add (heal);
 		playerCharC.stats.abilities.Add (frostbolt);
-		
+
+		// initialize enemy
 		enemy = Instantiate(characterPrefab) as Character;
 		enemy.characterPrefab.name = "Enemy Prefab";
 		enemy.characterPrefab.SetParentChar(enemy);
-        enemy.Generate(new Vector3(2.7f, 5.0f, 0f));
+        enemy.Generate(2.7f, 5.0f);
         enemy.setMaterial(enemyMaterial);
 		enemy.name = "Enemy";
 		enemy.stats.Name = "Enemy";
@@ -138,9 +139,11 @@ public class GameManager : MonoBehaviour {
 		enemy.stats.Agility = 5;
 		enemy.stats.Intelligence = 5;
 		enemy.stats.InitializeCombatStats ();
+		// set Hero A as enemy's target
+		enemy.Target = playerCharA;
+		// add enemy movement to enemy
+		enemy.gameObject.AddComponent ("EnemyMovement");
 
-        playerCharA.setTarget(enemy);
-        enemy.setTarget(playerCharA);
 
         enemies.addEnemy(enemy);
     }
