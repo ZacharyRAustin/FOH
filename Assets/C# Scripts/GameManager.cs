@@ -16,8 +16,7 @@ public class GameManager : MonoBehaviour {
     private Character playerCharA;
 	private Character playerCharB;
 	private Character playerCharC;
-
-    private Character enemy;
+	private Character enemy;
 
 	private CharacterCollection allies = new CharacterCollection();
 	private EnemyCollection enemies = new EnemyCollection();
@@ -30,11 +29,7 @@ public class GameManager : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
         Random.seed = seed;
-        BeginGame();
-		allies.addHero (playerCharA);
-		allies.addHero (playerCharB);
-		allies.addHero (playerCharC);
-		enemies.addEnemy (enemy);
+		BeginGame();
 		inputManager.Awake ();
 		inputManager.Allies = allies;
 		inputManager.Enemies = enemies;
@@ -47,6 +42,9 @@ public class GameManager : MonoBehaviour {
 	void Update () {
 		inputManager.Allies = allies;
 		inputManager.Enemies = enemies;
+
+		setEnemyTarget (enemy, allies);
+
 
         if (Input.GetButtonDown("Regenerate Map"))
         {
@@ -139,14 +137,34 @@ public class GameManager : MonoBehaviour {
 		enemy.stats.Agility = 5;
 		enemy.stats.Intelligence = 5;
 		enemy.stats.InitializeCombatStats ();
-		// set Hero A as enemy's target
-		enemy.Target = playerCharA;
+
+		allies.addHero (playerCharA);
+		allies.addHero (playerCharB);
+		allies.addHero (playerCharC);
+		enemies.addEnemy (enemy);
+		
+		setEnemyTarget (enemy, allies);
+
 		// add enemy movement to enemy
 		enemy.gameObject.AddComponent ("EnemyMovement");
 
 
-        enemies.addEnemy(enemy);
-    }
+
+	}
+
+	private void setEnemyTarget(Character enemy, CharacterCollection heroesCollection) {
+		Character closestHero = heroesCollection.getHero(0);
+		float closestDistance = 1000.0f;
+		Vector3 enemyPosition = enemy.getCharacterPosition ();
+		for (int i = 0; i < heroesCollection.Heroes.Count; i++) {
+			Vector3 heroPosition = heroesCollection.getHero(i).getCharacterPosition();
+			if (Vector3.Distance (enemyPosition, heroPosition) < closestDistance) {
+				closestDistance = Vector3.Distance (enemyPosition, heroPosition);
+				closestHero = heroesCollection.getHero(i);
+			}
+		}
+		enemy.Target = closestHero;
+	}
 
     private void RestartGame() {
         Destroy(roomInstance.gameObject);

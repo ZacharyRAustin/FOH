@@ -16,7 +16,7 @@ public class EnemyMovement : MonoBehaviour {
 	private float detectRange = 5.0f;
 	private float patrolRange = 2.0f;
 	//controls the speed of the enemy
-	private float duration = 50.0f;
+	private float duration = 40.0f;
 	private int patrolSwitch;
 
 
@@ -30,6 +30,7 @@ public class EnemyMovement : MonoBehaviour {
 	void Update () {
 		move ();
 		currentPosition = thisCharacter.getCharacterPosition ();
+		target = thisCharacter.Target;
 		targetPosition = target.getCharacterPosition ();
 	}
 

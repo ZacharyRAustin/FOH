@@ -8,6 +8,11 @@ public class CharacterCollection {
         heroes.Add(hero);
     }
 
+	public List<Character> Heroes {
+		get{return heroes;}
+		set{heroes = value;}
+	}
+
     public Character getHero(int index) {
         if(-1 < index && index < heroes.Count)
         {
