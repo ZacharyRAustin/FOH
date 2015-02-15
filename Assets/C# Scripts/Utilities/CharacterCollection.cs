@@ -50,4 +50,11 @@ public class CharacterCollection {
             Debug.Log(c.name + " Num Spells " + c.stats.abilities.Count);
         }
     }
+
+    public static void pause(bool paused) {
+        foreach (Character c in heroes)
+        {
+            c.isPaused = paused;
+        }
+    }
 }

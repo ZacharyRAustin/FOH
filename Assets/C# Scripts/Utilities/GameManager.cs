@@ -47,12 +47,8 @@ public class GameManager : MonoBehaviour {
 		if (Input.GetButtonDown("Pause"))
 		{
 			isPaused = !isPaused;
+            Utilities.pause(isPaused);
 		}
-
-		playerCharA.isPaused = isPaused;
-		playerCharB.isPaused = isPaused;
-		playerCharC.isPaused = isPaused;
-		enemy.isPaused = isPaused;
 
 		inputManager.Resolve ();
 

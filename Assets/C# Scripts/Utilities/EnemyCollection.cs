@@ -54,4 +54,11 @@ public class EnemyCollection {
         }
     }
 
+    public static void pause(bool paused) {
+        foreach (Character c in enemies)
+        {
+            c.isPaused = paused;
+        }
+    }
+
 }
