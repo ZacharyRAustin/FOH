@@ -45,6 +45,7 @@ public class Character : MonoBehaviour {
             //	moveToTarget();
         	//}
 		}
+        removeVelocities();
 	}
 
 	void DeathCheck ()
@@ -223,6 +224,8 @@ public class Character : MonoBehaviour {
         {
             movementDirection.Normalize();
             character.transform.localPosition += movementDirection * Time.deltaTime * stats.MoveSpeed;
+            character.rigidbody.angularVelocity = Vector3.zero;
+            character.rigidbody.velocity = Vector3.zero;
             //character.rigidbody.velocity = Vector3.zero;
             //character.rigidbody.MovePosition(movementDirection * stats.MoveSpeed);
             //Debug.Log(movementDirection * stats.MoveSpeed + " is the speed ");
@@ -292,4 +295,9 @@ public class Character : MonoBehaviour {
 			}
 		}
 	}
+
+    public void removeVelocities() {
+        character.rigidbody.angularVelocity = Vector3.zero;
+        character.rigidbody.velocity = Vector3.zero;
+    }
 }

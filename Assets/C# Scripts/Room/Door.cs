@@ -16,7 +16,11 @@ public class Door : MonoBehaviour {
 	}
 
     void OnTriggerEnter() {
-        Debug.Log("Entered Collider for " + doorPosition);
+        Utilities.setNearDoor(true, doorPosition);
+    }
+
+    void OnTriggerExit() {
+        Utilities.setNearDoor(false, -1);
     }
 
     public void setDoorPosition(int pos) {

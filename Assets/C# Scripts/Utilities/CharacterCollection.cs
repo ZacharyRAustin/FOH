@@ -69,4 +69,25 @@ public class CharacterCollection {
                 + " at position " + pos);
         }
     }
+
+    public static void prepareCharactersForSpawn() {
+        List<Character> destroy = new List<Character>();
+        foreach(Character c in heroes)
+        {
+            if(c.isDead)
+            {
+                destroy.Add(c);
+            }
+            else
+            {
+                c.removeVelocities();
+            }
+        }
+
+        foreach(Character c in destroy)
+        {
+            heroes.Remove(c);
+            Object.Destroy(c.gameObject);
+        }
+    }
 }

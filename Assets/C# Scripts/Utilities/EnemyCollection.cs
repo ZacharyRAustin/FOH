@@ -44,7 +44,12 @@ public class EnemyCollection {
     }
 
     public static void removeAll() {
+        List<Character> destroy = new List<Character>(enemies);
         enemies.Clear();
+        foreach(Character c in destroy)
+        {
+            Object.Destroy(c.gameObject);
+        }
     }
 
     public static void print() {
@@ -59,6 +64,15 @@ public class EnemyCollection {
         {
             c.isPaused = paused;
         }
+    }
+
+    public static bool allEnemiesDead() {
+        bool ret = true;
+        foreach(Character c in enemies)
+        {
+            ret = ret && c.isDead;
+        }
+        return ret;
     }
 
 }

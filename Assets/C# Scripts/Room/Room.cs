@@ -16,6 +16,13 @@ public class Room : MonoBehaviour {
     private List<Door> doors = new List<Door>();
     private List<RoomObstacle> obstacles = new List<RoomObstacle>();
 
+    void Update() {
+        if(Input.GetButtonDown("Enter Room") && Utilities.canLeaveRoom())
+        {
+            GenerateNextRoom();
+        }
+    }
+
     public void GenerateNextRoom() {
         foreach (RoomObstacle o in obstacles)
         {
@@ -23,6 +30,8 @@ public class Room : MonoBehaviour {
         }
         obstacles.Clear();
         Generate();
+        Utilities.prepareForGeneration();
+        SpawnCharacters(Utilities.getDoorPosition());
     }
 
     public void Generate() {
