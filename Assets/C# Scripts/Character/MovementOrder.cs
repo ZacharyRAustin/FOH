@@ -9,14 +9,4 @@ public class MovementOrder {
 	{
 		destination = click;
 	}
-
-	// Use this for initialization
-	void Start () {
-	
-	}
-	
-	// Update is called once per frame
-	void Update () {
-	
-	}
 }

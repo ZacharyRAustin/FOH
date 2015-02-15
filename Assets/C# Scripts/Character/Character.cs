@@ -212,16 +212,21 @@ public class Character : MonoBehaviour {
 	public void ResolveMovementOrder(MovementOrder currentOrder)
 	{
 		Vector3 movementDirection = currentOrder.destination - character.transform.localPosition;
-		if (movementDirection.magnitude < .1)
-		{
-			actionQueue.Pop();
-			Debug.Log ("Character " + name + " completed movement order");
-		}
-		else
-		{
-			movementDirection.Normalize();
-			character.transform.localPosition += movementDirection * Time.deltaTime * stats.MoveSpeed;
-		}
+        if (movementDirection.magnitude < .1)
+        {
+            character.rigidbody.velocity = Vector3.zero;
+            character.rigidbody.angularVelocity = Vector3.zero;
+            actionQueue.Pop();
+            Debug.Log("Character " + name + " completed movement order");
+        }
+        else
+        {
+            movementDirection.Normalize();
+            character.transform.localPosition += movementDirection * Time.deltaTime * stats.MoveSpeed;
+            //character.rigidbody.velocity = Vector3.zero;
+            //character.rigidbody.MovePosition(movementDirection * stats.MoveSpeed);
+            //Debug.Log(movementDirection * stats.MoveSpeed + " is the speed ");
+        }
 	}
 
 	public void ResolveAttackOrder(AttackOrder currentOrder)
