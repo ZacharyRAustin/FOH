@@ -3,6 +3,8 @@ using System.Collections;
 
 public class Door : MonoBehaviour {
 
+    private int doorPosition;
+
 	// Use this for initialization
 	void Start () {
 	
@@ -12,4 +14,12 @@ public class Door : MonoBehaviour {
 	void Update () {
 	
 	}
+
+    public void setDoorPosition(int pos) {
+        doorPosition = pos;
+    }
+
+    public int getDoorPosition() {
+        return doorPosition;
+    }
 }

@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System;
+using System.Collections.Generic;
 
 public class Room : MonoBehaviour {
     public int sizeX, sizeY;
@@ -11,31 +12,30 @@ public class Room : MonoBehaviour {
     public float obstacleChance;
 
     private RoomCell[,] cells;
-    private RoomWall[,] walls;
-    private Door[,] doors;
-    private RoomObstacle[,] obstacles;
+    private List<RoomWall> walls = new List<RoomWall>();
+    private List<Door> doors = new List<Door>();
+    private List<RoomObstacle> obstacles = new List<RoomObstacle>();
 
     public void GenerateNextRoom() {
         foreach (RoomObstacle o in obstacles)
         {
-            Destroy(o);
+            Destroy(o.gameObject);
         }
+        obstacles.Clear();
         Generate();
     }
 
     public void Generate() {
         cells = new RoomCell[sizeX, sizeY];
-        walls = new RoomWall[sizeX, sizeY];
-        doors = new Door[sizeX, sizeY];
-        obstacles = new RoomObstacle[sizeX, sizeY];
         for (int x = 0; x < sizeX; x++)
         {
             for (int y = 0; y < sizeY; y++)
             {
                 CreateCell(x, y);
-                if(shouldSpawnDoor(x, y))
+                int doorPos = shouldSpawnDoor(x, y);
+                if(doorPos > -1)
                 {
-                    CreateDoor(x, y);
+                    CreateDoor(x, y, doorPos);
                 }
                 else if(x == 0 || x == sizeX - 1 || y == 0 || y == sizeY - 1)
                 {
@@ -59,15 +59,16 @@ public class Room : MonoBehaviour {
 
     private void CreateWall(int x, int y) {
         RoomWall newWall = Instantiate(wallPrefab) as RoomWall;
-        walls[x, y] = newWall;
+        walls.Add(newWall);
         newWall.name = "Room Wall " + x + ", " + y;
         newWall.transform.parent = transform;
         newWall.transform.localPosition = new Vector3(x - sizeX * 0.5f, y - sizeY * 0.5f, 0);
     }
 
-    private void CreateDoor(int x, int y) {
+    private void CreateDoor(int x, int y, int doorPos) {
         Door newDoor = Instantiate(doorPrefab) as Door;
-        doors[x, y] = newDoor;
+        newDoor.setDoorPosition(doorPos);
+        doors.Add(newDoor);
         newDoor.name = "New Door " + x + ", " + y;
         newDoor.transform.parent = transform;
         newDoor.transform.localPosition = new Vector3(x - sizeX * 0.5f, y - sizeY * 0.5f, 0);
@@ -76,7 +77,7 @@ public class Room : MonoBehaviour {
 
     private void SpawnObstacle(int x, int y) {
         RoomObstacle newObst = Instantiate(obstaclePrefab) as RoomObstacle;
-        obstacles[x, y] = newObst;
+        obstacles.Add(newObst);
         newObst.name = "Obstacle " + x + ", " + y;
         newObst.transform.parent = transform;
         newObst.transform.localPosition = new Vector3(x - sizeX * 0.5f, y - sizeY * 0.5f, 0);
@@ -89,12 +90,27 @@ public class Room : MonoBehaviour {
         return xBounds && yBounds && chance;
     }
 
-    private bool shouldSpawnDoor(int x, int y) {
-        bool north = x == (sizeX / 2) && y == sizeY - 1;
-        bool south = x == (sizeX / 2) && y == 0;
-        bool east = x == sizeX - 1 && y == (sizeY / 2);
-        bool west = x == 0 && y == (sizeY / 2);
-        return north || south || east || west;
+    private int shouldSpawnDoor(int x, int y) {
+        if(x == (sizeX / 2) && y == sizeY - 1)
+        {
+            return DoorPositions.NORTH;
+        }
+        else if(x == (sizeX / 2) && y == 0)
+        {
+            return DoorPositions.SOUTH;
+        }
+        else if(x == sizeX - 1 && y == (sizeY / 2))
+        {
+            return DoorPositions.EAST;
+        }
+        else if(x == 0 && y == (sizeY / 2))
+        {
+            return DoorPositions.WEST;
+        }
+        else
+        {
+            return -1;
+        }
     }
 
     public void SpawnCharacters(int direction, Character c) {
