@@ -84,8 +84,8 @@ public class Room : MonoBehaviour {
     }
 
     private bool shouldSpawnObstacle(int x, int y) {
-        bool xBounds = x < sizeX - 2 && x > 1;
-        bool yBounds = y < sizeY - 2 && y > 1;
+        bool xBounds = x < sizeX - 4 && x > 4;
+        bool yBounds = y < sizeY - 4 && y > 4;
         bool chance = UnityEngine.Random.Range(0f, 100f) < obstacleChance;
         return xBounds && yBounds && chance;
     }
@@ -113,38 +113,79 @@ public class Room : MonoBehaviour {
         }
     }
 
-    public void SpawnCharacters(int direction, Character c) {
+    public void SpawnCharacters(int direction) {
         float startX, startY;
+        Vector3? startingPos = null;
+        bool useX = false;
         if (direction == DoorPositions.NORTH)
         {
             startX = 0;
             startY = (sizeY / 2) - Math.Min((sizeX * .15f), 3);
-            c.setCharacterPosition(new Vector3((float)startX, (float)startY, 0f));
+            startingPos = new Vector3((float)startX, (float)startY, 0f);
+            useX = true;
         }
         else if (direction == DoorPositions.EAST)
         {
             startX = (sizeX / 2) - Math.Min((sizeX  * .15f), 3);
             startY = 0;
-            Debug.Log("X is " + startX);
-            c.setCharacterPosition(new Vector3((float)startX, (float)startY, 0f));
+            startingPos = new Vector3((float)startX, (float)startY, 0f);
         }
         else if (direction == DoorPositions.SOUTH)
         {
             startX = 0;
             startY = -(sizeY / 2) + Math.Min((sizeX * .15f), 3);
-            c.setCharacterPosition(new Vector3((float)startX, (float)startY, 0f));
+            startingPos = new Vector3((float)startX, (float)startY, 0f);
+            useX = true;
         }
         else if (direction == DoorPositions.WEST)
         {
             startY = 0;
             startX = -(sizeX / 2) + Math.Min((sizeX * .15f), 3);
-            c.setCharacterPosition(new Vector3((float)startX, (float)startY, 0f));
+            startingPos = new Vector3((float)startX, (float)startY, 0f);
         }
         else
         {
             Debug.Log("Invalid spawn characters direction " + direction);
         }
 
-        Debug.Log("Character Position: " + c.getCharacterPosition());
+        if(startingPos != null)
+        {
+            Vector3 spawnPos = startingPos.Value;
+
+            for(int i = 0; i < CharacterCollection.NumberOfHeroes(); i++)
+            {
+                CharacterCollection.setCharacterPosition(i, spawnPos);
+                int mult = 1;
+                if ((i + 1) % 2 == 0)
+                {
+                    mult = (i + 1) / 2;
+                    spawnPos = startingPos.Value;
+                    if(useX)
+                    {
+                        spawnPos.x += mult * 2;
+                    }
+                    else
+                    {
+                        spawnPos.y += mult * 2;
+                    }
+                }
+                else
+                {
+                    if((i + 1) != 1)
+                    {
+                        mult = (i - 1) / 2;
+                    }
+                    spawnPos = startingPos.Value;
+                    if(useX)
+                    {
+                        spawnPos.x -= mult * 2;
+                    }
+                    else
+                    {
+                        spawnPos.y -= mult * 2;
+                    }
+                }
+            }
+        }
     }
 }

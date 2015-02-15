@@ -31,6 +31,7 @@ public class GameManager : MonoBehaviour {
 		CharacterCollection.addHero (playerCharA);
         CharacterCollection.addHero(playerCharB);
         CharacterCollection.addHero(playerCharC);
+        roomInstance.SpawnCharacters(DoorPositions.SOUTH);
 		EnemyCollection.addEnemy (enemy);
 		inputManager.Awake ();
 		inputManager.Select (playerCharA);
@@ -61,7 +62,8 @@ public class GameManager : MonoBehaviour {
         playerCharA = Instantiate (characterPrefab) as Character;
 		playerCharA.characterPrefab.SetParentChar(playerCharA);
 		playerCharA.characterPrefab.name = "Hero A Prefab";
-		playerCharA.Generate(new Vector3(-2.7f, -5.0f, 0f));
+        playerCharA.Generate();
+        //playerCharA.Generate(new Vector3(-2.7f, -5.0f, 0f));
 		playerCharA.actionQueue.ParentChar = playerCharA;
 		playerCharA.tag = "Hero A";
 		playerCharA.name = "Hero A";
@@ -76,7 +78,8 @@ public class GameManager : MonoBehaviour {
 		playerCharB = Instantiate (characterPrefab) as Character;
 		playerCharB.characterPrefab.name = "Hero B Prefab";
 		playerCharB.characterPrefab.SetParentChar(playerCharB);
-		playerCharB.Generate (new Vector3 (-2.7f, 0f, 0f));
+        playerCharB.Generate();
+        //playerCharB.Generate (new Vector3 (-2.7f, 0f, 0f));
 		playerCharB.actionQueue.ParentChar = playerCharB;
 		playerCharB.tag = "Hero B";
 		playerCharB.name = "Hero B";
@@ -97,7 +100,8 @@ public class GameManager : MonoBehaviour {
 		playerCharC = Instantiate (characterPrefab) as Character;
 		playerCharC.characterPrefab.name = "Hero C Prefab";
 		playerCharC.characterPrefab.SetParentChar(playerCharC);
-		playerCharC.Generate (new Vector3 (-2.7f, 5.0f, 0f));
+        playerCharC.Generate();
+        //playerCharC.Generate (new Vector3 (-2.7f, 5.0f, 0f));
 		playerCharC.actionQueue.ParentChar = playerCharC;
 		playerCharC.tag = "Hero C";
 		playerCharC.name = "Hero C";

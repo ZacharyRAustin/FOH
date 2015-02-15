@@ -167,7 +167,7 @@ public class Character : MonoBehaviour {
     }
 
     public void setCharacterPosition(Vector3 pos) {
-        transform.localPosition = pos;
+        character.transform.localPosition = pos;
     }
 
     public void setTarget(Character c) {

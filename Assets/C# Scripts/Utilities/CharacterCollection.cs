@@ -14,7 +14,7 @@ public class CharacterCollection {
         heroes.Add(hero);
     }
 
-    public static int NumberOfEnemies() {
+    public static int NumberOfHeroes() {
         return heroes.Count;
     }
 
@@ -55,6 +55,18 @@ public class CharacterCollection {
         foreach (Character c in heroes)
         {
             c.isPaused = paused;
+        }
+    }
+
+    public static void setCharacterPosition(int index, Vector3 pos) {
+        if (-1 < index && index < heroes.Count && pos != null)
+        {
+            heroes.ToArray()[index].setCharacterPosition(pos);
+        }
+        else
+        {
+            Debug.Log("Unable to set character position for index " + index
+                + " at position " + pos);
         }
     }
 }
