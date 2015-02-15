@@ -19,9 +19,6 @@ public class GameManager : MonoBehaviour {
 
     private Character enemy;
 
-	private CharacterCollection allies = new CharacterCollection();
-	private EnemyCollection enemies = new EnemyCollection();
-
     public Material enemyMaterial;
     public Material heroMaterial;
 
@@ -31,13 +28,11 @@ public class GameManager : MonoBehaviour {
 	void Start () {
         Random.seed = seed;
         BeginGame();
-		allies.addHero (playerCharA);
-		allies.addHero (playerCharB);
-		allies.addHero (playerCharC);
-		enemies.addEnemy (enemy);
+		CharacterCollection.addHero (playerCharA);
+        CharacterCollection.addHero(playerCharB);
+        CharacterCollection.addHero(playerCharC);
+		EnemyCollection.addEnemy (enemy);
 		inputManager.Awake ();
-		inputManager.Allies = allies;
-		inputManager.Enemies = enemies;
 		inputManager.Select (playerCharA);
 		enemy.actionQueue.ParentChar = enemy;
 		enemy.Enqueue (playerCharA);
@@ -45,9 +40,6 @@ public class GameManager : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		inputManager.Allies = allies;
-		inputManager.Enemies = enemies;
-
         if (Input.GetButtonDown("Regenerate Map"))
         {
             roomInstance.GenerateNextRoom();
@@ -142,7 +134,7 @@ public class GameManager : MonoBehaviour {
         playerCharA.setTarget(enemy);
         enemy.setTarget(playerCharA);
 
-        enemies.addEnemy(enemy);
+        EnemyCollection.addEnemy(enemy);
     }
 
     private void RestartGame() {

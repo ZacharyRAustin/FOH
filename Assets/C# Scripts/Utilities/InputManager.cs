@@ -3,8 +3,6 @@ using System.Collections.Generic;
 
 public class InputManager {
 
-	private CharacterCollection allies;
-	private EnemyCollection enemies;
 	private Character selected;
 	public bool isCharacterUnderMouse;
 	public Character characterUnderMouse;
@@ -14,18 +12,6 @@ public class InputManager {
 	int floorMask;
 	int characterMask;
 	float camRayLength = 100f;
-
-	public CharacterCollection Allies
-	{
-		get { return allies; }
-		set { allies = value; }
-	}
-
-	public EnemyCollection Enemies
-	{
-		get { return enemies; }
-		set { enemies = value; }
-	}
 
 	public void Select (Character c)
 	{
@@ -51,17 +37,17 @@ public class InputManager {
 
 		if (Input.GetButtonDown ("Select Character A"))
 		{
-			selected = allies.getHero(0);
+			selected = CharacterCollection.getHero(0);
 			Debug.Log ("Character A selected");
 		}
 		else if (Input.GetButtonDown ("Select Character B"))
 		{
-			selected = allies.getHero(1);
+            selected = CharacterCollection.getHero(1);
 			Debug.Log ("Character B selected");
 		}
 		else if (Input.GetButtonDown ("Select Character C"))
 		{
-			selected = allies.getHero(2);
+            selected = CharacterCollection.getHero(2);
 			Debug.Log ("Character C selected");
 		}
 		
@@ -110,7 +96,7 @@ public class InputManager {
 			{
 				for (int i = 0; i <= 2; i++)
 				{
-					if (Allies.getHero(i) == characterUnderMouse)
+                    if (CharacterCollection.getHero(i) == characterUnderMouse)
 					{
 						selected = characterUnderMouse;
 						Debug.Log ("Click selected " + selected.name);
@@ -156,7 +142,7 @@ public class InputManager {
 			Debug.Log ("Input - " + selected.name + " casting " + spell.name);
 			selected.playerCasting = true;
 			selected.SetCastTime (spell.castTime);
-			selected.SpellCast (spell, allies, enemies);
+			selected.SpellCast (spell);
 		}
 	}
 
@@ -225,7 +211,7 @@ public class InputManager {
 					{
 						for (int i = 0; i <= 2; i++)
 						{
-							if (allies.getHero(i) == characterUnderMouse)
+                            if (CharacterCollection.getHero(i) == characterUnderMouse)
 							{
 								Debug.Log ("Casting " + spell.name + " on " + characterUnderMouse.stats.Name);
 								selected.Enqueue (spell, characterUnderMouse, new Vector3());
@@ -242,9 +228,9 @@ public class InputManager {
 					CharacterMouseCheck();
 					if (isCharacterUnderMouse)
 					{
-						for (int i = 0; i <= enemies.NumberOfEnemies(); i++)
+						for (int i = 0; i <= EnemyCollection.NumberOfEnemies(); i++)
 						{
-							if (enemies.getEnemy(i) == characterUnderMouse)
+							if (EnemyCollection.getEnemy(i) == characterUnderMouse)
 							{
 								Debug.Log ("Casting " + spell.name + " on " + characterUnderMouse.stats.Name);
 								selected.Enqueue (spell, characterUnderMouse, new Vector3());

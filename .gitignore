@@ -4,3 +4,4 @@ UnityVS.GDS.CSharp.csproj
 UnityVS.GDS.CSharp.Editor.csproj
 UnityVS.GDS.sln
 UnityVS.*
+obj/

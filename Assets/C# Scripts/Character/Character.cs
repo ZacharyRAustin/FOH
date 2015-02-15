@@ -98,7 +98,7 @@ public class Character : MonoBehaviour {
 		actionQueue.Overwrite (s, c, p);
 	}
 
-	public void SpellCast (Ability spell, CharacterCollection allies, EnemyCollection enemies)
+	public void SpellCast (Ability spell)
 	{
 		if (playerCasting == true)
 		{
