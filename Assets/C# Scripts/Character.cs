@@ -20,6 +20,7 @@ public class Character : MonoBehaviour {
 	public bool isDead = false;
 
     private int status = CharacterStatus.WAITING;
+	
 
 
 	// ---properties---
@@ -32,9 +33,10 @@ public class Character : MonoBehaviour {
 
 
 
+
+
 	// Use this for initialization
 	void Start () {
-	    
 	}
 
 	public void SetCastTime (float castTime)
@@ -46,11 +48,11 @@ public class Character : MonoBehaviour {
 	void Update () {
 		if (isPaused == false)
 		{
+
 			DeathCheck ();
 			stats.ResolveBuffs ();
 			actionQueue.Resolve ();
 			AttackCooldownDecrement ();
-
         	//if(target != null)
         	//{
             //	moveToTarget();
@@ -219,15 +221,20 @@ public class Character : MonoBehaviour {
 	public void ResolveMovementOrder(MovementOrder currentOrder)
 	{
 		Vector3 movementDirection = currentOrder.destination - character.transform.localPosition;
+		movementDirection.z = 0;
 		if (movementDirection.magnitude < .1)
 		{
+			character.idle();
 			actionQueue.Pop();
 			Debug.Log ("Character " + name + " completed movement order");
 		}
 		else
 		{
+			character.walk();
 			movementDirection.Normalize();
+			character.transform.rotation = Quaternion.LookRotation(movementDirection, new Vector3(0, 0, -1.0f));
 			character.transform.localPosition += movementDirection * Time.deltaTime * stats.MoveSpeed;
+
 		}
 	}
 
@@ -245,13 +252,17 @@ public class Character : MonoBehaviour {
 
 		if (attackDistance > stats.AttackRange)
 		{ //if out of range, move towards target
+			character.walk();
 			attackVector.Normalize();
+			character.transform.rotation = Quaternion.LookRotation(attackVector, new Vector3(0, 0, -1.0f));
 			character.transform.localPosition += attackVector * Time.deltaTime * stats.MoveSpeed;
 		}
 		else
 		{
 			if (attackCooldown == 0)
 			{
+				character.transform.rotation = Quaternion.LookRotation(attackVector, new Vector3(0, 0, -1.0f));
+				character.attack();
 				combatManager.Hit(this, attackTarget);
 				Debug.Log ("Character " + stats.Name + " attacks " + attackTarget.stats.Name + ".");
 				Debug.Log (attackTarget.stats.Name + "'s HP is now " + attackTarget.stats.CurrentHealth);

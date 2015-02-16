@@ -82,6 +82,7 @@ public class GameManager : MonoBehaviour {
 		playerCharA.stats.Agility = 5;
 		playerCharA.stats.Intelligence = 5;
 		playerCharA.stats.InitializeCombatStats ();
+		//playerCharA.Anim = playerCharA.characterPrefab.GetComponent<Animator> ();
 
 		playerCharB = Instantiate (characterPrefab) as Character;
 		playerCharB.characterPrefab.name = "Hero B Prefab";
@@ -98,6 +99,9 @@ public class GameManager : MonoBehaviour {
 		playerCharB.stats.Intelligence = 5;
 		playerCharB.stats.InitializeCombatStats ();
 		playerCharB.stats.AttackRange = 5.0f;
+		//playerCharB.Anim = playerCharB.characterPrefab.GetComponent<Animator> ();
+		//playerCharB.Anim.SetBool ("walk 0", true);
+		//Debug.Log (playerCharB.Anim);
 
 		Heal heal = new Heal ();
 		heal.Start ();
@@ -122,6 +126,7 @@ public class GameManager : MonoBehaviour {
 		playerCharC.stats.MagicAttack = true;
 		playerCharC.stats.abilities.Add (heal);
 		playerCharC.stats.abilities.Add (frostbolt);
+		//playerCharC.Anim = playerCharC.characterPrefab.GetComponent<Animator> ();
 
 		// initialize enemy
 		enemy = Instantiate(characterPrefab) as Character;
