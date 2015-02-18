@@ -16,8 +16,7 @@ public class GameManager : MonoBehaviour {
     private Character playerCharA;
 	private Character playerCharB;
 	private Character playerCharC;
-
-    private Character enemy;
+	private Character enemy;
 
     public Material enemyMaterial;
     public Material heroMaterial;
@@ -35,16 +34,27 @@ public class GameManager : MonoBehaviour {
         roomInstance.SpawnCharacters(DoorPositions.SOUTH);
 		inputManager.Awake ();
 		inputManager.Select (playerCharA);
-        for(int i = 0; i < EnemyCollection.NumberOfEnemies(); i++)
-        {
-            EnemyCollection.getEnemy(i).setTarget(playerCharA);
-            EnemyCollection.getEnemy(i).actionQueue.ParentChar = EnemyCollection.getEnemy(i);
-            EnemyCollection.getEnemy(i).Enqueue(playerCharA);
-        }
+        //for(int i = 0; i < EnemyCollection.NumberOfEnemies(); i++)
+        //{
+        //    EnemyCollection.getEnemy(i).setTarget(playerCharA);
+        //    EnemyCollection.getEnemy(i).actionQueue.ParentChar = EnemyCollection.getEnemy(i);
+        //    EnemyCollection.getEnemy(i).Enqueue(playerCharA);
+        //}
 	}
 	
 	// Update is called once per frame
 	void Update () {
+//=======
+//        inputManager.Allies = allies;
+//        inputManager.Enemies = enemies;
+
+        if(EnemyCollection.getEnemy(0) != null)
+        {
+            setEnemyTarget (EnemyCollection.getEnemy(0));
+        }
+		
+
+
         if (Input.GetButtonDown("Regenerate Map"))
         {
             roomInstance.GenerateNextRoom();
@@ -80,7 +90,6 @@ public class GameManager : MonoBehaviour {
 		playerCharA.stats.Agility = 5;
 		playerCharA.stats.Intelligence = 5;
 		playerCharA.stats.InitializeCombatStats ();
-	
 
 		playerCharB = Instantiate (characterPrefab) as Character;
 		playerCharB.characterPrefab.name = "Hero B Prefab";
@@ -101,6 +110,9 @@ public class GameManager : MonoBehaviour {
 		playerCharB.stats.Intelligence = 5;
 		playerCharB.stats.InitializeCombatStats ();
 		playerCharB.stats.AttackRange = 5.0f;
+		//playerCharB.Anim = playerCharB.characterPrefab.GetComponent<Animator> ();
+		//playerCharB.Anim.SetBool ("walk 0", true);
+		//Debug.Log (playerCharB.Anim);
 
 		Heal heal = new Heal ();
 		heal.Start ();
@@ -129,7 +141,52 @@ public class GameManager : MonoBehaviour {
 		playerCharC.stats.MagicAttack = true;
 		playerCharC.stats.abilities.Add (heal);
 		playerCharC.stats.abilities.Add (frostbolt);
-    }
+  }
+//=======
+//        //playerCharC.Anim = playerCharC.characterPrefab.GetComponent<Animator> ();
+
+//        // initialize enemy
+//        enemy = Instantiate(characterPrefab) as Character;
+//        enemy.characterPrefab.name = "Enemy Prefab";
+//        enemy.characterPrefab.SetParentChar(enemy);
+//        enemy.Generate(2.7f, 5.0f);
+//        enemy.setMaterial(enemyMaterial);
+//        enemy.name = "Enemy";
+//        enemy.stats.Name = "Enemy";
+//        enemy.stats.MaxHealth = 50;
+//        enemy.stats.MaxMana = 30;
+//        enemy.stats.Strength = 10;
+//        enemy.stats.Agility = 5;
+//        enemy.stats.Intelligence = 5;
+//        enemy.stats.InitializeCombatStats ();
+
+//        allies.addHero (playerCharA);
+//        allies.addHero (playerCharB);
+//        allies.addHero (playerCharC);
+//        enemies.addEnemy (enemy);
+		
+//        setEnemyTarget (enemy, allies);
+
+//        // add enemy movement to enemy
+//        enemy.gameObject.AddComponent ("EnemyMovement");
+
+
+
+//    }
+
+	private void setEnemyTarget(Character enemy) {
+		Character closestHero = CharacterCollection.getHero(0);
+		float closestDistance = 1000.0f;
+		Vector3 enemyPosition = enemy.getCharacterPosition ();
+		for (int i = 0; i < CharacterCollection.NumberOfHeroes(); i++) {
+			Vector3 heroPosition = CharacterCollection.getHero(i).getCharacterPosition();
+			if (Vector3.Distance (enemyPosition, heroPosition) < closestDistance) {
+				closestDistance = Vector3.Distance (enemyPosition, heroPosition);
+				closestHero = CharacterCollection.getHero(i);
+			}
+		}
+		enemy.Target = closestHero;
+	}
 
     private void RestartGame() {
         Destroy(roomInstance.gameObject);

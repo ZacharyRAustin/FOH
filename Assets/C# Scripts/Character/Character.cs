@@ -15,12 +15,26 @@ public class Character : MonoBehaviour {
 	private InputManager inputManager = new InputManager();
 	public Ability currentSpell;
 
+	private Character target;
     private GameObject cube;
-    private Character target;
 	public bool isPaused;
 	public bool isDead = false;
 
     private int status = CharacterStatus.WAITING;
+	
+
+
+	// ---properties---
+	public Character Target {
+		get {return target;} 
+		set {target = value;}
+	}
+
+
+
+
+
+
 
 	public float barDisplay ;//current progress
 	public float barDisplay_1;
@@ -128,7 +142,6 @@ public class Character : MonoBehaviour {
 		
 		
 		//int[] left_array = {10, 40, 70,100,130,160,190,220,250};
-	    
 	}
 
 	public void SetCastTime (float castTime)
@@ -141,15 +154,12 @@ public class Character : MonoBehaviour {
 		pause_string = "GAME IS PAUSED";
 		if (isPaused == false)
 		{
-
 			pause_string = "";
 			DeathCheck ();
 			stats.ResolveBuffs ();
 			actionQueue.Resolve ();
 			AttackCooldownDecrement ();
 			character_gui_update();
-
-
         	//if(target != null)
         	//{
             //	moveToTarget();
@@ -250,14 +260,14 @@ public class Character : MonoBehaviour {
     public void Generate() {
         character = Instantiate(characterPrefab) as CharacterInstance;
         character.transform.parent = transform;
-        character.transform.localPosition = new Vector3(0f, 0f, 0f);
+        character.transform.localPosition = new Vector3(0f, 0f, -0.5f);
         cube = character.transform.GetChild(0).gameObject;
     }
 
-    public void Generate(Vector3 pos) {
+    public void Generate(float x, float y) {
         character = Instantiate(characterPrefab) as CharacterInstance;
         character.transform.parent = transform;
-        character.transform.localPosition = pos;
+		character.transform.localPosition = new Vector3 (x, y, -0.5f);
         cube = character.transform.GetChild(0).gameObject;
     }
 
@@ -323,23 +333,21 @@ public class Character : MonoBehaviour {
 	public void ResolveMovementOrder(MovementOrder currentOrder)
 	{
 		Vector3 movementDirection = currentOrder.destination - character.transform.localPosition;
-        if (movementDirection.magnitude < .1)
-        {
-            character.rigidbody.velocity = Vector3.zero;
-            character.rigidbody.angularVelocity = Vector3.zero;
-            actionQueue.Pop();
-            Debug.Log("Character " + name + " completed movement order");
-        }
-        else
-        {
-            movementDirection.Normalize();
-            character.transform.localPosition += movementDirection * Time.deltaTime * stats.MoveSpeed;
-            character.rigidbody.angularVelocity = Vector3.zero;
-            character.rigidbody.velocity = Vector3.zero;
-            //character.rigidbody.velocity = Vector3.zero;
-            //character.rigidbody.MovePosition(movementDirection * stats.MoveSpeed);
-            //Debug.Log(movementDirection * stats.MoveSpeed + " is the speed ");
-        }
+		movementDirection.z = 0;
+		if (movementDirection.magnitude < .1)
+		{
+			character.idle();
+			actionQueue.Pop();
+			Debug.Log ("Character " + name + " completed movement order");
+		}
+		else
+		{
+			character.walk();
+			movementDirection.Normalize();
+			character.transform.rotation = Quaternion.LookRotation(movementDirection, new Vector3(0, 0, -1.0f));
+			character.transform.localPosition += movementDirection * Time.deltaTime * stats.MoveSpeed;
+
+		}
 	}
 
 	public void ResolveAttackOrder(AttackOrder currentOrder)
@@ -356,13 +364,17 @@ public class Character : MonoBehaviour {
 
 		if (attackDistance > stats.AttackRange)
 		{ //if out of range, move towards target
+			character.walk();
 			attackVector.Normalize();
+			character.transform.rotation = Quaternion.LookRotation(attackVector, new Vector3(0, 0, -1.0f));
 			character.transform.localPosition += attackVector * Time.deltaTime * stats.MoveSpeed;
 		}
 		else
 		{
 			if (attackCooldown == 0)
 			{
+				character.transform.rotation = Quaternion.LookRotation(attackVector, new Vector3(0, 0, -1.0f));
+				character.attack();
 				combatManager.Hit(this, attackTarget);
 				Debug.Log ("Character " + stats.Name + " attacks " + attackTarget.stats.Name + ".");
 				Debug.Log (attackTarget.stats.Name + "'s HP is now " + attackTarget.stats.CurrentHealth);

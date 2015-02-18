@@ -20,7 +20,7 @@ public class EnemyGenerator {
             Character enemy = MonoBehaviour.Instantiate(enemyPrefab) as Character;
             enemy.characterPrefab.name = "Enemy " + numEnemies + " Prefab";
             enemy.characterPrefab.SetParentChar(enemy);
-            enemy.Generate(pos);
+            enemy.Generate(pos.x, pos.y);
             enemy.setMaterial(enemyMaterial);
             enemy.name = enemyName;
             enemy.stats.Name = enemyName;
@@ -33,6 +33,7 @@ public class EnemyGenerator {
             enemy.image_name = "enemy_image";
             enemy.stats.Intelligence = 5;
             enemy.stats.InitializeCombatStats();
+            enemy.gameObject.AddComponent("EnemyMovement");
             EnemyCollection.addEnemy(enemy);
             return numEnemies;
         }

@@ -20,7 +20,7 @@ public class Room : MonoBehaviour {
 
     }
     void OnGUI() {
-        GUI.BeginGroup(new Rect(0, Screen.width / 2, 100, 100));
+        GUI.BeginGroup(new Rect(0, Screen.height-50, 100, 100));
         GUI.TextArea(new Rect(0, 0, 100, 20), "Room 1");// + SpawnCharacteristics.getDoorsEntered().ToString());
         GUI.EndGroup();
     }
