@@ -17,7 +17,7 @@ public class Room : MonoBehaviour {
     private List<RoomObstacle> obstacles = new List<RoomObstacle>();
 
     void Update() {
-        if(Input.GetButtonDown("Enter Room") && Utilities.canLeaveRoom())
+        if(Input.GetButtonDown("Enter Room") && SpawnCharacteristics.canLeaveRoom())
         {
             GenerateNextRoom();
         }
@@ -29,9 +29,32 @@ public class Room : MonoBehaviour {
             Destroy(o.gameObject);
         }
         obstacles.Clear();
-        Generate();
         Utilities.prepareForGeneration();
-        SpawnCharacters(Utilities.getDoorPosition());
+        GenerateRandomObjects();
+        SpawnCharacters(SpawnCharacteristics.getDoorPosition());
+        SpawnCharacteristics.increaseDoorsEntered();
+    }
+
+    private void GenerateRandomObjects(int x, int y) {
+        if(shouldSpawnObstacle(x,y))
+        {
+            SpawnObstacle(x, y);
+        }
+        else if(shouldSpawnEnemy(x, y))
+        {
+            SpawnEnemies(x, y);
+        }
+
+    }
+
+    private void GenerateRandomObjects() {
+        for(int x = 0; x < sizeX; x++)
+        {
+            for(int y = 0; y < sizeY; y++)
+            {
+                GenerateRandomObjects(x, y);
+            }
+        }
     }
 
     public void Generate() {
@@ -50,10 +73,8 @@ public class Room : MonoBehaviour {
                 {
                     CreateWall(x, y);
                 }
-                else if (shouldSpawnObstacle(x, y))
-                {
-                    SpawnObstacle(x, y);
-                }
+
+                GenerateRandomObjects(x, y);
             }
         }
     }
@@ -195,6 +216,21 @@ public class Room : MonoBehaviour {
                     }
                 }
             }
+        }
+    }
+
+    private bool shouldSpawnEnemy(int x, int y) {
+        bool xBounds = x < sizeX - 4 && x > 4;
+        bool yBounds = y < sizeY - 4 && y > 4;
+        return SpawnCharacteristics.shouldSpawnEnemy() && xBounds && yBounds;
+    }
+
+    private void SpawnEnemies(int x, int y) {
+        Vector3 v = new Vector3(x - sizeX * 0.5f, y - sizeY * 0.5f, 0f);
+        int ret = EnemyGenerator.generateEnemy(v);
+        if(ret > 0)
+        {
+            EnemyCollection.getEnemy(ret).transform.parent = transform;
         }
     }
 }

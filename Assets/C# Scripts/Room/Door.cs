@@ -16,11 +16,11 @@ public class Door : MonoBehaviour {
 	}
 
     void OnTriggerEnter() {
-        Utilities.setNearDoor(true, doorPosition);
+        SpawnCharacteristics.setNearDoor(true, doorPosition);
     }
 
     void OnTriggerExit() {
-        Utilities.setNearDoor(false, -1);
+        SpawnCharacteristics.setNearDoor(false, -1);
     }
 
     public void setDoorPosition(int pos) {
