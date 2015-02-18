@@ -31,7 +31,10 @@ public class EnemyMovement : MonoBehaviour {
 		move ();
 		currentPosition = thisCharacter.getCharacterPosition ();
 		target = thisCharacter.Target;
-		targetPosition = target.getCharacterPosition ();
+        if(target != null)
+        {
+            targetPosition = target.getCharacterPosition();
+        }
 	}
 
 
@@ -45,7 +48,10 @@ public class EnemyMovement : MonoBehaviour {
 		currentPosition = originalPosition;
 		// initialize target of this character
 		target = thisCharacter.Target;
-		targetPosition = target.getCharacterPosition();
+        if(target != null)
+        {
+            targetPosition = target.getCharacterPosition();
+        }
 		// patrol locations 1 and 2
 		patrolPosition1 = new Vector3 (originalPosition.x + patrolRange, originalPosition.y, originalPosition.z);
 		patrolPosition2 = new Vector3 (originalPosition.x - patrolRange, originalPosition.y, originalPosition.z);
