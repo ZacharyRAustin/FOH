@@ -81,6 +81,7 @@ public class CharacterCollection {
             else
             {
                 c.removeVelocities();
+                c.clearActionQueue();
             }
         }
 

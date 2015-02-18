@@ -300,4 +300,8 @@ public class Character : MonoBehaviour {
         character.rigidbody.angularVelocity = Vector3.zero;
         character.rigidbody.velocity = Vector3.zero;
     }
+
+    public void clearActionQueue() {
+        actionQueue.Clear();
+    }
 }
