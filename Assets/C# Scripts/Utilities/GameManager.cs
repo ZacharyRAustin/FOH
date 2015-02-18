@@ -67,6 +67,10 @@ public class GameManager : MonoBehaviour {
 		playerCharA.characterPrefab.name = "Hero A Prefab";
         playerCharA.Generate();
 		playerCharA.actionQueue.ParentChar = playerCharA;
+		playerCharA.position_y_health= 10;
+		playerCharA.position_y = 40;
+		playerCharA.isenemy = false;
+		playerCharA.image_name = "hero_image";
 		playerCharA.tag = "Hero A";
 		playerCharA.name = "Hero A";
 		playerCharA.stats.Name = "Hero A";
@@ -76,12 +80,17 @@ public class GameManager : MonoBehaviour {
 		playerCharA.stats.Agility = 5;
 		playerCharA.stats.Intelligence = 5;
 		playerCharA.stats.InitializeCombatStats ();
+	
 
 		playerCharB = Instantiate (characterPrefab) as Character;
 		playerCharB.characterPrefab.name = "Hero B Prefab";
 		playerCharB.characterPrefab.SetParentChar(playerCharB);
         playerCharB.Generate();
 		playerCharB.actionQueue.ParentChar = playerCharB;
+		playerCharB.position_y_health = 70;
+		playerCharB.position_y = 100;
+		playerCharB.isenemy = false;
+		playerCharB.image_name = "hero_image";
 		playerCharB.tag = "Hero B";
 		playerCharB.name = "Hero B";
 		playerCharB.stats.Name = "Hero B";
@@ -105,6 +114,10 @@ public class GameManager : MonoBehaviour {
 		playerCharC.actionQueue.ParentChar = playerCharC;
 		playerCharC.tag = "Hero C";
 		playerCharC.name = "Hero C";
+		playerCharC.position_y_health = 130;
+		playerCharC.position_y = 160;
+		playerCharC.isenemy = false;
+		playerCharC.image_name = "hero_image";
 		playerCharC.stats.Name = "Hero C";
 		playerCharC.stats.MaxHealth = 30;
 		playerCharC.stats.MaxMana = 50;

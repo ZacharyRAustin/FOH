@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.UI;
 
 public class Character : MonoBehaviour {
     public CharacterInstance characterPrefab;
@@ -21,8 +22,112 @@ public class Character : MonoBehaviour {
 
     private int status = CharacterStatus.WAITING;
 
+	public float barDisplay ;//current progress
+	public float barDisplay_1;
+	public string name;
+	public string pause_string;
+	public float position_y_health;
+	public float position_y;
+	public float position_x;
+	public Vector2 pos  ;
+	public Vector2 size ;
+	public string image_name;
+	public Texture2D emptyTex;
+	public Texture2D image_texture;
+	public Texture2D fullTex;
+	public Texture2D fullTex_mana;
+	public bool isenemy;
+	Color redcolor = Color.red;
+	Color greencolor = Color.green;
+	Color graycolor = Color.grey;
+	Color bluecolor = Color.blue;
+	GUIStyle style_font = new GUIStyle ();
+	GUIStyle style = new GUIStyle();
+	GUIStyle style_mana = new GUIStyle();
+
+	
+	
+	void OnGUI(){
+		fullTex_mana.Apply ();
+		fullTex.Apply ();
+		style.normal.background = fullTex;
+		style_mana.normal.background = fullTex_mana;
+		style_font.fontSize = 50;
+		
+		
+		float width_x = (Screen.width / 6);
+		GUI.BeginGroup (new Rect ((Screen.width/3), (Screen.width/4), width_x*2 + 100 , 1000));
+		GUI.Label(new Rect (0, 0, width_x*2, 1000), pause_string,style_font);
+		GUI.EndGroup ();
+
+		if (isenemy == false) {
+						GUI.BeginGroup (new Rect (position_x, position_y_health, width_x + 100, 80));
+						GUI.DrawTexture (new Rect (0, 0, 60, 60), image_texture);
+						GUI.BeginGroup (new Rect (60, 0, width_x + 40, size.y));
+						GUI.TextArea (new Rect (width_x, 0, 40, size.y), (stats.CurrentHealth * 100 / stats.MaxHealth).ToString () + "%");
+						GUI.Box (new Rect (0, 0, width_x, size.y), emptyTex);
+						//draw the filled-in part:
+						GUI.BeginGroup (new Rect (0, 0, width_x * (stats.CurrentHealth) / (stats.MaxHealth), size.y));
+						GUI.Box (new Rect (0, 0, width_x, size.y), new GUIContent (""), style);
+						GUI.EndGroup ();
+						GUI.EndGroup ();
+		
+						GUI.BeginGroup (new Rect (60, 30, width_x + 40, size.y));
+						GUI.TextArea (new Rect (width_x, 0, 40, size.y), (stats.CurrentMana * 100 / stats.MaxMana).ToString () + "%");
+						GUI.Box (new Rect (0, 0, width_x, size.y), emptyTex);
+						//GUI.TextArea (new Rect (0,0,60, size.y), character.name);
+						//draw the filled-in part:
+						GUI.BeginGroup (new Rect (0, 0, width_x * (stats.CurrentMana) / (stats.MaxMana), size.y));
+						GUI.Box (new Rect (0, 0, width_x, size.y), new GUIContent (""), style_mana);
+						GUI.EndGroup ();
+						GUI.EndGroup ();
+						GUI.EndGroup ();
+				} else {
+		
+			GUI.BeginGroup (new Rect (Screen.width - width_x - 100, position_y_health, width_x + 100, 80));
+			GUI.DrawTexture (new Rect (width_x+40, 0, 60, 60), image_texture);
+			GUI.BeginGroup (new Rect (0, 0, width_x + 40, size.y));
+			GUI.TextArea (new Rect (0, 0, 40, size.y), (stats.CurrentHealth * 100 / stats.MaxHealth).ToString () + "%");
+			GUI.Box (new Rect (40, 0, width_x, size.y), emptyTex);
+			//draw the filled-in part:
+			GUI.BeginGroup (new Rect (40, 0, width_x * (stats.CurrentHealth) / (stats.MaxHealth), size.y));
+			GUI.Box (new Rect (0, 0, width_x, size.y), new GUIContent (""), style);
+			GUI.EndGroup ();
+			GUI.EndGroup ();
+			
+			GUI.BeginGroup (new Rect (0, 30, width_x + 40, size.y));
+			GUI.TextArea (new Rect (0, 0, 40, size.y), (stats.CurrentMana * 100 / stats.MaxMana).ToString () + "%");
+			GUI.Box (new Rect (40, 0, width_x, size.y), emptyTex);
+			//GUI.TextArea (new Rect (0,0,60, size.y), character.name);
+			//draw the filled-in part:
+			GUI.BeginGroup (new Rect (40, 0, width_x * (stats.CurrentMana) / (stats.MaxMana), size.y));
+			GUI.Box (new Rect (0, 0, width_x, size.y), new GUIContent (""), style_mana);
+			GUI.EndGroup ();
+			GUI.EndGroup ();
+			GUI.EndGroup ();
+			
+			
+		}
+		
+	}
+	
 	// Use this for initialization
 	void Start () {
+		barDisplay_1 = stats.CurrentHealth;
+		barDisplay = stats.CurrentMana;
+		
+		pos = new Vector2(20,0);
+		size = new Vector2(80,20);
+		image_texture = new Texture2D(1024, 1024, TextureFormat.DXT1, false);
+		image_texture = Resources.Load<Texture2D>(image_name);
+		
+		fullTex = new Texture2D(1, 1);
+		fullTex.SetPixel(1, 1, greencolor);
+		fullTex_mana = new Texture2D(1, 1);
+		fullTex_mana.SetPixel(1, 1, bluecolor);
+		
+		
+		//int[] left_array = {10, 40, 70,100,130,160,190,220,250};
 	    
 	}
 
@@ -33,12 +138,17 @@ public class Character : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+		pause_string = "GAME IS PAUSED";
 		if (isPaused == false)
 		{
+
+			pause_string = "";
 			DeathCheck ();
 			stats.ResolveBuffs ();
 			actionQueue.Resolve ();
 			AttackCooldownDecrement ();
+			character_gui_update();
+
 
         	//if(target != null)
         	//{
@@ -304,4 +414,25 @@ public class Character : MonoBehaviour {
     public void clearActionQueue() {
         actionQueue.Clear();
     }
+
+	public void character_gui_update(){
+		barDisplay_1 = stats.CurrentHealth*100/stats.MaxHealth;
+			barDisplay = stats.CurrentMana;
+
+		if (((stats.CurrentHealth * 100)/stats.MaxHealth) > 40)
+		{
+			
+			fullTex.SetPixel(1, 1, greencolor);
+		}
+		
+		if (((stats.CurrentHealth*100)/stats.MaxHealth) <= 40)
+			
+		{
+			fullTex.SetPixel(1, 1, redcolor);
+		}
+		
+	}
+
 }
+
+

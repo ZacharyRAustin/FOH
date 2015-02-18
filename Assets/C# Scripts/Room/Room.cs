@@ -16,6 +16,16 @@ public class Room : MonoBehaviour {
     private List<Door> doors = new List<Door>();
     private List<RoomObstacle> obstacles = new List<RoomObstacle>();
 
+    void Start() {
+        count_room = 1;
+
+    }
+    void OnGUI() {
+        GUI.BeginGroup(new Rect(0, Screen.width / 2, 100, 100));
+        GUI.TextArea(new Rect(0, 0, 100, 20), "Room" + count_room.ToString());
+        GUI.EndGroup();
+    }
+
     void Update() {
         if(Input.GetButtonDown("Enter Room") && SpawnCharacteristics.canLeaveRoom())
         {
