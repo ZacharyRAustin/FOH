@@ -14,8 +14,22 @@ public class Room : MonoBehaviour {
     private RoomWall[,] walls;
     private Door[,] doors;
     private RoomObstacle[,] obstacles;
-
-    public void GenerateNextRoom() {
+	void Start(){
+		count_room = 1;
+		
+	}
+	void Update() {
+		if(Input.GetButtonDown("Enter Room") && Utilities.canLeaveRoom())
+		{
+			GenerateNextRoom();
+		}
+	}
+	void OnGUI(){
+		GUI.BeginGroup (new Rect (0, Screen.width/2, 100, 100));
+		GUI.TextArea (new Rect (0, 0, 100, 20), "Room" + count_room.ToString());
+		GUI.EndGroup ();
+	}
+	public void GenerateNextRoom() {
         foreach (RoomObstacle o in obstacles)
         {
             Destroy(o);
