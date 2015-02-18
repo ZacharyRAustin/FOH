@@ -17,12 +17,11 @@ public class Room : MonoBehaviour {
     private List<RoomObstacle> obstacles = new List<RoomObstacle>();
 
     void Start() {
-        count_room = 1;
 
     }
     void OnGUI() {
         GUI.BeginGroup(new Rect(0, Screen.width / 2, 100, 100));
-        GUI.TextArea(new Rect(0, 0, 100, 20), "Room" + count_room.ToString());
+        GUI.TextArea(new Rect(0, 0, 100, 20), "Room 1");// + SpawnCharacteristics.getDoorsEntered().ToString());
         GUI.EndGroup();
     }
 

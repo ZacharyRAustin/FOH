@@ -27,6 +27,10 @@ public class EnemyGenerator {
             enemy.stats.MaxHealth = 50;
             enemy.stats.MaxMana = 30;
             enemy.stats.Agility = 5;
+            enemy.isenemy = true;
+            enemy.position_y_health = 10 + 60 * EnemyCollection.NumberOfEnemies();
+            enemy.position_y = 40 + 60 * EnemyCollection.NumberOfEnemies();
+            enemy.image_name = "enemy_image";
             enemy.stats.Intelligence = 5;
             enemy.stats.InitializeCombatStats();
             EnemyCollection.addEnemy(enemy);
