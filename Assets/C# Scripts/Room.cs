@@ -9,6 +9,7 @@ public class Room : MonoBehaviour {
     public Door doorPrefab;
     public RoomObstacle obstaclePrefab;
     public float obstacleChance;
+	public int count_room;
 
     private RoomCell[,] cells;
     private RoomWall[,] walls;
