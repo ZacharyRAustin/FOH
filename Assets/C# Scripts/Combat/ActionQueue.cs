@@ -66,12 +66,12 @@ public class ActionQueue {
 				MovementOrder currentOrder = (MovementOrder) actionQueue.Peek ();
 				parentChar.ResolveMovementOrder(currentOrder);
 			}
-			if (actionQueue.Peek () is AttackOrder)
+			else if (actionQueue.Peek () is AttackOrder)
 			{
 				AttackOrder currentOrder = (AttackOrder) actionQueue.Peek ();
 				parentChar.ResolveAttackOrder(currentOrder);
 			}
-			if (actionQueue.Peek () is CastOrder)
+			else if (actionQueue.Peek () is CastOrder)
 			{
 				CastOrder currentOrder = (CastOrder) actionQueue.Peek ();
 				parentChar.ResolveCastOrder(currentOrder);
