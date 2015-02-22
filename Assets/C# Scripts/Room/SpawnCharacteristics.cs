@@ -18,8 +18,30 @@ public class SpawnCharacteristics{
     }
 
     public static void setNearDoor(bool near, int pos) {
+        if(pos > 0)
+        {
+            if(pos == DoorPositions.NORTH)
+            {
+                doorNum = DoorPositions.SOUTH;
+            }
+            else if(pos == DoorPositions.SOUTH)
+            {
+                doorNum = DoorPositions.NORTH;
+            }
+            else if(pos == DoorPositions.WEST)
+            {
+                doorNum = DoorPositions.EAST;
+            }
+            else if(pos == DoorPositions.EAST)
+            {
+                doorNum = DoorPositions.WEST;
+            }
+            else
+            {
+                doorNum = -1;
+            }
+        }
         nearDoor = near;
-        doorNum = pos;
     }
 
     public static int getDoorPosition() {

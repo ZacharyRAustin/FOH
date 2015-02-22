@@ -158,28 +158,27 @@ public class Room : MonoBehaviour {
         if (direction == DoorPositions.NORTH)
         {
             startX = 0;
-            startY = -(sizeY / 2) + Math.Min((sizeX * .15f), 3);
+            startY = (sizeY / 2) - Math.Min((sizeX * .15f), 3);
             startingPos = new Vector3((float)startX, (float)startY, 0f);
             useX = true;
         }
         else if (direction == DoorPositions.EAST)
         {
+            startX = (sizeX / 2) - Math.Min((sizeX * .15f), 3);
             startY = 0;
-            startX = -(sizeX / 2) + Math.Min((sizeX * .15f), 3);
             startingPos = new Vector3((float)startX, (float)startY, 0f);
-
         }
         else if (direction == DoorPositions.SOUTH)
         {
             startX = 0;
-            startY = (sizeY / 2) - Math.Min((sizeX * .15f), 3);
+            startY = -(sizeY / 2) + Math.Min((sizeX * .15f), 3);
             startingPos = new Vector3((float)startX, (float)startY, 0f);
             useX = true;
         }
         else if (direction == DoorPositions.WEST)
         {
-            startX = (sizeX / 2) - Math.Min((sizeX * .15f), 3);
             startY = 0;
+            startX = -(sizeX / 2) + Math.Min((sizeX * .15f), 3);
             startingPos = new Vector3((float)startX, (float)startY, 0f);
         }
         else
