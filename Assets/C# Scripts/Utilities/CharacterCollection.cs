@@ -90,5 +90,17 @@ public class CharacterCollection {
             heroes.Remove(c);
             Object.Destroy(c.gameObject);
         }
+
+        //SpawnCharacteristics.setAvgCharacterLevel(getAverageLevel());
+    }
+
+    private static int getAverageLevel() {
+        int ret = 0;
+        foreach(Character c in heroes)
+        {
+            //ret += c.
+        }
+
+        return 1;
     }
 }

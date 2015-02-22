@@ -16,5 +16,6 @@ public class Utilities {
     public static void prepareForGeneration() {
         CharacterCollection.prepareCharactersForSpawn();
         EnemyCollection.removeAll();
+        SpawnCharacteristics.prepareForSpawn();
     }
 }

@@ -58,12 +58,18 @@ public class GameManager : MonoBehaviour {
         if (Input.GetButtonDown("Regenerate Map"))
         {
             roomInstance.GenerateNextRoom();
+
         }
 		if (Input.GetButtonDown("Pause"))
 		{
 			isPaused = !isPaused;
             Utilities.pause(isPaused);
 		}
+
+        if(Input.GetButtonDown("Level Test"))
+        {
+            LevelingTest.PerformTest();
+        }
 
 		inputManager.Resolve ();
 
