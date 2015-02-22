@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System;
 
 public class SpawnCharacteristics{
 
@@ -12,6 +13,7 @@ public class SpawnCharacteristics{
     private static int averageCharacterLevel;
     private static int diffPerEnemy;
     private static int testCounter = 0;
+    private static int maxEnemyLevel;
 
     public static bool canLeaveRoom() {
         return EnemyCollection.allEnemiesDead() && nearDoor && doorNum > -1;
@@ -110,6 +112,7 @@ public class SpawnCharacteristics{
         int totalEnemyLevel = averageEnemyLevel * maxEnemies;
         int levelDifference = totalHeroLevel - totalEnemyLevel;
         diffPerEnemy = levelDifference / maxEnemies;
+        maxEnemyLevel = averageCharacterLevel + (int) ((double) averageCharacterLevel * .3);
         testCounter++;
     }
 
@@ -130,11 +133,13 @@ public class SpawnCharacteristics{
 
         if(bound < 0)
         {
-            return System.Math.Max(averageEnemyLevel + UnityEngine.Random.Range(bound, 0), 1);
+            int temp = Math.Max(averageEnemyLevel + UnityEngine.Random.Range(bound, 0), 1);
+            return Math.Min(temp, maxEnemyLevel);
         }
         else
         {
-            return System.Math.Max(averageEnemyLevel + UnityEngine.Random.Range(0, bound), 1);
+            int temp = Math.Max(averageEnemyLevel + UnityEngine.Random.Range(0, bound), 1);
+            return Math.Min(temp, maxEnemyLevel);
         }
 
     }
