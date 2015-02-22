@@ -8,6 +8,9 @@ public class CharacterStats {
 	//base stats
 	private int maxHealth, maxMana, strength, agility, intelligence;
 
+	//progression stats
+	private int level, currentExp, maxExp, expYield, unallocatedStatPoints;
+
 	//combat stats
 	private int currentHealth, currentMana, armor, magicResist;
 	private int attackDamage;
@@ -55,6 +58,37 @@ public class CharacterStats {
 	{
 		get { return intelligence; }
 		set { intelligence = value; }
+	}
+
+	//progression stat properties
+	public int Level
+	{
+		get { return level; }
+		set { level = value; }
+	}
+
+	public int CurrentExp
+	{
+		get { return currentExp; }
+		set { currentExp = value; }
+	}
+
+	public int MaxExp
+	{
+		get { return maxExp; }
+		set { maxExp = value; }
+	}
+
+	public int ExpYield
+	{
+		get { return expYield; }
+		set { expYield = value; }
+	}
+
+	public int UnallocatedStatPoints
+	{
+		get { return unallocatedStatPoints; }
+		set { unallocatedStatPoints = value; }
 	}
 
 	//combat stat properties
@@ -179,6 +213,15 @@ public class CharacterStats {
 		}
 	}
 
+	public void InitializeBaseStats ()
+	{
+		maxHealth = 30;
+		maxMana = 20;
+		strength = 5;
+		agility = 5;
+		intelligence = 5;
+	}
+
 	public void InitializeCombatStats ()
 	{
 		currentHealth = maxHealth;
@@ -193,6 +236,14 @@ public class CharacterStats {
 		attackRange = 1.3f;
 		attackRate = 1.0f;
 		moveSpeed = 2.0f;
+	}
+
+	public void InitializeProgressionStats ()
+	{
+		level = 1;
+		currentExp = 0;
+		maxExp = 10;
+		unallocatedStatPoints = 0;
 	}
 
 	// Ability and Buff list management

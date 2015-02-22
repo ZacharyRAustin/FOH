@@ -43,6 +43,11 @@ public class EnemyCollection {
         }
     }
 
+	public static void removeEnemy(Character enemy)
+	{
+		enemies.Remove (enemy);
+	}
+
     public static void removeAll() {
         List<Character> destroy = new List<Character>(enemies);
         enemies.Clear();

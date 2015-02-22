@@ -34,6 +34,7 @@ public class InputManager {
 
 		CancelCheck ();
 		SpellTarget ();
+		AllocateStatPoints ();
 
 		if (Input.GetButtonDown ("Select Character A"))
 		{
@@ -194,6 +195,53 @@ public class InputManager {
 			Debug.Log ("Cancel");
 			selected.actionQueue.Clear();
 			selected.PlayerCastInterrupt();
+		}
+	}
+
+	void AllocateStatPoints()
+	{
+		if (selected.stats.UnallocatedStatPoints > 0)
+		{
+			if (Input.GetButtonDown("Level HP"))
+			{
+				selected.stats.MaxHealth += 5;
+				selected.stats.UnallocatedStatPoints -= 1;
+				Debug.Log ("Raised HP. " + selected.stats.Name + "'s Max HP is now " + selected.stats.MaxHealth + ".");
+				Debug.Log (selected.stats.UnallocatedStatPoints + " points left to spend.");
+				selected.stats.InitializeCombatStats();
+			}
+			else if (Input.GetButtonDown("Level Mana"))
+			{
+				selected.stats.MaxMana += 5;
+				selected.stats.UnallocatedStatPoints -= 1;
+				Debug.Log ("Raised Mana. " + selected.stats.Name + "'s Max Mana is now " + selected.stats.MaxMana + ".");
+				Debug.Log (selected.stats.UnallocatedStatPoints + " points left to spend.");
+				selected.stats.InitializeCombatStats();
+			}
+			else if (Input.GetButtonDown("Level Strength"))
+			{
+				selected.stats.Strength += 1;
+				selected.stats.UnallocatedStatPoints -= 1;
+				Debug.Log ("Raised Strength. " + selected.stats.Name + "'s Strength is now " + selected.stats.Strength + ".");
+				Debug.Log (selected.stats.UnallocatedStatPoints + " points left to spend.");
+				selected.stats.InitializeCombatStats();
+			}
+			else if (Input.GetButtonDown("Level Agility"))
+			{
+				selected.stats.Agility += 1;
+				selected.stats.UnallocatedStatPoints -= 1;
+				Debug.Log ("Raised Agility. " + selected.stats.Name + "'s Agility is now " + selected.stats.Agility + ".");
+				Debug.Log (selected.stats.UnallocatedStatPoints + " points left to spend.");
+				selected.stats.InitializeCombatStats();
+			}
+			else if (Input.GetButtonDown("Level Intelligence"))
+			{
+				selected.stats.Intelligence += 1;
+				selected.stats.UnallocatedStatPoints -= 1;
+				Debug.Log ("Raised Intelligence. " + selected.stats.Name + "'s Intelligence is now " + selected.stats.Intelligence + ".");
+				Debug.Log (selected.stats.UnallocatedStatPoints + " points left to spend.");
+				selected.stats.InitializeCombatStats();
+			}
 		}
 	}
 

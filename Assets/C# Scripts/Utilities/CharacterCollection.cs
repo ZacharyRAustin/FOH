@@ -14,6 +14,11 @@ public class CharacterCollection {
         heroes.Add(hero);
     }
 
+	public static void removeHero(Character hero)
+	{
+		heroes.Remove (hero);
+	}
+
     public static int NumberOfHeroes() {
         return heroes.Count;
     }
@@ -91,4 +96,12 @@ public class CharacterCollection {
             Object.Destroy(c.gameObject);
         }
     }
+
+	public static void heroExpGain(int exp)
+	{
+		foreach(Character c in heroes)
+		{
+			c.GainExp(exp);
+		}
+	}
 }
