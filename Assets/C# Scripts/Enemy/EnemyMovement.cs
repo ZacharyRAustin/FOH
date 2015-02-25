@@ -36,6 +36,10 @@ public class EnemyMovement : MonoBehaviour {
         if(!thisCharacter.isPaused)
         {
             death();
+            if(target == null)
+            {
+                checkForTarget();
+            }
             move();
             AttackCooldownDecrement();
             currentPosition = thisCharacter.getCharacterPosition();
@@ -170,5 +174,16 @@ public class EnemyMovement : MonoBehaviour {
 		//thisCharacter.getCharacter().transform.localPosition += movementDirection * Time.deltaTime * thisCharacter.stats.MoveSpeed;
 	}
 
+    private void checkForTarget() {
+        for(int i = 0; i < CharacterCollection.NumberOfHeroes(); i++)
+        {
+            if(Vector3.Distance (currentPosition, CharacterCollection.getHero(i).getCharacterPosition()) < detectRange)
+            {
+                target = CharacterCollection.getHero(i);
+                targetPosition = target.getCharacterPosition();
+                return;
+            }
+        }
+    }
 
 }
