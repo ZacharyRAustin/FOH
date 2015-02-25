@@ -358,6 +358,7 @@ public class Character : MonoBehaviour {
 
 		if (attackTarget.isDead == true)
 		{
+            character.idle();
 			Debug.Log ("Attack target of " + stats.Name + " is dead. Cancelling attack order");
 			actionQueue.Pop ();
 		}
@@ -444,6 +445,10 @@ public class Character : MonoBehaviour {
 		}
 		
 	}
+
+    public void setCharacterIdle() {
+        character.idle();
+    }
 
 }
 

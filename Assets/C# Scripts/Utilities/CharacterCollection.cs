@@ -82,6 +82,7 @@ public class CharacterCollection {
             {
                 c.removeVelocities();
                 c.clearActionQueue();
+                c.setCharacterIdle();
             }
         }
 
