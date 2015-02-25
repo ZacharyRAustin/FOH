@@ -35,6 +35,7 @@ public class EnemyGenerator {
             enemy.stats.InitializeCombatStats();
             enemy.gameObject.AddComponent("EnemyMovement");
             EnemyCollection.addEnemy(enemy);
+            Debug.Log("Level for " + enemyName + " is " + SpawnCharacteristics.generateNewEnemyLevel());
             return numEnemies;
         }
         else

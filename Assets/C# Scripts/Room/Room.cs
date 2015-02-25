@@ -41,7 +41,6 @@ public class Room : MonoBehaviour {
         Utilities.prepareForGeneration();
         GenerateRandomObjects();
         SpawnCharacters(SpawnCharacteristics.getDoorPosition());
-        SpawnCharacteristics.increaseDoorsEntered();
     }
 
     private void GenerateRandomObjects(int x, int y) {
@@ -165,7 +164,7 @@ public class Room : MonoBehaviour {
         }
         else if (direction == DoorPositions.EAST)
         {
-            startX = (sizeX / 2) - Math.Min((sizeX  * .15f), 3);
+            startX = (sizeX / 2) - Math.Min((sizeX * .15f), 3);
             startY = 0;
             startingPos = new Vector3((float)startX, (float)startY, 0f);
         }
