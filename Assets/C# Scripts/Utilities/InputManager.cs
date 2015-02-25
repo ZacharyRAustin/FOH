@@ -38,6 +38,8 @@ public class InputManager {
 		if (Input.GetButtonDown ("Select Character A"))
 		{
 			selected = CharacterCollection.getHero(0);
+			CharacterCollection.getHero(0).is_selected = false;
+			selected.is_selected = false;
 			Debug.Log ("Character A selected");
 		}
 		else if (Input.GetButtonDown ("Select Character B"))
@@ -53,7 +55,7 @@ public class InputManager {
 		
 		if (Input.GetMouseButtonDown(1)) //right click
 		{
-			Debug.Log ("Right click");
+			//Debug.Log ("Right click");
 			CharacterMouseCheck();
 
 			if (isCharacterUnderMouse == false) //player right clicked on ground, issue move order
@@ -63,12 +65,12 @@ public class InputManager {
 					if (Input.GetButton ("Queue"))
 					{
 						selected.Enqueue(mousePosition);
-						Debug.Log ("Queueing move order to " + mousePosition.x + ", " + mousePosition.y);
+						//Debug.Log ("Queueing move order to " + mousePosition.x + ", " + mousePosition.y);
 					}
 					else
 					{
 						selected.Overwrite(mousePosition);
-						Debug.Log ("Clearing queue, queueing move order to " + mousePosition.x + ", " + mousePosition.y);
+						//Debug.Log ("Clearing queue, queueing move order to " + mousePosition.x + ", " + mousePosition.y);
 					}
 				}
 			}
@@ -77,33 +79,35 @@ public class InputManager {
 				if (Input.GetButton ("Queue"))
 				{
 					selected.Enqueue(characterUnderMouse);
-					Debug.Log ("Queueing attack order on " + characterUnderMouse.name);
+					//Debug.Log ("Queueing attack order on " + characterUnderMouse.name);
 				}
 				else
 				{
 					selected.Overwrite(characterUnderMouse);
-					Debug.Log ("Clearing queue, queueing attack order on " + characterUnderMouse.name);
+					//Debug.Log ("Clearing queue, queueing attack order on " + characterUnderMouse.name);
 				}
 			}
 		}
 
-		if (Input.GetMouseButtonDown (0) && selected.playerCasting == false) //left click
-		{
-			CharacterMouseCheck ();
-			Debug.Log ("Left click");
+		if (Input.GetMouseButtonDown (0) && selected.playerCasting == false) { //left click
+						CharacterMouseCheck ();
+						Debug.Log ("Left click");
 
-			if (isCharacterUnderMouse)
-			{
-				for (int i = 0; i <= 2; i++)
-				{
-                    if (CharacterCollection.getHero(i) == characterUnderMouse)
-					{
-						selected = characterUnderMouse;
-						Debug.Log ("Click selected " + selected.name);
-					}
+						if (isCharacterUnderMouse) {
+								for (int i = 0; i <= 2; i++) {
+										if (CharacterCollection.getHero (i) == characterUnderMouse) {
+												selected = characterUnderMouse;
+												Debug.Log (selected.is_selected);
+												selected.is_selected = true;
+												Debug.Log (selected.is_selected);
+												Debug.Log ("Click selected " + selected.name);
+										} else {
+												CharacterCollection.getHero (i).is_selected = false;
+										}
+		
+								}
+						}
 				}
-			}
-		}
 
 		if (selected.playerCasting == false)
 		{

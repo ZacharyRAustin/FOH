@@ -21,7 +21,6 @@ public class EnemyGenerator {
             enemy.characterPrefab.name = "Enemy " + numEnemies + " Prefab";
             enemy.characterPrefab.SetParentChar(enemy);
             enemy.Generate(pos.x, pos.y);
-            //enemy.setMaterial(enemyMaterial);
             enemy.name = enemyName;
             enemy.stats.Name = enemyName;
             enemy.stats.MaxHealth = 50;
@@ -35,7 +34,6 @@ public class EnemyGenerator {
             enemy.stats.InitializeCombatStats();
             enemy.gameObject.AddComponent("EnemyMovement");
             EnemyCollection.addEnemy(enemy);
-            Debug.Log("Level for " + enemyName + " is " + SpawnCharacteristics.generateNewEnemyLevel());
             return numEnemies;
         }
         else

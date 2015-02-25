@@ -84,7 +84,7 @@ public class SpawnCharacteristics{
         averageCharacterLevel = l;
     }
 
-    private static void increaseDoorsEntered() {
+    public static void increaseDoorsEntered() {
         doorsEntered++;
     }
 

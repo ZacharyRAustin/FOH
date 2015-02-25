@@ -21,7 +21,7 @@ public class Room : MonoBehaviour {
     }
     void OnGUI() {
         GUI.BeginGroup(new Rect(0, Screen.height-50, 100, 100));
-        GUI.TextArea(new Rect(0, 0, 100, 20), "Room 1");// + SpawnCharacteristics.getDoorsEntered().ToString());
+        GUI.TextArea(new Rect(0, 0, 100, 20),"Room " + SpawnCharacteristics.getDoorsEntered().ToString());
         GUI.EndGroup();
     }
 
@@ -41,6 +41,7 @@ public class Room : MonoBehaviour {
         Utilities.prepareForGeneration();
         GenerateRandomObjects();
         SpawnCharacters(SpawnCharacteristics.getDoorPosition());
+        SpawnCharacteristics.increaseDoorsEntered();
     }
 
     private void GenerateRandomObjects(int x, int y) {
