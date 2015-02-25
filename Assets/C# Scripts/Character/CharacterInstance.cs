@@ -25,19 +25,30 @@ public class CharacterInstance : MonoBehaviour {
 
 	public void walk ()
 	{
+		anim.SetBool ("run", false);
 		anim.SetBool ("walk", true);
+		anim.SetBool ("idle", false);
+		anim.SetBool ("attack", false);
+	}
+
+	public void run ()
+	{
+		anim.SetBool ("run", true);
+		anim.SetBool ("walk", false);
 		anim.SetBool ("idle", false);
 		anim.SetBool ("attack", false);
 	}
 
 	public void idle ()
 	{
+		anim.SetBool ("run", false);
 		anim.SetBool ("walk", false);
 		anim.SetBool ("attack", false);
 		anim.SetBool ("idle", true);
 	}
 
 	public void attack () {
+		anim.SetBool ("run", false);
 		anim.SetBool ("walk", false);
 		anim.SetBool ("idle", false);
 		anim.SetBool ("attack", true);

@@ -12,8 +12,14 @@ public class GameManager : MonoBehaviour {
 
 	private Character selected;
 
-    public Character characterPrefab;
-    private Character playerCharA;
+    public Character characterPrefab1;
+	public Character characterPrefab2;
+	public Character characterPrefab3;
+	public Character trollPrefab;
+    
+
+
+	private Character playerCharA;
 	private Character playerCharB;
 	private Character playerCharC;
 	private Character enemy;
@@ -26,7 +32,7 @@ public class GameManager : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
         Random.seed = seed;
-        EnemyGenerator.Initialize(characterPrefab, enemyMaterial);
+        EnemyGenerator.Initialize(trollPrefab, enemyMaterial);
         BeginGame();
 		CharacterCollection.addHero (playerCharA);
         CharacterCollection.addHero(playerCharB);
@@ -44,13 +50,10 @@ public class GameManager : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-//=======
-//        inputManager.Allies = allies;
-//        inputManager.Enemies = enemies;
 
         if(EnemyCollection.getEnemy(0) != null)
         {
-            setEnemyTarget (EnemyCollection.getEnemy(0));
+            setEnemyTarget ();
         }
 		
 
@@ -72,7 +75,7 @@ public class GameManager : MonoBehaviour {
     private void BeginGame() {
         roomInstance = Instantiate(roomPrefab) as Room;
         roomInstance.Generate();
-        playerCharA = Instantiate (characterPrefab) as Character;
+        playerCharA = Instantiate (characterPrefab1) as Character;
 		playerCharA.characterPrefab.SetParentChar(playerCharA);
 		playerCharA.characterPrefab.name = "Hero A Prefab";
         playerCharA.Generate();
@@ -91,7 +94,7 @@ public class GameManager : MonoBehaviour {
 		playerCharA.stats.Intelligence = 5;
 		playerCharA.stats.InitializeCombatStats ();
 
-		playerCharB = Instantiate (characterPrefab) as Character;
+		playerCharB = Instantiate (characterPrefab2) as Character;
 		playerCharB.characterPrefab.name = "Hero B Prefab";
 		playerCharB.characterPrefab.SetParentChar(playerCharB);
         playerCharB.Generate();
@@ -119,7 +122,7 @@ public class GameManager : MonoBehaviour {
 		Frostbolt frostbolt = new Frostbolt ();
 		frostbolt.Start ();
 
-		playerCharC = Instantiate (characterPrefab) as Character;
+		playerCharC = Instantiate (characterPrefab3) as Character;
 		playerCharC.characterPrefab.name = "Hero C Prefab";
 		playerCharC.characterPrefab.SetParentChar(playerCharC);
         playerCharC.Generate();
@@ -142,50 +145,23 @@ public class GameManager : MonoBehaviour {
 		playerCharC.stats.abilities.Add (heal);
 		playerCharC.stats.abilities.Add (frostbolt);
   }
-//=======
-//        //playerCharC.Anim = playerCharC.characterPrefab.GetComponent<Animator> ();
-
-//        // initialize enemy
-//        enemy = Instantiate(characterPrefab) as Character;
-//        enemy.characterPrefab.name = "Enemy Prefab";
-//        enemy.characterPrefab.SetParentChar(enemy);
-//        enemy.Generate(2.7f, 5.0f);
-//        enemy.setMaterial(enemyMaterial);
-//        enemy.name = "Enemy";
-//        enemy.stats.Name = "Enemy";
-//        enemy.stats.MaxHealth = 50;
-//        enemy.stats.MaxMana = 30;
-//        enemy.stats.Strength = 10;
-//        enemy.stats.Agility = 5;
-//        enemy.stats.Intelligence = 5;
-//        enemy.stats.InitializeCombatStats ();
-
-//        allies.addHero (playerCharA);
-//        allies.addHero (playerCharB);
-//        allies.addHero (playerCharC);
-//        enemies.addEnemy (enemy);
-		
-//        setEnemyTarget (enemy, allies);
-
-//        // add enemy movement to enemy
-//        enemy.gameObject.AddComponent ("EnemyMovement");
 
 
+	private void setEnemyTarget() {
+		for (int i = 0; i < EnemyCollection.NumberOfEnemies(); i++) {
 
-//    }
-
-	private void setEnemyTarget(Character enemy) {
-		Character closestHero = CharacterCollection.getHero(0);
-		float closestDistance = 1000.0f;
-		Vector3 enemyPosition = enemy.getCharacterPosition ();
-		for (int i = 0; i < CharacterCollection.NumberOfHeroes(); i++) {
-			Vector3 heroPosition = CharacterCollection.getHero(i).getCharacterPosition();
-			if (Vector3.Distance (enemyPosition, heroPosition) < closestDistance) {
-				closestDistance = Vector3.Distance (enemyPosition, heroPosition);
-				closestHero = CharacterCollection.getHero(i);
+			Character closestHero = CharacterCollection.getHero(0);
+			float closestDistance = 1000.0f;
+			Vector3 enemyPosition = EnemyCollection.getEnemy(i).getCharacterPosition ();
+			for (int j = 0; j < CharacterCollection.NumberOfHeroes(); j++) {
+				Vector3 heroPosition = CharacterCollection.getHero(j).getCharacterPosition();
+				if (Vector3.Distance (enemyPosition, heroPosition) < closestDistance) {
+					closestDistance = Vector3.Distance (enemyPosition, heroPosition);
+					closestHero = CharacterCollection.getHero(j);
+				}
 			}
+			EnemyCollection.getEnemy(i).Target = closestHero;
 		}
-		enemy.Target = closestHero;
 	}
 
     private void RestartGame() {

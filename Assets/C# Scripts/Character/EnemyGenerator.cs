@@ -21,7 +21,7 @@ public class EnemyGenerator {
             enemy.characterPrefab.name = "Enemy " + numEnemies + " Prefab";
             enemy.characterPrefab.SetParentChar(enemy);
             enemy.Generate(pos.x, pos.y);
-            enemy.setMaterial(enemyMaterial);
+            //enemy.setMaterial(enemyMaterial);
             enemy.name = enemyName;
             enemy.stats.Name = enemyName;
             enemy.stats.MaxHealth = 50;

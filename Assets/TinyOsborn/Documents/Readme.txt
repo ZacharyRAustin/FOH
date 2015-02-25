@@ -1,8 +1,10 @@
-Tiny Knight, Osborn
-===================
+Tiny Warrior
+============
 
 Low-poly modeled.
+Rigged mecanim compatible.
 Package contains 3DMax file.
+Included side scroll demo with parallax background.
 
 Contact :
 - Homepage Link : http://buntgames.com
