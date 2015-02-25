@@ -452,7 +452,6 @@ public class Character : MonoBehaviour {
     public void setCharacterIdle() {
         character.idle();
     }
-
 }
 
 

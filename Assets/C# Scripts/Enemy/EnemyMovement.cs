@@ -33,14 +33,17 @@ public class EnemyMovement : MonoBehaviour {
 	}
 
 	void Update () {
-		death ();
-		move ();
-		AttackCooldownDecrement ();
-		currentPosition = thisCharacter.getCharacterPosition ();
-		target = thisCharacter.Target;
-        if(target != null)
+        if(!thisCharacter.isPaused)
         {
-            targetPosition = target.getCharacterPosition();
+            death();
+            move();
+            AttackCooldownDecrement();
+            currentPosition = thisCharacter.getCharacterPosition();
+            target = thisCharacter.Target;
+            if (target != null)
+            {
+                targetPosition = target.getCharacterPosition();
+            }
         }
 	}
 
@@ -86,7 +89,7 @@ public class EnemyMovement : MonoBehaviour {
 			thisCharacter.getCharacter ().animation.Play ("Run");
 			moveBetweenPositions (currentPosition, targetPosition, chasingSpeed);
 		} 
-		else if (Vector3.Distance (currentPosition, targetPosition) < attackRange) {
+		else if (target != null && Vector3.Distance (currentPosition, targetPosition) < attackRange) {
 			attack ();
 		}
 		// when enemy doesn't detect a target
@@ -142,8 +145,8 @@ public class EnemyMovement : MonoBehaviour {
 	}
 
 	private void attack () {
-		thisCharacter.getCharacter ().animation.Play ("Attack_02");
-		if(attackCooldown == 0){
+		if(attackCooldown == 0 && target != null){
+            thisCharacter.getCharacter().animation.Play("Attack_02");
 			combatManager.Hit (thisCharacter, target);				
 			attackCooldown = thisCharacter.stats.AttackRate;
 		}
@@ -151,7 +154,8 @@ public class EnemyMovement : MonoBehaviour {
 
 	private void death() {
 		if (thisCharacter.stats.CurrentHealth == 0) {
-			Destroy(this.gameObject);
+            //Destroy(this.gameObject);
+            EnemyCollection.removeAndDestroyEnemy(thisCharacter);
 			Debug.Log("hi");
 		}
 	}

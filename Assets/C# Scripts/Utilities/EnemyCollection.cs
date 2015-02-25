@@ -43,12 +43,23 @@ public class EnemyCollection {
         }
     }
 
+    public static void removeAndDestroyEnemy(Character c) {
+        if(c != null)
+        {
+            enemies.Remove(c);
+            Object.Destroy(c.gameObject);
+        }
+    }
+
     public static void removeAll() {
         List<Character> destroy = new List<Character>(enemies);
         enemies.Clear();
         foreach(Character c in destroy)
         {
-            Object.Destroy(c.gameObject);
+            if(c != null && c.gameObject != null)
+            {
+                Object.Destroy(c.gameObject);
+            }
         }
     }
 
