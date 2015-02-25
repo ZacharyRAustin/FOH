@@ -22,7 +22,7 @@ public class Character : MonoBehaviour {
 
     private int status = CharacterStatus.WAITING;
 	
-
+		
 
 	// ---properties---
 	public Character Target {
@@ -30,6 +30,9 @@ public class Character : MonoBehaviour {
 		set {target = value;}
 	}
 
+	public CharacterInstance getCharacter () {
+		return character;
+	}
 
 
 
@@ -342,7 +345,7 @@ public class Character : MonoBehaviour {
 		}
 		else
 		{
-			character.walk();
+			character.run();
 			movementDirection.Normalize();
 			character.transform.rotation = Quaternion.LookRotation(movementDirection, new Vector3(0, 0, -1.0f));
 			character.transform.localPosition += movementDirection * Time.deltaTime * stats.MoveSpeed;
@@ -365,7 +368,7 @@ public class Character : MonoBehaviour {
 
 		if (attackDistance > stats.AttackRange)
 		{ //if out of range, move towards target
-			character.walk();
+			character.run();
 			attackVector.Normalize();
 			character.transform.rotation = Quaternion.LookRotation(attackVector, new Vector3(0, 0, -1.0f));
 			character.transform.localPosition += attackVector * Time.deltaTime * stats.MoveSpeed;
