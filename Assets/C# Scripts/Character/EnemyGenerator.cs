@@ -31,6 +31,7 @@ public class EnemyGenerator {
             enemy.position_y = 40 + 60 * EnemyCollection.NumberOfEnemies();
             enemy.image_name = "enemy_image";
             enemy.stats.Intelligence = 5;
+			enemy.stats.ExpYield = 4;
             enemy.stats.InitializeCombatStats();
             enemy.gameObject.AddComponent("EnemyMovement");
             EnemyCollection.addEnemy(enemy);

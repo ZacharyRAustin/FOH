@@ -101,13 +101,9 @@ public class GameManager : MonoBehaviour {
 		playerCharA.image_name = "hero_image";
 		playerCharA.tag = "Hero A";
 		playerCharA.name = "Hero A";
-		playerCharA.stats.Name = "Hero A";
-		playerCharA.stats.MaxHealth = 50;
-		playerCharA.stats.MaxMana = 30;
-		playerCharA.stats.Strength = 7;
-		playerCharA.stats.Agility = 5;
-		playerCharA.stats.Intelligence = 5;
+		playerCharA.stats.InitializeBaseStats ();
 		playerCharA.stats.InitializeCombatStats ();
+		playerCharA.stats.InitializeProgressionStats ();
 
 		playerCharB = Instantiate (characterPrefab2) as Character;
 		playerCharB.characterPrefab.name = "Hero B Prefab";
@@ -121,13 +117,10 @@ public class GameManager : MonoBehaviour {
 		playerCharB.tag = "Hero B";
 		playerCharB.name = "Hero B";
 		playerCharB.stats.Name = "Hero B";
-		playerCharB.stats.MaxHealth = 40;
-		playerCharB.stats.MaxMana = 30;
-		playerCharB.stats.Strength = 5;
-		playerCharB.stats.Agility = 8;
-		playerCharB.stats.Intelligence = 5;
+		playerCharB.stats.InitializeBaseStats ();
 		playerCharB.stats.InitializeCombatStats ();
-		playerCharB.stats.AttackRange = 5.0f;
+		playerCharB.stats.InitializeProgressionStats ();
+		playerCharB.stats.AttackRange = 7.0f;
 		//playerCharB.Anim = playerCharB.characterPrefab.GetComponent<Animator> ();
 		//playerCharB.Anim.SetBool ("walk 0", true);
 		//Debug.Log (playerCharB.Anim);
@@ -149,12 +142,9 @@ public class GameManager : MonoBehaviour {
 		playerCharC.isenemy = false;
 		playerCharC.image_name = "hero_image";
 		playerCharC.stats.Name = "Hero C";
-		playerCharC.stats.MaxHealth = 30;
-		playerCharC.stats.MaxMana = 50;
-		playerCharC.stats.Strength = 3;
-		playerCharC.stats.Agility = 5;
-		playerCharC.stats.Intelligence = 8;
+		playerCharC.stats.InitializeBaseStats ();
 		playerCharC.stats.InitializeCombatStats ();
+		playerCharC.stats.InitializeProgressionStats ();
 		playerCharC.stats.AttackRange = 4.0f;
 		playerCharC.stats.MagicAttack = true;
 		playerCharC.stats.abilities.Add (heal);
@@ -233,6 +223,16 @@ public class GameManager : MonoBehaviour {
 		}
 		
 		
+	}
+
+	private void RemoveHero(Character hero)
+	{
+		CharacterCollection.removeHero (hero);
+	}
+
+	private void RemoveEnemy(Character enemy)
+	{
+		EnemyCollection.removeEnemy (enemy);
 	}
 
 }
