@@ -21,7 +21,7 @@ public class Room : MonoBehaviour {
     }
     void OnGUI() {
         GUI.BeginGroup(new Rect(0, Screen.height-50, 100, 100));
-        GUI.TextArea(new Rect(0, 0, 100, 20),"Room " + SpawnCharacteristics.getDoorsEntered().ToString());
+        GUI.TextArea(new Rect(0, 0, 100, 20),"Room " + (SpawnCharacteristics.getDoorsEntered()-1).ToString());
         GUI.EndGroup();
     }
 

@@ -503,7 +503,7 @@ public class Character : MonoBehaviour
 	{
 		if (isenemy == false)
 		{
-			stats.CurrentExp += exp;
+            stats.CurrentExp += exp;
 			Debug.Log (stats.Name + " has gained " + exp + " exp! (" + stats.CurrentExp + "/" + stats.MaxExp + ")");
 			if (stats.CurrentExp >= stats.MaxExp)
 			{
