@@ -160,7 +160,8 @@ public class EnemyMovement : MonoBehaviour {
 		if (thisCharacter.stats.CurrentHealth == 0) {
             //Destroy(this.gameObject);
             EnemyCollection.removeAndDestroyEnemy(thisCharacter);
-			Debug.Log("hi");
+			Debug.Log("EnemyMovement.Death()");
+			CharacterCollection.heroExpGain(thisCharacter.stats.ExpYield);
 		}
 	}
 

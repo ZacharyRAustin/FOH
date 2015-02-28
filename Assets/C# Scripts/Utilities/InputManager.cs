@@ -137,7 +137,7 @@ public class InputManager {
 
 	void SpellCast (int index)
 	{
-		Ability spell = selected.stats.abilities.ToArray () [index];
+		RandomAbility spell = selected.stats.abilities.ToArray () [index];
 		if (spell == null)
 		{
 			Debug.Log ("No spell in that slot");
@@ -251,7 +251,7 @@ public class InputManager {
 
 	void SpellTarget ()
 	{
-		Ability spell = selected.currentSpell;
+		RandomAbility spell = selected.currentSpell;
 		if (selected.playerCasting)
 		{
 			if (spell.targetOption == AbilityTargetOption.TARGET_ALLY)
@@ -280,7 +280,7 @@ public class InputManager {
 					CharacterMouseCheck();
 					if (isCharacterUnderMouse)
 					{
-						for (int i = 0; i <= EnemyCollection.NumberOfEnemies(); i++)
+						for (int i = 0; i < EnemyCollection.NumberOfEnemies(); i++)
 						{
 							if (EnemyCollection.getEnemy(i) == characterUnderMouse)
 							{

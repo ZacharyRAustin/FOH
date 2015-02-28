@@ -61,12 +61,13 @@ public class GameManager : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 
-        if(EnemyCollection.getEnemy(0) != null)
-        {
-            setEnemyTarget ();
-        }
-		
-
+		if (EnemyCollection.NumberOfEnemies() > 0)
+		{
+        	if(EnemyCollection.getEnemy(0) != null)
+        	{
+        	    setEnemyTarget ();
+        	}
+		}
 
         if (Input.GetButtonDown("Regenerate Map"))
         {
@@ -83,6 +84,54 @@ public class GameManager : MonoBehaviour {
         {
             LevelingTest.PerformTest();
         }
+
+		if (Input.GetButtonDown("Ability Test Char A"))
+		{
+			AbilityParameters param = new AbilityParameters(Random.Range(1,4));
+			RandomAbility s = new RandomAbility();
+			s.SetAbility(param);
+			playerCharA.stats.AddAbility(s);
+			s.Print ();
+			s.caster = playerCharA;
+		}
+		else if (Input.GetButtonDown ("Ability Test Char B"))
+		{
+			AbilityParameters param = new AbilityParameters(Random.Range (1,4));
+			RandomAbility s = new RandomAbility();
+			s.SetAbility(param);
+			playerCharB.stats.AddAbility(s);
+			s.Print ();
+			s.caster = playerCharB;
+		}
+		else if (Input.GetButtonDown ("Ability Test Char C"))
+		{
+			AbilityParameters param = new AbilityParameters(Random.Range (1,4));
+			RandomAbility s = new RandomAbility();
+			s.SetAbility(param);
+			playerCharC.stats.AddAbility(s);
+			s.Print ();
+			s.caster = playerCharC;
+		}
+
+		if (Input.GetButtonDown ("Buff Test"))
+		{
+			MoveSpeedBuff slow1 = new MoveSpeedBuff();
+			DodgeRateBuff evasion1 = new DodgeRateBuff();
+			AttackRateBuff attackRate1 = new AttackRateBuff();
+			slow1.duration = 5;
+			evasion1.duration = 5;
+			attackRate1.duration = 10;
+			slow1.magnitude = .5f;
+			evasion1.magnitude = 2;
+			attackRate1.magnitude = .5f;
+			slow1.target = playerCharA;
+			evasion1.target = playerCharA;
+			attackRate1.target = playerCharA;
+			playerCharA.stats.AddBuff(slow1);
+			playerCharA.stats.AddBuff(evasion1);
+			playerCharA.stats.AddBuff(attackRate1);
+		}
+
 		inputManager.Resolve ();
 
 	}
@@ -125,10 +174,10 @@ public class GameManager : MonoBehaviour {
 		//playerCharB.Anim.SetBool ("walk 0", true);
 		//Debug.Log (playerCharB.Anim);
 
-		Heal heal = new Heal ();
+		/*Heal heal = new Heal ();
 		heal.Start ();
 		Frostbolt frostbolt = new Frostbolt ();
-		frostbolt.Start ();
+		frostbolt.Start ();*/
 
 		playerCharC = Instantiate (characterPrefab3) as Character;
 		playerCharC.characterPrefab.name = "Hero C Prefab";
@@ -147,8 +196,6 @@ public class GameManager : MonoBehaviour {
 		playerCharC.stats.InitializeProgressionStats ();
 		playerCharC.stats.AttackRange = 4.0f;
 		playerCharC.stats.MagicAttack = true;
-		playerCharC.stats.abilities.Add (heal);
-		playerCharC.stats.abilities.Add (frostbolt);
   }
 
 
@@ -234,5 +281,6 @@ public class GameManager : MonoBehaviour {
 	{
 		EnemyCollection.removeEnemy (enemy);
 	}
+
 
 }

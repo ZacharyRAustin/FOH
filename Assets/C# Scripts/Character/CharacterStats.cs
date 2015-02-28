@@ -20,7 +20,7 @@ public class CharacterStats {
 	private float attackRange = 1.30f, attackRate = 1f, moveSpeed = 1f;
 	private bool magicAttack;
 
-	public List<Ability> abilities = new List<Ability>();
+	public List<RandomAbility> abilities = new List<RandomAbility>();
 	private List<Buff> buffs = new List<Buff>();
 
 	//base stat properties
@@ -215,8 +215,8 @@ public class CharacterStats {
 
 	public void InitializeBaseStats ()
 	{
-		maxHealth = 30;
-		maxMana = 20;
+		maxHealth = 50;
+		maxMana = 30;
 		strength = 5;
 		agility = 5;
 		intelligence = 5;
@@ -247,7 +247,7 @@ public class CharacterStats {
 	}
 
 	// Ability and Buff list management
-	public Ability GetAbility (int index)
+	public RandomAbility GetAbility (int index)
 	{
 		if(-1 < index && index < abilities.Count)
 		{
@@ -260,9 +260,28 @@ public class CharacterStats {
 		}
 	}
 
+	public void AddAbility (RandomAbility s)
+	{
+		if (abilities.Count < 5)
+		{
+			abilities.Add (s);
+		}
+		else
+		{
+			Debug.Log ("This character already has 5 abilities!");
+		}
+	}
+
 	public void AddBuff (Buff buff)
 	{
-		buffs.Add (buff);
+		if (buffs.Contains(buff)) //buffs cannot stack
+		{
+			buff.elapsedTime = .01f; //reset duration, but do not set to 0
+		}
+		else
+		{
+			buffs.Add (buff);
+		}
 	}
 
 	public void RemoveBuff (Buff buff)

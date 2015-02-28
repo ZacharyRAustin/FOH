@@ -15,7 +15,7 @@ public class Character : MonoBehaviour
     private float timeUntilCast = 0f;
     private CombatManager combatManager = new CombatManager();
     private InputManager inputManager = new InputManager();
-    public Ability currentSpell;
+    public RandomAbility currentSpell;
     private Character target;
     private GameObject cube;
     public bool isPaused;
@@ -214,6 +214,16 @@ public class Character : MonoBehaviour
             //}
         }
         removeVelocities();
+
+		if (stats.CurrentHealth > stats.MaxHealth)
+		{
+			stats.CurrentHealth = stats.MaxHealth;
+		}
+
+		if (stats.CurrentMana > stats.MaxMana)
+		{
+			stats.CurrentMana = stats.MaxMana;
+		}
     }
 
     void DeathCheck() {
@@ -253,21 +263,21 @@ public class Character : MonoBehaviour
         actionQueue.Overwrite(c);
     }
 
-    public void Enqueue(Ability s, Character c, Vector3 p) //cast order
+    public void Enqueue(RandomAbility s, Character c, Vector3 p) //cast order
     {
         actionQueue.Enqueue(s, c, p);
     }
 
-    public void Overwrite(Ability s, Character c, Vector3 p) {
+    public void Overwrite(RandomAbility s, Character c, Vector3 p) {
         actionQueue.Overwrite(s, c, p);
     }
 
-    public void SpellCast(Ability spell) {
+    public void SpellCast(RandomAbility spell) {
         if (playerCasting == true)
         {
             if (spell.targetOption == AbilityTargetOption.SELF)
             {
-                Enqueue(spell, new Character(), new Vector3());
+                Enqueue(spell, this, new Vector3());
                 playerCasting = false;
             }
             else if (spell.targetOption == AbilityTargetOption.TARGET_ALLY)
@@ -395,7 +405,7 @@ public class Character : MonoBehaviour
         Vector3 attackVector = attackTarget.getCharacterPosition() - character.transform.localPosition;
         float attackDistance = attackVector.magnitude;
 
-        if (attackTarget.isDead == true)
+        if (attackTarget.isDead == true || attackTarget == null)
         {
             character.idle();
             Debug.Log("Attack target of " + stats.Name + " is dead. Cancelling attack order");
@@ -420,6 +430,7 @@ public class Character : MonoBehaviour
                 Debug.Log("Character " + stats.Name + " attacks " + attackTarget.stats.Name + ".");
                 Debug.Log(attackTarget.stats.Name + "'s HP is now " + attackTarget.stats.CurrentHealth);
                 attackCooldown = stats.AttackRate;
+				Debug.Log("Attack cooldown: " + attackCooldown);
             }
         }
     }
@@ -427,7 +438,7 @@ public class Character : MonoBehaviour
     public void ResolveCastOrder(CastOrder currentOrder) {
         Character targetCharacter = currentOrder.targetCharacter;
         Vector3 targetLocation = currentOrder.targetLocation;
-        Ability spell = currentOrder.spell;
+        RandomAbility spell = currentOrder.spell;
 
         Vector3 characterVector = targetCharacter.getCharacterPosition() - character.transform.localPosition;
         float targetDistance = characterVector.magnitude;
@@ -450,10 +461,13 @@ public class Character : MonoBehaviour
             }
             else
             {
-                stats.CurrentMana -= spell.manaCost;
                 Debug.Log("Spell " + spell.name + " resolving");
                 spell.Resolve(targetCharacter, targetLocation);
                 actionQueue.Pop();
+				if (targetCharacter.isenemy)
+				{
+					Enqueue(targetCharacter);
+				}
             }
         }
     }
@@ -517,21 +531,11 @@ public class Character : MonoBehaviour
 	{
 		stats.Level += 1;
 		stats.UnallocatedStatPoints += 5;
-		/*stats.MaxHealth += 5;
-		stats.MaxMana += 5;
-		stats.Strength += 2;
-		stats.Agility += 2;
-		stats.Intelligence += 2;*/
 		stats.CurrentHealth = stats.MaxHealth;
 		stats.CurrentMana = stats.MaxMana;
 
 		Debug.Log (stats.Name + " has advanced to level " + stats.Level + "!");
 		Debug.Log (stats.Name + " has " + stats.UnallocatedStatPoints + " stat points to spend.");
-		/*Debug.Log ("Max Health: " + stats.MaxHealth);
-		Debug.Log ("Max Mana: " + stats.MaxMana);
-		Debug.Log ("Strength: " + stats.Strength);
-		Debug.Log ("Agility: " + stats.Agility);
-		Debug.Log ("Intelligence: " + stats.Intelligence);*/
 	}
 
 }

@@ -22,7 +22,7 @@ public class ActionQueue {
 		actionQueue.Enqueue (new AttackOrder (targetChar));
 	}
 	
-	public void Enqueue (Ability spell, Character targetChar, Vector3 targetPos)
+	public void Enqueue (RandomAbility spell, Character targetChar, Vector3 targetPos)
 	{
 		actionQueue.Enqueue (new CastOrder (spell, targetChar, targetPos));
 	}
@@ -39,7 +39,7 @@ public class ActionQueue {
 		actionQueue.Enqueue (new AttackOrder (targetChar));
 	}
 
-	public void Overwrite (Ability spell, Character targetChar, Vector3 targetPos)
+	public void Overwrite (RandomAbility spell, Character targetChar, Vector3 targetPos)
 	{
 		Clear ();
 		actionQueue.Enqueue (new CastOrder (spell, targetChar, targetPos));

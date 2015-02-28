@@ -23,7 +23,7 @@ public class EnemyCollection {
     public static Character getEnemy(int index) {
         if(index > -1 && index < enemies.Count)
         {
-            return enemies.ToArray()[0];
+            return enemies.ToArray()[index];
         }
         else
         {
@@ -48,6 +48,7 @@ public class EnemyCollection {
         {
             enemies.Remove(c);
             Object.Destroy(c.gameObject);
+
         }
     }
 

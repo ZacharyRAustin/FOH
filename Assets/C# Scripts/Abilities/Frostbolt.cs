@@ -15,7 +15,7 @@ public class Frostbolt : Ability {
 
 	public void Resolve (Character targetChar, Vector3 targetLocation)
 	{
-		Slow slow = new Slow ();
+		MoveSpeedBuff slow = new MoveSpeedBuff ();
 		targetChar.stats.CurrentHealth -= 5;
 		targetChar.stats.AddBuff (slow);
 	}

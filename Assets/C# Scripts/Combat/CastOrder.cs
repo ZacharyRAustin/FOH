@@ -3,11 +3,11 @@ using System.Collections;
 
 public class CastOrder {
 
-	public Ability spell;
+	public RandomAbility spell;
 	public Character targetCharacter;
 	public Vector3 targetLocation;
 
-	public CastOrder (Ability s, Character c, Vector3 l)
+	public CastOrder (RandomAbility s, Character c, Vector3 l)
 	{
 		spell = s;
 		targetCharacter = c;
