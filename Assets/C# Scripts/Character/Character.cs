@@ -213,6 +213,10 @@ public class Character : MonoBehaviour
                 SpellCooldownDecrement();
                 character_gui_update();
             }
+            else
+            {
+                character.idle();
+            }
         }
         removeVelocities();
 
