@@ -36,11 +36,17 @@ public class EnemyMovement : MonoBehaviour {
         if(!thisCharacter.isPaused)
         {
             death();
+            
             if(target == null)
             {
                 checkForTarget();
             }
+            else if(target.isDead)
+            {
+                target = null;
+            }
             move();
+
             AttackCooldownDecrement();
             currentPosition = thisCharacter.getCharacterPosition();
             target = thisCharacter.Target;
@@ -89,7 +95,7 @@ public class EnemyMovement : MonoBehaviour {
 
 	private void move () {
 		// when enemy detects a target
-		if (Vector3.Distance (currentPosition, targetPosition) < detectRange && Vector3.Distance (currentPosition, targetPosition) > attackRange) {
+		if (target != null && Vector3.Distance (currentPosition, targetPosition) < detectRange && Vector3.Distance (currentPosition, targetPosition) > attackRange) {
 			thisCharacter.getCharacter ().animation.Play ("Run");
 			moveBetweenPositions (currentPosition, targetPosition, chasingSpeed);
 		} 
@@ -97,7 +103,7 @@ public class EnemyMovement : MonoBehaviour {
 			attack ();
 		}
 		// when enemy doesn't detect a target
-		else if (Vector3.Distance (currentPosition, targetPosition) > detectRange) {
+		else if (target == null || Vector3.Distance (currentPosition, targetPosition) > detectRange) {
 			// outside of patrol range and target is not detected
 			if (Vector3.Distance (currentPosition, originalPosition) > patrolRange) {
 				thisCharacter.getCharacter ().animation.Play ("Walk");
@@ -178,11 +184,14 @@ public class EnemyMovement : MonoBehaviour {
     private void checkForTarget() {
         for(int i = 0; i < CharacterCollection.NumberOfHeroes(); i++)
         {
-            if(Vector3.Distance (currentPosition, CharacterCollection.getHero(i).getCharacterPosition()) < detectRange)
+            if(!CharacterCollection.getHero(i).isDead)
             {
-                target = CharacterCollection.getHero(i);
-                targetPosition = target.getCharacterPosition();
-                return;
+                if (Vector3.Distance(currentPosition, CharacterCollection.getHero(i).getCharacterPosition()) < detectRange)
+                {
+                    target = CharacterCollection.getHero(i);
+                    targetPosition = target.getCharacterPosition();
+                    return;
+                }
             }
         }
     }

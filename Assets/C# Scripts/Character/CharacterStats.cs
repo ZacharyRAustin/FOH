@@ -32,6 +32,23 @@ public class CharacterStats {
 	public int hitMod = 0, critMod = 0, dodgeMod = 0;
 	public float attackRateMod = 1f, moveSpeedMod = 1f;
 
+    public CharacterStats() {
+
+    }
+
+    public CharacterStats(int level) {
+        baseMaxHealth = 60 * level;
+        baseMaxMana = 30 * level;
+        baseStrength = 5 * level;
+        baseAgility = 5 * level;
+        baseIntelligence = 3 * level;
+        expYield = 4 * level;
+        InitializeEquipment();
+        CalculateCombatStats();
+        InitializeCombatStats();
+    }
+
+
 	//base stat properties
 	public string Name
 	{

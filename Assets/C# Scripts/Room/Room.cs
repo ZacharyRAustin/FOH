@@ -44,14 +44,14 @@ public class Room : MonoBehaviour {
         SpawnCharacteristics.increaseDoorsEntered();
     }
 
-    private void GenerateRandomObjects(int x, int y) {
-        if(shouldSpawnObstacle(x,y))
-        {
-            SpawnObstacle(x, y);
-        }
-        else if(shouldSpawnEnemy(x, y))
+    private void GenerateRandomObjects(int x, int y) {        
+        if(shouldSpawnEnemy(x, y))
         {
             SpawnEnemies(x, y);
+        }
+        else if (shouldSpawnObstacle(x, y))
+        {
+            SpawnObstacle(x, y);
         }
 
     }

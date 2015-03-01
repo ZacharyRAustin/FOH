@@ -77,16 +77,19 @@ public class InputManager {
 			}
 			else //player right clicked on a character, issue attack order
 			{
-				if (Input.GetButton ("Queue"))
-				{
-					selected.Enqueue(characterUnderMouse);
-					//Debug.Log ("Queueing attack order on " + characterUnderMouse.name);
-				}
-				else
-				{
-					selected.Overwrite(characterUnderMouse);
-					//Debug.Log ("Clearing queue, queueing attack order on " + characterUnderMouse.name);
-				}
+                if (characterUnderMouse.isenemy)
+                {
+                    if (Input.GetButton("Queue"))
+                    {
+                        selected.Enqueue(characterUnderMouse);
+                        //Debug.Log ("Queueing attack order on " + characterUnderMouse.name);
+                    }
+                    else
+                    {
+                        selected.Overwrite(characterUnderMouse);
+                        //Debug.Log ("Clearing queue, queueing attack order on " + characterUnderMouse.name);
+                    }
+                }
 			}
 		}
 

@@ -205,15 +205,14 @@ public class Character : MonoBehaviour
             pause_string = "";
 			stats.CalculateCombatStats();
             DeathCheck();
-            stats.ResolveBuffs();
-            actionQueue.Resolve();
-            AttackCooldownDecrement();
-			SpellCooldownDecrement();
-            character_gui_update();
-            //if(target != null)
-            //{
-            //	moveToTarget();
-            //}
+            if(!isDead)
+            {
+                stats.ResolveBuffs();
+                actionQueue.Resolve();
+                AttackCooldownDecrement();
+                SpellCooldownDecrement();
+                character_gui_update();
+            }
         }
         removeVelocities();
 
@@ -360,7 +359,11 @@ public class Character : MonoBehaviour
     }
 
     public void setTarget(Character c) {
-        target = c;
+        if((c.isenemy && !isenemy) || (!c.isenemy && isenemy))
+        {
+            target = c;
+        }
+        
     }
 
     private int moveToTarget() {
@@ -557,6 +560,10 @@ public class Character : MonoBehaviour
 		Debug.Log (stats.Name + " has advanced to level " + stats.Level + "!");
 		Debug.Log (stats.Name + " has " + stats.UnallocatedStatPoints + " stat points to spend.");
 	}
+
+    public int getLevel() {
+        return stats.Level;
+    }
 
 }
 
