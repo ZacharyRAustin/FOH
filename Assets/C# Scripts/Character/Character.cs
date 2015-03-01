@@ -379,6 +379,7 @@ public class Character : MonoBehaviour
             character.idle();
             actionQueue.Pop();
             Debug.Log("Character " + name + " completed movement order");
+			MyConsole.NewMessage("Character " + name + " completed movement order");
         }
         else
         {
@@ -470,6 +471,7 @@ public class Character : MonoBehaviour
     public void character_gui_update() {
         barDisplay_1 = stats.CurrentHealth * 100 / stats.MaxHealth;
         barDisplay = stats.CurrentMana;
+
         if (((stats.CurrentHealth * 100) / stats.MaxHealth) > 40)
         {
 
@@ -499,41 +501,6 @@ public class Character : MonoBehaviour
 
 
     }
-	public void GainExp (int exp)
-	{
-		if (isenemy == false)
-		{
-            stats.CurrentExp += exp;
-			Debug.Log (stats.Name + " has gained " + exp + " exp! (" + stats.CurrentExp + "/" + stats.MaxExp + ")");
-			if (stats.CurrentExp >= stats.MaxExp)
-			{
-				stats.CurrentExp -= stats.MaxExp;
-				LevelUp();
-			}
-		}
-	}
-
-	public void LevelUp ()
-	{
-		stats.Level += 1;
-		stats.UnallocatedStatPoints += 5;
-		/*stats.MaxHealth += 5;
-		stats.MaxMana += 5;
-		stats.Strength += 2;
-		stats.Agility += 2;
-		stats.Intelligence += 2;*/
-		stats.CurrentHealth = stats.MaxHealth;
-		stats.CurrentMana = stats.MaxMana;
-
-		Debug.Log (stats.Name + " has advanced to level " + stats.Level + "!");
-		Debug.Log (stats.Name + " has " + stats.UnallocatedStatPoints + " stat points to spend.");
-		/*Debug.Log ("Max Health: " + stats.MaxHealth);
-		Debug.Log ("Max Mana: " + stats.MaxMana);
-		Debug.Log ("Strength: " + stats.Strength);
-		Debug.Log ("Agility: " + stats.Agility);
-		Debug.Log ("Intelligence: " + stats.Intelligence);*/
-	}
-
 }
 
 

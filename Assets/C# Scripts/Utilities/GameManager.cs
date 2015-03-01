@@ -5,7 +5,7 @@ using UnityEngine.UI;
 public class GameManager : MonoBehaviour {
 
 	public bool isPaused = true;
-	
+	public string text;
     public Room roomPrefab;
     private Room roomInstance;
 
@@ -18,7 +18,7 @@ public class GameManager : MonoBehaviour {
 	public Character characterPrefab3;
 	public Character trollPrefab;
     
-
+	public int count_1;
 
 	private Character playerCharA;
 	private Character playerCharB;
@@ -34,12 +34,15 @@ public class GameManager : MonoBehaviour {
 
     private int seed = 123456789;
 
+	GUIStyle style_font = new GUIStyle();
+
 	// Use this for initialization
 
 	void Start () {
 		//damageimage.color = flashColour;
-
-
+		count_1 = 0;
+		style_font.fontSize = 10;
+		style_font.fontStyle = FontStyle.Normal;
 
         Random.seed = seed;
         EnemyGenerator.Initialize(trollPrefab, enemyMaterial);
@@ -60,7 +63,8 @@ public class GameManager : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-
+		count_1 += 1;
+		flashred ();
         if(EnemyCollection.getEnemy(0) != null)
         {
             setEnemyTarget ();
@@ -88,6 +92,7 @@ public class GameManager : MonoBehaviour {
 	}
 
     private void BeginGame() {
+		MyConsole.NewMessage("watsupp2");
         roomInstance = Instantiate(roomPrefab) as Room;
         roomInstance.Generate();
         playerCharA = Instantiate (characterPrefab1) as Character;
@@ -101,9 +106,13 @@ public class GameManager : MonoBehaviour {
 		playerCharA.image_name = "hero_image";
 		playerCharA.tag = "Hero A";
 		playerCharA.name = "Hero A";
-		playerCharA.stats.InitializeBaseStats ();
+		playerCharA.stats.Name = "Hero A";
+		playerCharA.stats.MaxHealth = 50;
+		playerCharA.stats.MaxMana = 30;
+		playerCharA.stats.Strength = 7;
+		playerCharA.stats.Agility = 5;
+		playerCharA.stats.Intelligence = 5;
 		playerCharA.stats.InitializeCombatStats ();
-		playerCharA.stats.InitializeProgressionStats ();
 
 		playerCharB = Instantiate (characterPrefab2) as Character;
 		playerCharB.characterPrefab.name = "Hero B Prefab";
@@ -117,10 +126,13 @@ public class GameManager : MonoBehaviour {
 		playerCharB.tag = "Hero B";
 		playerCharB.name = "Hero B";
 		playerCharB.stats.Name = "Hero B";
-		playerCharB.stats.InitializeBaseStats ();
+		playerCharB.stats.MaxHealth = 40;
+		playerCharB.stats.MaxMana = 30;
+		playerCharB.stats.Strength = 5;
+		playerCharB.stats.Agility = 8;
+		playerCharB.stats.Intelligence = 5;
 		playerCharB.stats.InitializeCombatStats ();
-		playerCharB.stats.InitializeProgressionStats ();
-		playerCharB.stats.AttackRange = 7.0f;
+		playerCharB.stats.AttackRange = 5.0f;
 		//playerCharB.Anim = playerCharB.characterPrefab.GetComponent<Animator> ();
 		//playerCharB.Anim.SetBool ("walk 0", true);
 		//Debug.Log (playerCharB.Anim);
@@ -142,9 +154,12 @@ public class GameManager : MonoBehaviour {
 		playerCharC.isenemy = false;
 		playerCharC.image_name = "hero_image";
 		playerCharC.stats.Name = "Hero C";
-		playerCharC.stats.InitializeBaseStats ();
+		playerCharC.stats.MaxHealth = 30;
+		playerCharC.stats.MaxMana = 50;
+		playerCharC.stats.Strength = 3;
+		playerCharC.stats.Agility = 5;
+		playerCharC.stats.Intelligence = 8;
 		playerCharC.stats.InitializeCombatStats ();
-		playerCharC.stats.InitializeProgressionStats ();
 		playerCharC.stats.AttackRange = 4.0f;
 		playerCharC.stats.MagicAttack = true;
 		playerCharC.stats.abilities.Add (heal);
@@ -203,11 +218,12 @@ public class GameManager : MonoBehaviour {
 
 //    }
 	void OnGUI(){
-		MyConsole.DrawConsole(new Rect(Screen.width-200,Screen.height-100,400,400));
-		if (Event.current.type == EventType.Repaint) {
 				
-		}
-
+				
+				MyConsole.DrawConsole ();
+		        while (count_1 < 100) {
+			MyConsole.NewMessage("test");
+				}
 		}
 
     private void RestartGame() {
@@ -218,21 +234,13 @@ public class GameManager : MonoBehaviour {
 	public void flashred(){
 		if (playerCharA.count_times == 0 && playerCharB.count_times == 0 && playerCharC.count_times == 0) {
 			damageimage.color = flashColour_1;
-		} else {
+		} else if((playerCharA.stats.CurrentHealth*100/playerCharA.stats.MaxHealth <= 40)&& (playerCharA.count_times >= 0) ||
+		          (playerCharB.stats.CurrentHealth*100/playerCharB.stats.MaxHealth <= 40)&& (playerCharB.count_times >= 0) ||
+		          (playerCharC.stats.CurrentHealth*100/playerCharC.stats.MaxHealth <= 40)&& (playerCharC.count_times >= 0)){
 			damageimage.color = flashColour;
 		}
 		
 		
-	}
-
-	private void RemoveHero(Character hero)
-	{
-		CharacterCollection.removeHero (hero);
-	}
-
-	private void RemoveEnemy(Character enemy)
-	{
-		EnemyCollection.removeEnemy (enemy);
 	}
 
 }
