@@ -202,6 +202,10 @@ public class Character : MonoBehaviour
         pause_string = "GAME IS PAUSED";
         if (isPaused == false)
         {
+            if(!isenemy)
+            {
+                character.setEnabled(true);
+            }
             pause_string = "";
 			stats.CalculateCombatStats();
             DeathCheck();
@@ -216,6 +220,13 @@ public class Character : MonoBehaviour
             else
             {
                 character.idle();
+            }
+        }
+        else
+        {
+            if(!isenemy)
+            {
+                character.setEnabled(false);
             }
         }
         removeVelocities();

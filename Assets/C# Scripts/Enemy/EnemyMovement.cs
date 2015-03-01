@@ -35,6 +35,7 @@ public class EnemyMovement : MonoBehaviour {
 	void Update () {
         if(!thisCharacter.isPaused)
         {
+            thisCharacter.getCharacter().animation.enabled = true;
             death();
             
             if(target == null)
@@ -54,6 +55,10 @@ public class EnemyMovement : MonoBehaviour {
             {
                 targetPosition = target.getCharacterPosition();
             }
+        }
+        else
+        {
+            thisCharacter.getCharacter().animation.enabled = false;
         }
 	}
 

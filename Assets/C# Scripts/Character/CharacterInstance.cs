@@ -53,4 +53,8 @@ public class CharacterInstance : MonoBehaviour {
 		anim.SetBool ("idle", false);
 		anim.SetBool ("attack", true);
 	}
+
+    public void setEnabled(bool e) {
+        anim.enabled = e;
+    }
 }
