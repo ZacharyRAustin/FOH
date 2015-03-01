@@ -18,7 +18,7 @@ public class GameManager : MonoBehaviour {
 	public Character characterPrefab3;
 	public Character trollPrefab;
     
-
+	private EquipmentGenerator equipmentGenerator = new EquipmentGenerator();
 
 	private Character playerCharA;
 	private Character playerCharB;
@@ -45,8 +45,8 @@ public class GameManager : MonoBehaviour {
         EnemyGenerator.Initialize(trollPrefab, enemyMaterial);
         BeginGame();
 		CharacterCollection.addHero (playerCharA);
-        CharacterCollection.addHero(playerCharB);
-        CharacterCollection.addHero(playerCharC);
+        CharacterCollection.addHero (playerCharB);
+        CharacterCollection.addHero (playerCharC);
         roomInstance.SpawnCharacters(DoorPositions.SOUTH);
 		inputManager.Awake ();
 		inputManager.Select (playerCharA);
@@ -85,32 +85,52 @@ public class GameManager : MonoBehaviour {
             LevelingTest.PerformTest();
         }
 
-		if (Input.GetButtonDown("Ability Test Char A"))
+		if (Input.GetButtonDown("Generate Abilities"))
 		{
 			AbilityParameters param = new AbilityParameters(Random.Range(1,4));
 			RandomAbility s = new RandomAbility();
 			s.SetAbility(param);
 			playerCharA.stats.AddAbility(s);
+			Debug.Log ("Hero A got a new ability!");
 			s.Print ();
 			s.caster = playerCharA;
-		}
-		else if (Input.GetButtonDown ("Ability Test Char B"))
-		{
-			AbilityParameters param = new AbilityParameters(Random.Range (1,4));
-			RandomAbility s = new RandomAbility();
+
+			param = new AbilityParameters(Random.Range (1,4));
+			s = new RandomAbility();
 			s.SetAbility(param);
 			playerCharB.stats.AddAbility(s);
+			Debug.Log ("Hero B got a new ability!");
 			s.Print ();
 			s.caster = playerCharB;
-		}
-		else if (Input.GetButtonDown ("Ability Test Char C"))
-		{
-			AbilityParameters param = new AbilityParameters(Random.Range (1,4));
-			RandomAbility s = new RandomAbility();
+
+			param = new AbilityParameters(Random.Range (1,4));
+			s = new RandomAbility();
 			s.SetAbility(param);
 			playerCharC.stats.AddAbility(s);
+			Debug.Log ("Hero C got a new ability!");
 			s.Print ();
 			s.caster = playerCharC;
+		}
+
+		if (Input.GetButtonDown ("Generate Equipment"))
+	    {
+			playerCharA.stats.weapon = equipmentGenerator.GenerateWeapon(3);
+			Debug.Log ("Hero A got a " + playerCharA.stats.weapon.name + "!");
+			playerCharA.stats.gear[0] = equipmentGenerator.GenerateArmor(1);
+			playerCharA.stats.gear[1] = equipmentGenerator.GenerateArmor(2);
+			playerCharA.stats.gear[2] = equipmentGenerator.GenerateArmor(0);
+
+			playerCharB.stats.weapon = equipmentGenerator.GenerateWeapon(3);
+			Debug.Log ("Hero B got a " + playerCharB.stats.weapon.name + "!");
+			playerCharB.stats.gear[0] = equipmentGenerator.GenerateArmor(10);
+			playerCharB.stats.gear[1] = equipmentGenerator.GenerateArmor(2);
+			playerCharB.stats.gear[2] = equipmentGenerator.GenerateArmor(1);
+
+			playerCharC.stats.weapon = equipmentGenerator.GenerateWeapon(3);
+			Debug.Log ("Hero C got a " + playerCharC.stats.weapon.name + "!");
+			playerCharC.stats.gear[0] = equipmentGenerator.GenerateArmor(10);
+			playerCharC.stats.gear[1] = equipmentGenerator.GenerateArmor(2);
+			playerCharC.stats.gear[2] = equipmentGenerator.GenerateArmor(1);
 		}
 
 		if (Input.GetButtonDown ("Buff Test"))
@@ -132,6 +152,13 @@ public class GameManager : MonoBehaviour {
 			playerCharA.stats.AddBuff(attackRate1);
 		}
 
+		if (Input.GetButtonDown ("View Equipment"))
+		{
+			playerCharA.stats.PrintEquipment();
+			playerCharB.stats.PrintEquipment();
+			playerCharC.stats.PrintEquipment();
+		}
+
 		inputManager.Resolve ();
 
 	}
@@ -150,7 +177,10 @@ public class GameManager : MonoBehaviour {
 		playerCharA.image_name = "hero_image";
 		playerCharA.tag = "Hero A";
 		playerCharA.name = "Hero A";
+		playerCharA.stats.Name = "Hero A";
 		playerCharA.stats.InitializeBaseStats ();
+		playerCharA.stats.InitializeEquipment ();
+		playerCharA.stats.CalculateCombatStats ();
 		playerCharA.stats.InitializeCombatStats ();
 		playerCharA.stats.InitializeProgressionStats ();
 
@@ -167,17 +197,13 @@ public class GameManager : MonoBehaviour {
 		playerCharB.name = "Hero B";
 		playerCharB.stats.Name = "Hero B";
 		playerCharB.stats.InitializeBaseStats ();
+		playerCharB.stats.InitializeEquipment ();
+		playerCharB.stats.CalculateCombatStats ();
 		playerCharB.stats.InitializeCombatStats ();
 		playerCharB.stats.InitializeProgressionStats ();
-		playerCharB.stats.AttackRange = 7.0f;
 		//playerCharB.Anim = playerCharB.characterPrefab.GetComponent<Animator> ();
 		//playerCharB.Anim.SetBool ("walk 0", true);
 		//Debug.Log (playerCharB.Anim);
-
-		/*Heal heal = new Heal ();
-		heal.Start ();
-		Frostbolt frostbolt = new Frostbolt ();
-		frostbolt.Start ();*/
 
 		playerCharC = Instantiate (characterPrefab3) as Character;
 		playerCharC.characterPrefab.name = "Hero C Prefab";
@@ -192,10 +218,10 @@ public class GameManager : MonoBehaviour {
 		playerCharC.image_name = "hero_image";
 		playerCharC.stats.Name = "Hero C";
 		playerCharC.stats.InitializeBaseStats ();
+		playerCharC.stats.InitializeEquipment ();
+		playerCharC.stats.CalculateCombatStats ();
 		playerCharC.stats.InitializeCombatStats ();
 		playerCharC.stats.InitializeProgressionStats ();
-		playerCharC.stats.AttackRange = 4.0f;
-		playerCharC.stats.MagicAttack = true;
   }
 
 

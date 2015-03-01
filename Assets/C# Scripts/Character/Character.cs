@@ -203,10 +203,12 @@ public class Character : MonoBehaviour
         if (isPaused == false)
         {
             pause_string = "";
+			stats.CalculateCombatStats();
             DeathCheck();
             stats.ResolveBuffs();
             actionQueue.Resolve();
             AttackCooldownDecrement();
+			SpellCooldownDecrement();
             character_gui_update();
             //if(target != null)
             //{
@@ -245,6 +247,14 @@ public class Character : MonoBehaviour
         }
     }
 
+	void SpellCooldownDecrement()
+	{
+		foreach (RandomAbility s in stats.abilities)
+		{
+			s.UpdateRemainingCooldownTime();
+		}
+	}
+
     public void Enqueue(Vector3 position) //move order
     {
         actionQueue.Enqueue(position);
@@ -277,7 +287,14 @@ public class Character : MonoBehaviour
         {
             if (spell.targetOption == AbilityTargetOption.SELF)
             {
-                Enqueue(spell, this, new Vector3());
+				if (Input.GetButton ("Queue"))
+			    {
+	                Enqueue(spell, this, new Vector3());
+				}
+				else
+				{
+					Overwrite(spell, this, new Vector3());
+				}
                 playerCasting = false;
             }
             else if (spell.targetOption == AbilityTargetOption.TARGET_ALLY)
@@ -402,8 +419,6 @@ public class Character : MonoBehaviour
 
     public void ResolveAttackOrder(AttackOrder currentOrder) {
         Character attackTarget = currentOrder.target;
-        Vector3 attackVector = attackTarget.getCharacterPosition() - character.transform.localPosition;
-        float attackDistance = attackVector.magnitude;
 
         if (attackTarget.isDead == true || attackTarget == null)
         {
@@ -411,28 +426,33 @@ public class Character : MonoBehaviour
             Debug.Log("Attack target of " + stats.Name + " is dead. Cancelling attack order");
             actionQueue.Pop();
         }
-
-        if (attackDistance > stats.AttackRange)
-        { //if out of range, move towards target
-            character.run();
-            attackVector.Normalize();
-            character.transform.rotation = Quaternion.LookRotation(attackVector, new Vector3(0, 0, -1.0f));
-            character.transform.localPosition += attackVector * Time.deltaTime * stats.MoveSpeed;
-        }
-        else
-        {
-            if (attackCooldown == 0)
-            {
-                character.transform.rotation = Quaternion.LookRotation(attackVector, new Vector3(0, 0, -1.0f));
-                character.attack();
-                combatManager.Hit(this, attackTarget);
-                attackTarget.is_selected = true;
-                Debug.Log("Character " + stats.Name + " attacks " + attackTarget.stats.Name + ".");
-                Debug.Log(attackTarget.stats.Name + "'s HP is now " + attackTarget.stats.CurrentHealth);
-                attackCooldown = stats.AttackRate;
-				Debug.Log("Attack cooldown: " + attackCooldown);
-            }
-        }
+		else
+		{
+			Vector3 attackVector = attackTarget.getCharacterPosition() - character.transform.localPosition;
+			float attackDistance = attackVector.magnitude;
+		
+			 if (attackDistance > stats.AttackRange)
+        	{ //if out of range, move towards target
+            	character.run();
+            	attackVector.Normalize();
+            	character.transform.rotation = Quaternion.LookRotation(attackVector, new Vector3(0, 0, -1.0f));
+            	character.transform.localPosition += attackVector * Time.deltaTime * stats.MoveSpeed;
+        	}
+        	else
+        	{
+        	    if (attackCooldown == 0)
+        	    {
+        	        character.transform.rotation = Quaternion.LookRotation(attackVector, new Vector3(0, 0, -1.0f));
+        	        character.attack();
+        	        combatManager.Hit(this, attackTarget);
+            	    attackTarget.is_selected = true;
+            	    Debug.Log("Character " + stats.Name + " attacks " + attackTarget.stats.Name + ".");
+            	    Debug.Log(attackTarget.stats.Name + "'s HP is now " + attackTarget.stats.CurrentHealth);
+            	    attackCooldown = stats.AttackRate;
+					Debug.Log("Attack cooldown: " + attackCooldown);
+            	}
+        	}
+		}
     }
 
     public void ResolveCastOrder(CastOrder currentOrder) {

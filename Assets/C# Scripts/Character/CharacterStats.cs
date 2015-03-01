@@ -6,6 +6,7 @@ public class CharacterStats {
 	private string name;
 
 	//base stats
+	private int baseMaxHealth, baseMaxMana, baseStrength, baseAgility, baseIntelligence;
 	private int maxHealth, maxMana, strength, agility, intelligence;
 
 	//progression stats
@@ -22,6 +23,14 @@ public class CharacterStats {
 
 	public List<RandomAbility> abilities = new List<RandomAbility>();
 	private List<Buff> buffs = new List<Buff>();
+	public Weapon weapon;
+	public Armor[] gear = new Armor[3];
+	private EquipmentGenerator equipmentGenerator = new EquipmentGenerator();
+
+	//modifiers
+	public int healthMod = 0, manaMod = 0, strMod = 0, agiMod = 0, intMod = 0, damageMod = 0, armorMod = 0, magResMod = 0;
+	public int hitMod = 0, critMod = 0, dodgeMod = 0;
+	public float attackRateMod = 1f, moveSpeedMod = 1f;
 
 	//base stat properties
 	public string Name
@@ -169,19 +178,19 @@ public class CharacterStats {
 	{
 		if (magicAttack == true)
 		{
-			return intelligence;
+			return intelligence + weapon.damage + damageMod;
 		}
 		else
 		{
-			return strength;
+			return strength + weapon.damage + damageMod;
 		}
 	}
 
 	private int calculateHitRate ()
 	{
-		if (60 + agility < 100)
+		if (weapon.hitRate + agility + hitMod < 100)
 		{
-			return 60 + agility;
+			return weapon.hitRate + agility + hitMod;
 		}
 		else
 		{
@@ -191,9 +200,9 @@ public class CharacterStats {
 
 	private int calculateCritRate ()
 	{
-		if (agility < 100)
+		if (agility + weapon.critRate + critMod < 100)
 		{
-			return agility;
+			return agility + weapon.critRate + critMod;
 		}
 		else
 		{
@@ -213,29 +222,71 @@ public class CharacterStats {
 		}
 	}
 
+	private int calculateArmor()
+	{
+		return weapon.armor + gear[0].armor + gear[1].armor + gear[2].armor + armorMod;
+	}
+
+	private int calculateMagicResist()
+	{
+		return weapon.magicResist + gear[0].magicResist + gear[1].magicResist + gear[2].magicResist + magResMod;
+	}
+
+	private float calculateAttackRate ()
+	{
+		float agiAttackSpeedBonus = 0f;
+		return (weapon.attackRate - agiAttackSpeedBonus) * attackRateMod;
+	}
+
 	public void InitializeBaseStats ()
 	{
-		maxHealth = 50;
-		maxMana = 30;
-		strength = 5;
-		agility = 5;
-		intelligence = 5;
+		baseMaxHealth = 50;
+		baseMaxMana = 30;
+		baseStrength = 5;
+		baseAgility = 5;
+		baseIntelligence = 5;
+	}
+
+	public void InitializeTrollBaseStats()
+	{
+		baseMaxHealth = 60;
+		baseMaxMana = 30;
+		baseStrength = 5;
+		baseAgility = 5;
+		baseIntelligence = 3;
+		expYield = 4;
+	}
+
+	public void InitializeEquipment ()
+	{
+		weapon = equipmentGenerator.basicSword;
+		gear [0] = equipmentGenerator.basicArmor;
+		gear [1] = equipmentGenerator.basicArmor;
+		gear [2] = equipmentGenerator.basicArmor;
 	}
 
 	public void InitializeCombatStats ()
 	{
 		currentHealth = maxHealth;
 		currentMana = maxMana;
-		attackDamage = calculateAttackDamage ();
-		critRate = calculateCritRate ();
+	}
+
+	public void CalculateCombatStats ()
+	{
+		maxHealth = baseMaxHealth + weapon.health + gear[0].health + gear[1].health + gear[2].health + healthMod;
+		maxMana = baseMaxMana + weapon.mana + gear[0].mana + gear[1].mana + gear[2].mana + manaMod;
+		strength = baseStrength + weapon.strength + gear[0].strength + gear[1].strength + gear[2].strength + strMod;
+		agility = baseAgility + weapon.agility + gear[0].agility + gear[1].agility + gear[2].agility + agiMod;
+		intelligence = baseIntelligence + weapon.intelligence + gear[0].intelligence + gear[1].intelligence + gear[2].intelligence + intMod;
+		attackDamage = calculateAttackDamage();
+		armor = calculateArmor ();
+		magicResist = calculateMagicResist ();
+		hitRate = calculateHitRate();
+		critRate = calculateCritRate();
 		dodgeRate = calculateDodgeRate ();
-		hitRate = calculateHitRate ();
-		armor = 3;
-		magicResist = 0;
-		magicAttack = false;
-		attackRange = 1.3f;
-		attackRate = 1.0f;
-		moveSpeed = 2.0f;
+		attackRate = calculateAttackRate();
+		attackRange = weapon.attackRange;
+		moveSpeed = 2.0f * moveSpeedMod;
 	}
 
 	public void InitializeProgressionStats ()
@@ -296,6 +347,40 @@ public class CharacterStats {
 		{
 			buff.Resolve();
 		}
+	}
+
+	public void PrintEquipment ()
+	{
+		Debug.Log (name + "'s equipment: ");
+		weapon.Print ();
+		gear [0].Print ();
+		gear [1].Print ();
+		gear [2].Print ();
+	}
+
+	public void LevelHealth()
+	{
+		baseMaxHealth += 5;
+	}
+
+	public void LevelMana()
+	{
+		baseMaxMana += 5;
+	}
+
+	public void LevelStrength()
+	{
+		baseStrength += 1;
+	}
+
+	public void LevelAgility()
+	{
+		baseAgility += 1;
+	}
+
+	public void LevelIntelligence()
+	{
+		baseIntelligence += 1;
 	}
 
 }

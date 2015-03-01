@@ -6,10 +6,11 @@ public class RandomAbility {
 	public string name;
 	public Character caster;
 	public int targetOption;
-	public float range, castTime;
+	public float range, castTime, coolDown = 10f;
 	public int manaCost, damage, healing;
 	public Buff buff;
 	public float buffMagnitude, buffTime;
+	public float remainingCooldownTime = 0f;
 
 	private bool isInstantCast = false;
 
@@ -197,8 +198,9 @@ public class RandomAbility {
 	{
 		Debug.Log ("RandomAbility.Resolve");
 		caster.stats.CurrentMana -= manaCost;
-		targetChar.stats.CurrentHealth -= damage;
-		targetChar.stats.CurrentHealth += healing;
+		remainingCooldownTime = coolDown;
+		targetChar.stats.CurrentHealth -= (damage + caster.stats.Intelligence);
+		targetChar.stats.CurrentHealth += (healing + caster.stats.Intelligence);
 		if (buff != null)
 		{
 			targetChar.stats.AddBuff(buff);
@@ -208,7 +210,14 @@ public class RandomAbility {
 	}
 
 	// Update is called once per frame
-	void Update () {
-	
+	public void UpdateRemainingCooldownTime () {
+		if (remainingCooldownTime > 0)
+		{
+			remainingCooldownTime -= Time.deltaTime;
+		}
+		else
+		{
+			remainingCooldownTime = 0;
+		}
 	}
 }
