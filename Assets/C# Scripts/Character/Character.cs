@@ -65,6 +65,7 @@ public class Character : MonoBehaviour
     Color greencolor = Color.green;
     Color graycolor = Color.grey;
     Color bluecolor = Color.blue;
+	Color yellowcolor = Color.yellow;
     GUIStyle style_font = new GUIStyle();
     GUIStyle style = new GUIStyle();
     GUIStyle style_mana = new GUIStyle();
@@ -91,20 +92,23 @@ public class Character : MonoBehaviour
         GUI.BeginGroup(new Rect((Screen.width / 3), (Screen.height / 2), width_x * 2 + 100, 1000));
         GUI.Label(new Rect(0, 0, width_x * 2, 1000), pause_string, style_font);
         GUI.EndGroup();
-        if (isPaused == false)
+        //if (isPaused == false)
+		if (true)
         {
             if (is_selected == true)
             {
                 if (isenemy == false)
                 {
-                    GUI.BeginGroup(new Rect(Screen.width / 4, Screen.height - 50, 6 * Screen.width / 10, 30));
-                    GUI.Label(new Rect(0, 0, Screen.width / 10, 30), name, style_name);
-                    GUI.Button(new Rect(Screen.width / 10, 0, Screen.width / 10, 30), "Ability1");
-                    GUI.Button(new Rect(2 * Screen.width / 10, 0, Screen.width / 10, 30), "Ability2");
-                    GUI.Button(new Rect(3 * Screen.width / 10, 0, Screen.width / 10, 30), "Ability3");
-                    GUI.Button(new Rect(4 * Screen.width / 10, 0, Screen.width / 10, 30), "Ability4");
-                    GUI.Button(new Rect(5 * Screen.width / 10, 0, Screen.width / 10, 30), "Ability5");
-                    GUI.EndGroup();
+                    GUI.BeginGroup(new Rect(Screen.width / 10, Screen.height - 50, 8 * Screen.width / 10, 40));
+                    GUI.Label(new Rect(0, 0, Screen.width / 12, 30), name, style_name);
+					for (int i = 0; i < stats.abilities.Count; i++)
+					{
+						float truncatedCooldownTime = stats.abilities.ToArray()[i].remainingCooldownTime;
+						truncatedCooldownTime = (float)(Mathf.Floor(truncatedCooldownTime*10.0f) / 10.0f);
+						GUI.Button(new Rect((i+1) * Screen.width / 8, 0, Screen.width / 8, 40), stats.abilities.ToArray()[i].name);
+						GUI.TextArea(new Rect((i+1) * Screen.width / 8, 0, Screen.width / 8, 40), truncatedCooldownTime.ToString());
+					}
+					GUI.EndGroup();
                 }
                 GUI.BeginGroup(new Rect(pos_bar.x - 10, (Screen.height - pos_bar.y) - 80, 20, 5));
                 GUI.Box(new Rect(0, 0, 20, 5), emptyTex);
@@ -118,7 +122,7 @@ public class Character : MonoBehaviour
                 GUI.BeginGroup(new Rect(position_x, position_y_health, width_x + 100, 80));
                 GUI.DrawTexture(new Rect(0, 0, 60, 60), image_texture);
                 GUI.BeginGroup(new Rect(60, 0, width_x + 40, size.y));
-                GUI.TextArea(new Rect(width_x, 0, 20, size.y), (stats.CurrentHealth).ToString());
+                GUI.TextArea(new Rect(width_x, 0, CalculateHPMPBoxWidth((float) stats.MaxHealth), size.y), (stats.CurrentHealth).ToString());
                 GUI.Box(new Rect(0, 0, width_x, size.y), emptyTex);
                 //draw the filled-in part:
                 GUI.BeginGroup(new Rect(0, 0, width_x * (stats.CurrentHealth) / (stats.MaxHealth), size.y));
@@ -127,7 +131,7 @@ public class Character : MonoBehaviour
                 GUI.EndGroup();
 
                 GUI.BeginGroup(new Rect(60, 30, width_x + 40, size.y));
-                GUI.TextArea(new Rect(width_x, 0, 20, size.y), (stats.CurrentMana).ToString());
+				GUI.TextArea(new Rect(width_x, 0, CalculateHPMPBoxWidth((float) stats.MaxMana), size.y), (stats.CurrentMana).ToString());
                 GUI.Box(new Rect(0, 0, width_x, size.y), emptyTex);
                 //GUI.TextArea (new Rect (0,0,60, size.y), character.name);
                 //draw the filled-in part:
@@ -137,13 +141,13 @@ public class Character : MonoBehaviour
                 GUI.EndGroup();
                 GUI.EndGroup();
             }
-            else
+            else //is enemy
             {
-
+				int healthBoxWidth = CalculateHPMPBoxWidth((float) stats.MaxHealth);
                 GUI.BeginGroup(new Rect(Screen.width - width_x - 100, position_y_health, width_x + 100, 80));
                 GUI.DrawTexture(new Rect(width_x + 40, 0, 60, 60), image_texture);
                 GUI.BeginGroup(new Rect(0, 0, width_x + 40, size.y));
-                GUI.TextArea(new Rect(20, 0, 20, size.y), (stats.CurrentHealth).ToString());
+				GUI.TextArea(new Rect(40 - healthBoxWidth, 0, healthBoxWidth, size.y), (stats.CurrentHealth).ToString());
                 GUI.Box(new Rect(40, 0, width_x, size.y), emptyTex);
                 //draw the filled-in part:
                 GUI.BeginGroup(new Rect(40, 0, width_x * (stats.CurrentHealth) / (stats.MaxHealth), size.y));
@@ -151,8 +155,9 @@ public class Character : MonoBehaviour
                 GUI.EndGroup();
                 GUI.EndGroup();
 
+				int manaBoxWidth = CalculateHPMPBoxWidth((float) stats.MaxMana);
                 GUI.BeginGroup(new Rect(0, 30, width_x + 40, size.y));
-                GUI.TextArea(new Rect(20, 0, 20, size.y), (stats.CurrentMana).ToString());
+				GUI.TextArea(new Rect(40 - manaBoxWidth, 0, manaBoxWidth, size.y), (stats.CurrentMana).ToString());
                 GUI.Box(new Rect(40, 0, width_x, size.y), emptyTex);
                 //GUI.TextArea (new Rect (0,0,60, size.y), character.name);
                 //draw the filled-in part:
@@ -469,13 +474,16 @@ public class Character : MonoBehaviour
         }
         else if (targetDistance > spell.range)
         {
+			character.run();
             characterVector.Normalize();
             character.transform.localPosition += characterVector * Time.deltaTime * stats.MoveSpeed;
+			character.transform.rotation = Quaternion.LookRotation(characterVector, new Vector3(0, 0, -1.0f));
         }
         else
         {
             if (timeUntilCast > 0f)
             {
+				character.attack();
                 Debug.Log("timeUntilCast = " + timeUntilCast);
                 timeUntilCast -= Time.deltaTime;
             }
@@ -556,6 +564,31 @@ public class Character : MonoBehaviour
 
 		Debug.Log (stats.Name + " has advanced to level " + stats.Level + "!");
 		Debug.Log (stats.Name + " has " + stats.UnallocatedStatPoints + " stat points to spend.");
+	}
+
+	private int CalculateHPMPBoxWidth (float stat)
+	{
+		//return 10 * Mathf.FloorToInt (Mathf.Log10 (stat));
+		if (stat < 10)
+		{
+			return 10;
+		}
+		else if (stat < 100)
+		{
+			return 20;
+		}
+		else if (stat < 1000)
+		{
+			return 30;
+		}
+		else if (stat < 10000)
+		{
+			return 40;
+		}
+		else
+		{
+			return 50;
+		}
 	}
 
 }

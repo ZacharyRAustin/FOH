@@ -6,13 +6,20 @@ public class StrengthBuff : Buff {
 	public override void Resolve () {
 		if (elapsedTime == 0) //upon activation
 		{
-			Debug.Log ("Strength: " + target.stats.Strength);
-			target.stats.Strength = (int) magnitude + target.stats.Strength;
+			if (magnitude > 0)
+			{
+				Debug.Log (target.name + "'s strength is boosted by " + magnitude + "!");
+			}
+			else if (magnitude < 0)
+			{
+				Debug.Log (target.name + "'s strength is reduced by " + magnitude + "!");
+			}
+			target.stats.strMod += (int) magnitude;
 			Debug.Log ("Strength: " + target.stats.Strength);
 		}
 		if (elapsedTime >= duration)
 		{
-			target.stats.Strength = target.stats.Strength - (int) magnitude; //return agility to normal
+			target.stats.strMod -= (int) magnitude; //return agility to normal
 			Debug.Log (target.name + "'s strength returns to normal.");
 			Debug.Log ("Strength: " + target.stats.Strength);
 			target.stats.RemoveBuff(this);

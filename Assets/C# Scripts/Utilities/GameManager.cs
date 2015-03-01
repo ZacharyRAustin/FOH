@@ -61,6 +61,8 @@ public class GameManager : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 
+		SetHeroIsSelected ();
+
 		if (EnemyCollection.NumberOfEnemies() > 0)
 		{
         	if(EnemyCollection.getEnemy(0) != null)
@@ -306,6 +308,26 @@ public class GameManager : MonoBehaviour {
 	private void RemoveEnemy(Character enemy)
 	{
 		EnemyCollection.removeEnemy (enemy);
+	}
+
+	private void SetHeroIsSelected ()
+	{
+		playerCharA.is_selected = false;
+		playerCharB.is_selected = false;
+		playerCharC.is_selected = false;
+
+		if (playerCharA == inputManager.selected)
+		{
+			playerCharA.is_selected = true;
+		}
+		else if (playerCharB == inputManager.selected)
+		{
+			playerCharB.is_selected = true;
+		}
+		else if (playerCharC == inputManager.selected)
+		{
+			playerCharC.is_selected = true;
+		}
 	}
 
 

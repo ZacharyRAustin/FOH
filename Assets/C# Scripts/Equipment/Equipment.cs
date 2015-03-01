@@ -109,6 +109,8 @@ public class Equipment {
 
 	public void PrintStats()
 	{
+		// if printing a weapon, call this after the weapon's print function, that includes name, damage, etc
+		// if printing armor, just separately print the name and then call PrintStats()
 		if (health != 0)
 		{
 			Debug.Log ("Health +" + health);

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 public class InputManager {
 
-	private Character selected;
+	public Character selected;
 	public bool isCharacterUnderMouse;
 	public Character characterUnderMouse;
 	private CharacterInstance instanceUnderMouse;
@@ -27,11 +27,11 @@ public class InputManager {
 		floorMask = LayerMask.GetMask ("Floor");
 		characterMask = LayerMask.GetMask ("Character");
 	}
+	
 
 	public void Resolve () {
 		//Debug.Log ("Inside inputManager.Resolve()");
 		UpdateMousePosition ();
-
 		CancelCheck ();
 		SpellTarget ();
 		AllocateStatPoints ();
@@ -54,7 +54,7 @@ public class InputManager {
 			Debug.Log ("Character C selected");
 		}
 		
-		if (Input.GetMouseButtonDown(1)) //right click
+		if (Input.GetMouseButtonDown(1) && selected.playerCasting == false) //right click
 		{
 			//Debug.Log ("Right click");
 			CharacterMouseCheck();
@@ -77,15 +77,18 @@ public class InputManager {
 			}
 			else //player right clicked on a character, issue attack order
 			{
-				if (Input.GetButton ("Queue"))
+				if (characterUnderMouse.isenemy)
 				{
-					selected.Enqueue(characterUnderMouse);
-					//Debug.Log ("Queueing attack order on " + characterUnderMouse.name);
-				}
-				else
-				{
-					selected.Overwrite(characterUnderMouse);
-					//Debug.Log ("Clearing queue, queueing attack order on " + characterUnderMouse.name);
+					if (Input.GetButton ("Queue"))
+					{
+						selected.Enqueue(characterUnderMouse);
+						//Debug.Log ("Queueing attack order on " + characterUnderMouse.name);
+					}
+					else
+					{
+						selected.Overwrite(characterUnderMouse);
+						//Debug.Log ("Clearing queue, queueing attack order on " + characterUnderMouse.name);
+					}
 				}
 			}
 		}
@@ -141,6 +144,11 @@ public class InputManager {
 		if (spell == null)
 		{
 			Debug.Log ("No spell in that slot");
+		}
+		else if (spell.remainingCooldownTime > 0)
+		{
+			Debug.Log (spell.name + " is still on cooldown for " + spell.remainingCooldownTime + " seconds!");
+			selected.playerCasting = false;
 		}
 		else
 		{
@@ -208,43 +216,43 @@ public class InputManager {
 		{
 			if (Input.GetButtonDown("Level HP"))
 			{
-				selected.stats.MaxHealth += 5;
+				selected.stats.LevelHealth();
 				selected.stats.UnallocatedStatPoints -= 1;
-				Debug.Log ("Raised HP. " + selected.stats.Name + "'s Max HP is now " + selected.stats.MaxHealth + ".");
+				Debug.Log ("Raised HP. " + selected.stats.Name + "'s Max HP is now " + (selected.stats.MaxHealth + 5) + ".");
 				Debug.Log (selected.stats.UnallocatedStatPoints + " points left to spend.");
 				selected.stats.InitializeCombatStats();
 			}
 			else if (Input.GetButtonDown("Level Mana"))
 			{
-				selected.stats.MaxMana += 5;
+				selected.stats.LevelMana();
 				selected.stats.UnallocatedStatPoints -= 1;
-				Debug.Log ("Raised Mana. " + selected.stats.Name + "'s Max Mana is now " + selected.stats.MaxMana + ".");
+				Debug.Log ("Raised Mana. " + selected.stats.Name + "'s Max Mana is now " + (selected.stats.MaxMana + 5) + ".");
 				Debug.Log (selected.stats.UnallocatedStatPoints + " points left to spend.");
 				selected.stats.InitializeCombatStats();
 			}
 			else if (Input.GetButtonDown("Level Strength"))
 			{
-				selected.stats.Strength += 1;
+				selected.stats.LevelStrength();
 				selected.stats.UnallocatedStatPoints -= 1;
-				Debug.Log ("Raised Strength. " + selected.stats.Name + "'s Strength is now " + selected.stats.Strength + ".");
+				Debug.Log ("Raised Strength. " + selected.stats.Name + "'s Strength is now " + (selected.stats.Strength + 1) + ".");
 				Debug.Log (selected.stats.UnallocatedStatPoints + " points left to spend.");
-				selected.stats.InitializeCombatStats();
+				selected.stats.CalculateCombatStats();
 			}
 			else if (Input.GetButtonDown("Level Agility"))
 			{
-				selected.stats.Agility += 1;
+				selected.stats.LevelAgility();
 				selected.stats.UnallocatedStatPoints -= 1;
-				Debug.Log ("Raised Agility. " + selected.stats.Name + "'s Agility is now " + selected.stats.Agility + ".");
+				Debug.Log ("Raised Agility. " + selected.stats.Name + "'s Agility is now " + (selected.stats.Agility + 1) + ".");
 				Debug.Log (selected.stats.UnallocatedStatPoints + " points left to spend.");
-				selected.stats.InitializeCombatStats();
+				selected.stats.CalculateCombatStats();
 			}
 			else if (Input.GetButtonDown("Level Intelligence"))
 			{
-				selected.stats.Intelligence += 1;
+				selected.stats.LevelIntelligence();
 				selected.stats.UnallocatedStatPoints -= 1;
-				Debug.Log ("Raised Intelligence. " + selected.stats.Name + "'s Intelligence is now " + selected.stats.Intelligence + ".");
+				Debug.Log ("Raised Intelligence. " + selected.stats.Name + "'s Intelligence is now " + (selected.stats.Intelligence + 1) + ".");
 				Debug.Log (selected.stats.UnallocatedStatPoints + " points left to spend.");
-				selected.stats.InitializeCombatStats();
+				selected.stats.CalculateCombatStats();
 			}
 		}
 	}
@@ -266,7 +274,14 @@ public class InputManager {
                             if (CharacterCollection.getHero(i) == characterUnderMouse)
 							{
 								Debug.Log ("Casting " + spell.name + " on " + characterUnderMouse.stats.Name);
-								selected.Enqueue (spell, characterUnderMouse, new Vector3());
+								if (Input.GetButton ("Queue"))
+								{
+									selected.Enqueue (spell, characterUnderMouse, new Vector3());
+								}
+								else
+								{
+									selected.Overwrite (spell, characterUnderMouse, new Vector3());
+								}
 								selected.playerCasting = false;
 							}
 						}
@@ -285,7 +300,14 @@ public class InputManager {
 							if (EnemyCollection.getEnemy(i) == characterUnderMouse)
 							{
 								Debug.Log ("Casting " + spell.name + " on " + characterUnderMouse.stats.Name);
-								selected.Enqueue (spell, characterUnderMouse, new Vector3());
+								if (Input.GetButton ("Queue"))
+								{
+									selected.Enqueue (spell, characterUnderMouse, new Vector3());
+								}
+								else
+								{
+									selected.Overwrite (spell, characterUnderMouse, new Vector3());
+								}
 								selected.playerCasting = false;
 							}
 						}
