@@ -41,7 +41,6 @@ public class Room : MonoBehaviour {
         Utilities.prepareForGeneration();
         GenerateRandomObjects();
         SpawnCharacters(SpawnCharacteristics.getDoorPosition());
-        SpawnCharacteristics.increaseDoorsEntered();
     }
 
     private void GenerateRandomObjects(int x, int y) {        
