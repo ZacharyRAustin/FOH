@@ -157,10 +157,9 @@ public class EnemyMovement : MonoBehaviour {
 	}
 
 	private void death() {
-		if (thisCharacter.stats.CurrentHealth == 0) {
+		if (thisCharacter.isDead == true) {
             //Destroy(this.gameObject);
             EnemyCollection.removeAndDestroyEnemy(thisCharacter);
-			Debug.Log("hi");
 		}
 	}
 

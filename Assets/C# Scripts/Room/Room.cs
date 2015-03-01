@@ -105,12 +105,15 @@ public class Room : MonoBehaviour {
     }
 
     private void CreateDoor(int x, int y, int doorPos) {
-        Door newDoor = Instantiate(doorPrefab) as Door;
-        newDoor.setDoorPosition(doorPos);
-        doors.Add(newDoor);
-        newDoor.name = "New Door " + x + ", " + y;
-        newDoor.transform.parent = transform;
-        newDoor.transform.localPosition = new Vector3(x - sizeX * 0.5f, y - sizeY * 0.5f, 0);
+		Door newDoor = Instantiate (doorPrefab) as Door;
+		newDoor.setDoorPosition (doorPos);
+		doors.Add (newDoor);
+		newDoor.name = "New Door " + x + ", " + y;
+		newDoor.transform.parent = transform;
+		newDoor.transform.localPosition = new Vector3 (x - sizeX * 0.5f, y - sizeY * 0.5f, -1.5f);
+		if (doorPos == DoorPositions.EAST || doorPos == DoorPositions.WEST) {
+			newDoor.transform.eulerAngles = new Vector3(0, 180, 90);
+		}
     }
 
 
