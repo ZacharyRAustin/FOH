@@ -41,10 +41,16 @@ public class EnemyMovement : MonoBehaviour {
             if(target == null)
             {
                 checkForTarget();
+                thisCharacter.setAggro(true);
             }
             else if(target.isDead)
             {
                 target = null;
+                thisCharacter.setAggro(false);
+            }
+            else if(!target.isenemy)
+            {
+                thisCharacter.setAggro(true);
             }
             move();
 

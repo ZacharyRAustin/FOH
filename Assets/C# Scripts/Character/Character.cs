@@ -23,7 +23,8 @@ public class Character : MonoBehaviour
     public Image Damage_image;
     private int status = CharacterStatus.WAITING;
 
-
+    private bool isAggrod = false;
+    private float detectRange = 5f;
 
     // ---properties---
     public Character Target {
@@ -211,6 +212,7 @@ public class Character : MonoBehaviour
             DeathCheck();
             if(!isDead)
             {
+                checkForAggro();
                 stats.ResolveBuffs();
                 actionQueue.Resolve();
                 AttackCooldownDecrement();
@@ -580,6 +582,29 @@ public class Character : MonoBehaviour
         return stats.Level;
     }
 
+    public void setAggro(bool a) {
+        isAggrod = a;
+    }
+
+    public bool isAggro() {
+        return isAggrod;
+    }
+
+    public void checkForAggro() {
+        for(int i = 0; i < EnemyCollection.NumberOfEnemies(); i++)
+        {
+            if(!EnemyCollection.getEnemy(i).isDead)
+            {
+                if(Vector3.Distance(getCharacterPosition(), EnemyCollection.getEnemy(i).getCharacterPosition()) < detectRange)
+                {
+                    if(EnemyCollection.getEnemy(i).isAggro())
+                    {
+                        Enqueue(EnemyCollection.getEnemy(i));
+                    }
+                }
+            }
+        }
+    }
 }
 
 
