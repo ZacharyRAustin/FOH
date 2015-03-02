@@ -144,15 +144,18 @@ public class InputManager {
 		if (spell == null)
 		{
 			Debug.Log ("No spell in that slot");
+			MyConsole.NewMessage("No spell in that slot");
 		}
 		else if (spell.remainingCooldownTime > 0)
 		{
 			Debug.Log (spell.name + " is still on cooldown for " + spell.remainingCooldownTime + " seconds!");
+			MyConsole.NewMessage(spell.name + " is still on cooldown for " + spell.remainingCooldownTime + " seconds!");
 			selected.playerCasting = false;
 		}
 		else
 		{
 			Debug.Log ("Input - " + selected.name + " casting " + spell.name);
+			MyConsole.NewMessage("Input - " + selected.name + " casting " + spell.name);
 			selected.playerCasting = true;
 			selected.SetCastTime (spell.castTime);
 			selected.SpellCast (spell);
@@ -185,6 +188,7 @@ public class InputManager {
 			if (instanceUnderMouse == null)
 			{
 				Debug.Log ("Character layer hit, but failed to register instance");
+				MyConsole.NewMessage("Character layer hit, but failed to register instance");
 			}
 			else
 			{
@@ -219,7 +223,9 @@ public class InputManager {
 				selected.stats.LevelHealth();
 				selected.stats.UnallocatedStatPoints -= 1;
 				Debug.Log ("Raised HP. " + selected.stats.Name + "'s Max HP is now " + (selected.stats.MaxHealth + 5) + ".");
+				MyConsole.NewMessage("Raised HP. " + selected.stats.Name + "'s Max HP is now " + (selected.stats.MaxHealth + 5) + ".");
 				Debug.Log (selected.stats.UnallocatedStatPoints + " points left to spend.");
+				MyConsole.NewMessage(selected.stats.UnallocatedStatPoints + " points left to spend.");
 				selected.stats.InitializeCombatStats();
 			}
 			else if (Input.GetButtonDown("Level Mana"))
@@ -227,7 +233,10 @@ public class InputManager {
 				selected.stats.LevelMana();
 				selected.stats.UnallocatedStatPoints -= 1;
 				Debug.Log ("Raised Mana. " + selected.stats.Name + "'s Max Mana is now " + (selected.stats.MaxMana + 5) + ".");
+				MyConsole.NewMessage("Raised Mana. " + selected.stats.Name + "'s Max Mana is now " + (selected.stats.MaxMana + 5) + ".");
 				Debug.Log (selected.stats.UnallocatedStatPoints + " points left to spend.");
+				MyConsole.NewMessage(selected.stats.UnallocatedStatPoints + " points left to spend.");
+
 				selected.stats.InitializeCombatStats();
 			}
 			else if (Input.GetButtonDown("Level Strength"))
@@ -235,7 +244,9 @@ public class InputManager {
 				selected.stats.LevelStrength();
 				selected.stats.UnallocatedStatPoints -= 1;
 				Debug.Log ("Raised Strength. " + selected.stats.Name + "'s Strength is now " + (selected.stats.Strength + 1) + ".");
+				MyConsole.NewMessage("Raised Strength. " + selected.stats.Name + "'s Strength is now " + (selected.stats.Strength + 1) + ".");
 				Debug.Log (selected.stats.UnallocatedStatPoints + " points left to spend.");
+				MyConsole.NewMessage(selected.stats.UnallocatedStatPoints + " points left to spend.");
 				selected.stats.CalculateCombatStats();
 			}
 			else if (Input.GetButtonDown("Level Agility"))
@@ -243,7 +254,9 @@ public class InputManager {
 				selected.stats.LevelAgility();
 				selected.stats.UnallocatedStatPoints -= 1;
 				Debug.Log ("Raised Agility. " + selected.stats.Name + "'s Agility is now " + (selected.stats.Agility + 1) + ".");
+				MyConsole.NewMessage("Raised Agility. " + selected.stats.Name + "'s Agility is now " + (selected.stats.Agility + 1) + ".");
 				Debug.Log (selected.stats.UnallocatedStatPoints + " points left to spend.");
+				MyConsole.NewMessage(selected.stats.UnallocatedStatPoints + " points left to spend.");
 				selected.stats.CalculateCombatStats();
 			}
 			else if (Input.GetButtonDown("Level Intelligence"))
@@ -251,7 +264,9 @@ public class InputManager {
 				selected.stats.LevelIntelligence();
 				selected.stats.UnallocatedStatPoints -= 1;
 				Debug.Log ("Raised Intelligence. " + selected.stats.Name + "'s Intelligence is now " + (selected.stats.Intelligence + 1) + ".");
+				MyConsole.NewMessage("Raised Intelligence. " + selected.stats.Name + "'s Intelligence is now " + (selected.stats.Intelligence + 1) + ".");
 				Debug.Log (selected.stats.UnallocatedStatPoints + " points left to spend.");
+				MyConsole.NewMessage(selected.stats.UnallocatedStatPoints + " points left to spend.");
 				selected.stats.CalculateCombatStats();
 			}
 		}
@@ -274,6 +289,7 @@ public class InputManager {
                             if (CharacterCollection.getHero(i) == characterUnderMouse)
 							{
 								Debug.Log ("Casting " + spell.name + " on " + characterUnderMouse.stats.Name);
+								MyConsole.NewMessage("Casting " + spell.name + " on " + characterUnderMouse.stats.Name);
 								if (Input.GetButton ("Queue"))
 								{
 									selected.Enqueue (spell, characterUnderMouse, new Vector3());
@@ -300,6 +316,7 @@ public class InputManager {
 							if (EnemyCollection.getEnemy(i) == characterUnderMouse)
 							{
 								Debug.Log ("Casting " + spell.name + " on " + characterUnderMouse.stats.Name);
+								MyConsole.NewMessage("Casting " + spell.name + " on " + characterUnderMouse.stats.Name);
 								if (Input.GetButton ("Queue"))
 								{
 									selected.Enqueue (spell, characterUnderMouse, new Vector3());

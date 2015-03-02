@@ -47,6 +47,7 @@ public class GameManager : MonoBehaviour {
 		style_font.fontSize = 10;
 		style_font.fontStyle = FontStyle.Normal;
 
+
         Random.seed = seed;
         EnemyGenerator.Initialize(trollPrefab, enemyMaterial);
         SpawnCharacteristics.prepareForSpawn();
@@ -71,6 +72,9 @@ public class GameManager : MonoBehaviour {
 		SetHeroIsSelected ();
 		count_1 += 1;
 		flashred ();
+		playerCharA.count_times = 0;
+		playerCharB.count_times = 0;
+		playerCharC.count_times = 0;
 
 		if (EnemyCollection.NumberOfEnemies() > 0)
 		{
@@ -103,6 +107,7 @@ public class GameManager : MonoBehaviour {
 			s.SetAbility(param);
 			playerCharA.stats.AddAbility(s);
 			Debug.Log ("Hero A got a new ability!");
+			MyConsole.NewMessage("Hero A got a new ability!");
 			s.Print ();
 			s.caster = playerCharA;
 
@@ -111,6 +116,7 @@ public class GameManager : MonoBehaviour {
 			s.SetAbility(param);
 			playerCharB.stats.AddAbility(s);
 			Debug.Log ("Hero B got a new ability!");
+			MyConsole.NewMessage("Hero B got a new ability!");
 			s.Print ();
 			s.caster = playerCharB;
 
@@ -119,6 +125,7 @@ public class GameManager : MonoBehaviour {
 			s.SetAbility(param);
 			playerCharC.stats.AddAbility(s);
 			Debug.Log ("Hero C got a new ability!");
+			MyConsole.NewMessage("Hero C got a new ability!");
 			s.Print ();
 			s.caster = playerCharC;
 		}
@@ -127,18 +134,21 @@ public class GameManager : MonoBehaviour {
 	    {
 			playerCharA.stats.weapon = equipmentGenerator.GenerateWeapon(3);
 			Debug.Log ("Hero A got a " + playerCharA.stats.weapon.name + "!");
+			MyConsole.NewMessage("Hero A got a " + playerCharA.stats.weapon.name + "!");
 			playerCharA.stats.gear[0] = equipmentGenerator.GenerateArmor(1);
 			playerCharA.stats.gear[1] = equipmentGenerator.GenerateArmor(2);
 			playerCharA.stats.gear[2] = equipmentGenerator.GenerateArmor(0);
 
 			playerCharB.stats.weapon = equipmentGenerator.GenerateWeapon(3);
 			Debug.Log ("Hero B got a " + playerCharB.stats.weapon.name + "!");
+			MyConsole.NewMessage("Hero B got a " + playerCharB.stats.weapon.name + "!");
 			playerCharB.stats.gear[0] = equipmentGenerator.GenerateArmor(10);
 			playerCharB.stats.gear[1] = equipmentGenerator.GenerateArmor(2);
 			playerCharB.stats.gear[2] = equipmentGenerator.GenerateArmor(1);
 
 			playerCharC.stats.weapon = equipmentGenerator.GenerateWeapon(3);
 			Debug.Log ("Hero C got a " + playerCharC.stats.weapon.name + "!");
+			MyConsole.NewMessage("Hero C got a " + playerCharC.stats.weapon.name + "!");
 			playerCharC.stats.gear[0] = equipmentGenerator.GenerateArmor(10);
 			playerCharC.stats.gear[1] = equipmentGenerator.GenerateArmor(2);
 			playerCharC.stats.gear[2] = equipmentGenerator.GenerateArmor(1);
@@ -175,7 +185,7 @@ public class GameManager : MonoBehaviour {
 	}
 
     private void BeginGame() {
-		MyConsole.NewMessage("watsupp2");
+
         roomInstance = Instantiate(roomPrefab) as Room;
         roomInstance.Generate();
         playerCharA = Instantiate (characterPrefab1) as Character;
@@ -301,9 +311,9 @@ public class GameManager : MonoBehaviour {
 	public void flashred(){
 		if (playerCharA.count_times == 0 && playerCharB.count_times == 0 && playerCharC.count_times == 0) {
 			damageimage.color = flashColour_1;
-		} else if((playerCharA.stats.CurrentHealth*100/playerCharA.stats.MaxHealth <= 40)&& (playerCharA.count_times >= 0) ||
-		          (playerCharB.stats.CurrentHealth*100/playerCharB.stats.MaxHealth <= 40)&& (playerCharB.count_times >= 0) ||
-		          (playerCharC.stats.CurrentHealth*100/playerCharC.stats.MaxHealth <= 40)&& (playerCharC.count_times >= 0)){
+		} else if((playerCharA.stats.CurrentHealth*100/playerCharA.stats.MaxHealth <= 40)&& (playerCharA.count_times > 0) ||
+		          (playerCharB.stats.CurrentHealth*100/playerCharB.stats.MaxHealth <= 40)&& (playerCharB.count_times > 0) ||
+		          (playerCharC.stats.CurrentHealth*100/playerCharC.stats.MaxHealth <= 40)&& (playerCharC.count_times > 0)){
 			damageimage.color = flashColour;
 		}
 		
