@@ -109,7 +109,7 @@ public class CharacterCollection {
 
         if(ret == 0)
         {
-            return 10;
+            return 1;
         }
         return ret / CharacterCollection.NumberOfHeroes();
     }
