@@ -114,7 +114,7 @@ public class CharacterCollection {
 	{
 		foreach(Character c in heroes)
 		{
-			c.GainExp(exp);
+		//	c.GainExp(exp);
 		}
 	}
 }

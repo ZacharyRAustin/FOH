@@ -221,9 +221,7 @@ public class GameManager : MonoBehaviour {
 				
 				
 				MyConsole.DrawConsole ();
-		        while (count_1 < 100) {
-			MyConsole.NewMessage("test");
-				}
+		        
 		}
 
     private void RestartGame() {
