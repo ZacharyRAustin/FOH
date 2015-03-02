@@ -23,35 +23,52 @@ public class CharacterInstance : MonoBehaviour {
 	
 	}
 
+
 	public void walk ()
 	{
-		anim.SetBool ("run", false);
-		anim.SetBool ("walk", true);
-		anim.SetBool ("idle", false);
-		anim.SetBool ("attack", false);
+		if (anim == null) {
+			animation.Play ("walk");
+		} else {
+			anim.SetBool ("run", false);
+			anim.SetBool ("walk", true);
+			anim.SetBool ("idle", false);
+			anim.SetBool ("attack", false);
+		}
 	}
-
+	
 	public void run ()
 	{
-		anim.SetBool ("run", true);
-		anim.SetBool ("walk", false);
-		anim.SetBool ("idle", false);
-		anim.SetBool ("attack", false);
+		if (anim == null) {
+			animation.Play ("run");
+		} else {
+			anim.SetBool ("run", true);
+			anim.SetBool ("walk", false);
+			anim.SetBool ("idle", false);
+			anim.SetBool ("attack", false);
+		}
 	}
-
+	
 	public void idle ()
 	{
-		anim.SetBool ("run", false);
-		anim.SetBool ("walk", false);
-		anim.SetBool ("attack", false);
-		anim.SetBool ("idle", true);
+		if (anim == null) {
+			animation.Play ("idle");
+		} else {
+			anim.SetBool ("run", false);
+			anim.SetBool ("walk", false);
+			anim.SetBool ("attack", false);
+			anim.SetBool ("idle", true);
+		}
 	}
-
+	
 	public void attack () {
-		anim.SetBool ("run", false);
-		anim.SetBool ("walk", false);
-		anim.SetBool ("idle", false);
-		anim.SetBool ("attack", true);
+		if (anim == null) {
+			animation.Play ("attack");
+		} else {
+			anim.SetBool ("run", false);
+			anim.SetBool ("walk", false);
+			anim.SetBool ("idle", false);
+			anim.SetBool ("attack", true);
+		}
 	}
 
     public void setEnabled(bool e) {
