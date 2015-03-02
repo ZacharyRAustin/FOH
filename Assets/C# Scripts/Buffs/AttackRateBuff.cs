@@ -11,13 +11,20 @@ public class AttackRateBuff : Buff {
 	public override void Resolve () {
 		if (elapsedTime == 0) //upon activation
 		{
-			Debug.Log ("Attack rate: " + target.stats.AttackRate);
-			target.stats.AttackRate = magnitude * target.stats.AttackRate;
+			if (magnitude > 1)
+			{
+				Debug.Log (target.name + "'s attack time is slowed by " + magnitude + "!");
+			}
+			else if (magnitude < 1)
+			{
+				Debug.Log (target.name + "'s attack time is sped up by " + magnitude + "!");
+			}
+			target.stats.attackRateMod *= magnitude;
 			Debug.Log ("Attack rate: " + target.stats.AttackRate);
 		}
 		if (elapsedTime >= duration)
 		{
-			target.stats.AttackRate = target.stats.AttackRate / magnitude;
+			target.stats.attackRateMod /= magnitude;
 			Debug.Log (target.name + "'s attack rate returns to normal.");
 			Debug.Log ("Attack rate: " + target.stats.AttackRate);
 			target.stats.RemoveBuff(this);

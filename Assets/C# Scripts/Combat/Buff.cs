@@ -9,15 +9,7 @@ public class Buff {
 	public bool debuff = false; // if false, treated as "buff" (beneficial), if true, "debuff" (negative) - may matter for other spells
 						// ex. a Purge spell that removes debuffs from an ally or buffs from an enemy
 
-	// Use this for initialization
-	public void Start () {
 
-	}
-	
-	// Update is called once per frame
-	void Update () {
-
-	}
 
 	// Resolve function handles application of effects - damage, stat changes, etc.
 	public virtual void Resolve () {

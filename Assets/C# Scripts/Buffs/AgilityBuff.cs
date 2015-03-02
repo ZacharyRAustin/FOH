@@ -6,13 +6,20 @@ public class AgilityBuff : Buff {
 	public override void Resolve () {
 		if (elapsedTime == 0) //upon activation
 		{
-			Debug.Log ("Agility: " + target.stats.Agility);
-			target.stats.Agility = (int) magnitude + target.stats.Agility;
+			if (magnitude > 0)
+			{
+				Debug.Log (target.name + "'s agility is boosted by " + magnitude + "!");
+			}
+			else if (magnitude < 0)
+			{
+				Debug.Log (target.name + "'s agility is reduced by " + magnitude + "!");
+			}
+			target.stats.agiMod += (int) magnitude;
 			Debug.Log ("Agility: " + target.stats.Agility);
 		}
 		if (elapsedTime >= duration)
 		{
-			target.stats.Agility = target.stats.Agility - (int) magnitude; //return agility to normal
+			target.stats.agiMod -= (int) magnitude; //return agility to normal
 			Debug.Log (target.name + "'s agility returns to normal.");
 			Debug.Log ("Agility: " + target.stats.Agility);
 			target.stats.RemoveBuff(this);

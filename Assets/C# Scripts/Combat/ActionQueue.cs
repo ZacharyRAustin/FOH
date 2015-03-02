@@ -82,6 +82,7 @@ public class ActionQueue {
 	public void Pop ()
 	{
 		actionQueue.Dequeue ();
+		parentChar.setCharacterIdle ();
 	}
 
 }
