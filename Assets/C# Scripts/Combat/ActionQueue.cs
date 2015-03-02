@@ -69,7 +69,10 @@ public class ActionQueue {
 			else if (actionQueue.Peek () is AttackOrder)
 			{
 				AttackOrder currentOrder = (AttackOrder) actionQueue.Peek ();
-				parentChar.ResolveAttackOrder(currentOrder);
+                if(parentChar != null)
+                {
+                    parentChar.ResolveAttackOrder(currentOrder);
+                }
 			}
 			else if (actionQueue.Peek () is CastOrder)
 			{
