@@ -431,6 +431,7 @@ public class Character : MonoBehaviour
             character.idle();
             actionQueue.Pop();
             Debug.Log("Character " + name + " completed movement order");
+			MyConsole.NewMessage("Character " + name + " completed movement order");
         }
         else
         {
@@ -532,6 +533,7 @@ public class Character : MonoBehaviour
     public void character_gui_update() {
         barDisplay_1 = stats.CurrentHealth * 100 / stats.MaxHealth;
         barDisplay = stats.CurrentMana;
+
         if (((stats.CurrentHealth * 100) / stats.MaxHealth) > 40)
         {
 
@@ -561,6 +563,7 @@ public class Character : MonoBehaviour
 
 
     }
+
 	public void GainExp (int exp)
 	{
 		if (isenemy == false)
