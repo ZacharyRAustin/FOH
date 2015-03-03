@@ -226,7 +226,10 @@ public class Character : MonoBehaviour
             }
             else
             {
-                character.idle();
+                if(!isenemy)
+                {
+                    character.idle();
+                }
             }
         }
         else
