@@ -203,7 +203,7 @@ public class Character : MonoBehaviour
 
     // Update is called once per frame
     void Update() {
-        count_times = 0;
+        //count_times = 0;
         pos_bar = Camera.main.WorldToScreenPoint(character.transform.localPosition);
         pause_string = "GAME IS PAUSED";
         if (isPaused == false)
