@@ -3,9 +3,16 @@ using System.Collections;
 
 public class AttackRateBuff : Buff {
 
-	// Use this for initialization
-	void Start () {
-	
+	public override void DebuffSet()
+	{
+		if (magnitude < 1)
+		{
+			debuff = false;
+		}
+		else
+		{
+			debuff = true;
+		}
 	}
 
 	public override void Resolve () {
@@ -20,11 +27,16 @@ public class AttackRateBuff : Buff {
 				Debug.Log (target.name + "'s attack time is sped up by " + magnitude + "!");
 			}
 			target.stats.attackRateMod *= magnitude;
+			target.stats.CalculateCombatStats();
 			Debug.Log ("Attack rate: " + target.stats.AttackRate);
 		}
+
+		target.stats.attackRateMod *= magnitude;
+		target.stats.CalculateCombatStats();
+
 		if (elapsedTime >= duration)
 		{
-			target.stats.attackRateMod /= magnitude;
+			target.stats.CalculateCombatStats();
 			Debug.Log (target.name + "'s attack rate returns to normal.");
 			Debug.Log ("Attack rate: " + target.stats.AttackRate);
 			target.stats.RemoveBuff(this);

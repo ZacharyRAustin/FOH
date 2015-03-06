@@ -11,6 +11,7 @@ public class RandomAbility {
 	public Buff buff;
 	public float buffMagnitude, buffTime;
 	public float remainingCooldownTime = 0f;
+	//public GameObject spellProjectilePrefab;
 
 	private bool isInstantCast = false;
 
@@ -65,6 +66,11 @@ public class RandomAbility {
 		{
 			buffMagnitude = Random.Range (param.minBuffMagnitude, param.maxBuffMagnitude);
 		}
+
+		if (buff != null)
+		{
+			buff.DebuffSet ();
+		}
 	}
 
 	public Buff RandomBuff (List<Buff> possibleBuffs)
@@ -94,6 +100,8 @@ public class RandomAbility {
 		string actionName = "Default";
 		//string damageOrHeal = "Default";
 		string descriptor = null;
+		string targetdescriptor = null;
+		string newline = null;
 
 		if (buff == null)
 		{
@@ -149,13 +157,36 @@ public class RandomAbility {
 
 		if (isInstantCast)
 		{
-			instantCast = "Flash ";
+			instantCast = "Instant ";
 		}
 
-		string[] values = new string[3]{instantCast, descriptor, actionName};
+		if (targetOption == AbilityTargetOption.SELF)
+		{
+			targetdescriptor = "Self ";
+		}
+		else if (targetOption == AbilityTargetOption.TARGET_ALLY)
+		{
+			targetdescriptor = "Ally ";
+		}
+		else if (targetOption == AbilityTargetOption.TARGET_ENEMY)
+		{
+			targetdescriptor = "Enemy ";
+		}
+		else if (targetOption == AbilityTargetOption.TARGET_LOCATION)
+		{
+			targetdescriptor = "Aimed ";
+		}
+
+		string[] values = new string[5]{instantCast, targetdescriptor, newline, descriptor, actionName};
 
 		name = string.Concat (values);
 
+		if (name.Length > 15)
+		{
+			newline = "\n";
+			values = new string[5]{instantCast, targetdescriptor, newline, descriptor, actionName};
+			name = string.Concat (values);
+		}
 		return name;
 	}
 
@@ -174,6 +205,10 @@ public class RandomAbility {
 		else if (targetOption == AbilityTargetOption.SELF)
 		{
 			Debug.Log ("Target option: Self");
+		}
+		else if (targetOption == AbilityTargetOption.TARGET_LOCATION)
+		{
+			Debug.Log ("Target option: Target Location");
 		}
 
 		Debug.Log ("Range: " + range);
@@ -199,13 +234,31 @@ public class RandomAbility {
 		Debug.Log ("RandomAbility.Resolve");
 		caster.stats.CurrentMana -= manaCost;
 		remainingCooldownTime = coolDown;
-		targetChar.stats.CurrentHealth -= (damage + caster.stats.Intelligence);
-		targetChar.stats.CurrentHealth += (healing + caster.stats.Intelligence);
-		if (buff != null)
+
+		if (targetOption == AbilityTargetOption.TARGET_ALLY || targetOption == AbilityTargetOption.TARGET_ENEMY || targetOption == AbilityTargetOption.SELF)
 		{
-			targetChar.stats.AddBuff(buff);
-			buff.target = targetChar;
-			buff.elapsedTime = 0f;
+			targetChar.stats.CurrentHealth -= (damage + caster.stats.Intelligence);
+			targetChar.stats.CurrentHealth += (healing + caster.stats.Intelligence);
+
+			if (buff != null)
+			{
+				Buff appliedBuff = new Buff();
+				appliedBuff = buff;
+				appliedBuff.target = targetChar;
+				appliedBuff.elapsedTime = 0f;
+				targetChar.stats.AddBuff(appliedBuff);
+			}
+		}
+		else if (targetOption == AbilityTargetOption.TARGET_LOCATION)
+		{
+			Vector3 spellProjectileDirection = targetLocation - caster.transform.localPosition;
+			spellProjectileDirection.Normalize();
+			GameObject spellProjectile = (GameObject) Object.Instantiate(Resources.Load("SpellProjectile"), caster.getCharacterPosition(), Quaternion.identity);
+			SpellProjectile projectileScript = spellProjectile.GetComponent<SpellProjectile>();
+			projectileScript.velocity = 15;
+			projectileScript.targetLocation = targetLocation;
+			projectileScript.spell = this;
+		
 		}
 	}
 
@@ -219,5 +272,46 @@ public class RandomAbility {
 		{
 			remainingCooldownTime = 0;
 		}
+	}
+
+	public void CollisionResolve(Character hitChar)
+	{
+		if (hitChar.isenemy)
+		{
+			hitChar.stats.CurrentHealth -= (damage + caster.stats.Intelligence);
+			if (buff != null)
+			{
+				if (buff.debuff)
+				{
+					Buff appliedBuff = new Buff();
+					appliedBuff = buff;
+					appliedBuff.target = hitChar;
+					appliedBuff.elapsedTime = 0f;
+					hitChar.stats.AddBuff(appliedBuff);
+				}
+			}
+		}
+		else
+		{
+			hitChar.stats.CurrentHealth += (healing + caster.stats.Intelligence);
+			if (buff != null)
+			{
+				if (!buff.debuff)
+				{
+					Buff appliedBuff = buff.CopyBuff(buff);
+					appliedBuff.target = hitChar;
+					appliedBuff.elapsedTime = 0f;
+					hitChar.stats.AddBuff(appliedBuff);
+					//Debug.Log ("Buff target is " + buff.target.name);
+					Debug.Log ("Applied Buff target is " + appliedBuff.target.name);
+					Debug.Log ("Buff duration: " + appliedBuff.duration);
+				}
+			}
+		}
+	}
+
+	public void TargetPositionResolve()
+	{
+
 	}
 }

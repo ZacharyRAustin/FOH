@@ -5,7 +5,7 @@ using UnityEngine.UI;
 public class GameManager : MonoBehaviour {
 
 	public bool isPaused = true;
-	
+	public string text;
     public Room roomPrefab;
     private Room roomInstance;
 
@@ -18,7 +18,10 @@ public class GameManager : MonoBehaviour {
 	public Character characterPrefab3;
 	public Character trollPrefab;
     
+
 	private EquipmentGenerator equipmentGenerator = new EquipmentGenerator();
+
+	public int count_1;
 
 	private Character playerCharA;
 	private Character playerCharB;
@@ -34,15 +37,19 @@ public class GameManager : MonoBehaviour {
 
     private int seed = 123456789;
 
+	GUIStyle style_font = new GUIStyle();
+
 	// Use this for initialization
 
 	void Start () {
 		//damageimage.color = flashColour;
-
-
+		count_1 = 0;
+		style_font.fontSize = 10;
+		style_font.fontStyle = FontStyle.Normal;
 
         Random.seed = seed;
         EnemyGenerator.Initialize(trollPrefab, enemyMaterial);
+        SpawnCharacteristics.prepareForSpawn();
         BeginGame();
 		CharacterCollection.addHero (playerCharA);
         CharacterCollection.addHero (playerCharB);
@@ -62,6 +69,8 @@ public class GameManager : MonoBehaviour {
 	void Update () {
 
 		SetHeroIsSelected ();
+		count_1 += 1;
+		flashred ();
 
 		if (EnemyCollection.NumberOfEnemies() > 0)
 		{
@@ -89,7 +98,7 @@ public class GameManager : MonoBehaviour {
 
 		if (Input.GetButtonDown("Generate Abilities"))
 		{
-			AbilityParameters param = new AbilityParameters(Random.Range(1,4));
+			AbilityParameters param = new AbilityParameters(Random.Range(1,5));
 			RandomAbility s = new RandomAbility();
 			s.SetAbility(param);
 			playerCharA.stats.AddAbility(s);
@@ -97,7 +106,7 @@ public class GameManager : MonoBehaviour {
 			s.Print ();
 			s.caster = playerCharA;
 
-			param = new AbilityParameters(Random.Range (1,4));
+			param = new AbilityParameters(Random.Range (1,5));
 			s = new RandomAbility();
 			s.SetAbility(param);
 			playerCharB.stats.AddAbility(s);
@@ -105,7 +114,7 @@ public class GameManager : MonoBehaviour {
 			s.Print ();
 			s.caster = playerCharB;
 
-			param = new AbilityParameters(Random.Range (1,4));
+			param = new AbilityParameters(Random.Range (1,5));
 			s = new RandomAbility();
 			s.SetAbility(param);
 			playerCharC.stats.AddAbility(s);
@@ -166,6 +175,7 @@ public class GameManager : MonoBehaviour {
 	}
 
     private void BeginGame() {
+		MyConsole.NewMessage("watsupp2");
         roomInstance = Instantiate(roomPrefab) as Room;
         roomInstance.Generate();
         playerCharA = Instantiate (characterPrefab1) as Character;
@@ -184,7 +194,6 @@ public class GameManager : MonoBehaviour {
 		playerCharA.stats.InitializeEquipment ();
 		playerCharA.stats.CalculateCombatStats ();
 		playerCharA.stats.InitializeCombatStats ();
-		playerCharA.stats.InitializeProgressionStats ();
 
 		playerCharB = Instantiate (characterPrefab2) as Character;
 		playerCharB.characterPrefab.name = "Hero B Prefab";
@@ -278,11 +287,10 @@ public class GameManager : MonoBehaviour {
 
 //    }
 	void OnGUI(){
-		MyConsole.DrawConsole(new Rect(Screen.width-200,Screen.height-100,400,400));
-		if (Event.current.type == EventType.Repaint) {
 				
-		}
-
+				
+				MyConsole.DrawConsole ();
+		        
 		}
 
     private void RestartGame() {
@@ -293,7 +301,9 @@ public class GameManager : MonoBehaviour {
 	public void flashred(){
 		if (playerCharA.count_times == 0 && playerCharB.count_times == 0 && playerCharC.count_times == 0) {
 			damageimage.color = flashColour_1;
-		} else {
+		} else if((playerCharA.stats.CurrentHealth*100/playerCharA.stats.MaxHealth <= 40)&& (playerCharA.count_times >= 0) ||
+		          (playerCharB.stats.CurrentHealth*100/playerCharB.stats.MaxHealth <= 40)&& (playerCharB.count_times >= 0) ||
+		          (playerCharC.stats.CurrentHealth*100/playerCharC.stats.MaxHealth <= 40)&& (playerCharC.count_times >= 0)){
 			damageimage.color = flashColour;
 		}
 		
@@ -329,6 +339,4 @@ public class GameManager : MonoBehaviour {
 			playerCharC.is_selected = true;
 		}
 	}
-
-
 }

@@ -59,6 +59,7 @@ public class ActionQueue {
 	
 	public void Resolve ()
 	{
+		//Debug.Log ("Resolving ability queue");
 		if (actionQueue.Count > 0)
 		{
 			if (actionQueue.Peek() is MovementOrder)
@@ -69,10 +70,14 @@ public class ActionQueue {
 			else if (actionQueue.Peek () is AttackOrder)
 			{
 				AttackOrder currentOrder = (AttackOrder) actionQueue.Peek ();
-				parentChar.ResolveAttackOrder(currentOrder);
+                if(parentChar != null)
+                {
+                    parentChar.ResolveAttackOrder(currentOrder);
+                }
 			}
 			else if (actionQueue.Peek () is CastOrder)
 			{
+
 				CastOrder currentOrder = (CastOrder) actionQueue.Peek ();
 				parentChar.ResolveCastOrder(currentOrder);
 			}

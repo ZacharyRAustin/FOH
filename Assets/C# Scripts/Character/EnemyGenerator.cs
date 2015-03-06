@@ -22,11 +22,10 @@ public class EnemyGenerator {
             enemy.characterPrefab.SetParentChar(enemy);
             enemy.Generate(pos.x, pos.y);
             enemy.name = enemyName;
+            int temp = SpawnCharacteristics.generateNewEnemyLevel();
+            Debug.Log("Generated Level is: " + temp);
+            enemy.stats = new CharacterStats(temp);
             enemy.stats.Name = enemyName;
-			enemy.stats.InitializeTrollBaseStats();
-			enemy.stats.InitializeEquipment();
-			enemy.stats.CalculateCombatStats();
-			enemy.stats.InitializeCombatStats();
             enemy.isenemy = true;
             enemy.position_y_health = 10 + 60 * EnemyCollection.NumberOfEnemies();
             enemy.position_y = 40 + 60 * EnemyCollection.NumberOfEnemies();

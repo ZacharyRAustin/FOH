@@ -53,6 +53,12 @@ public class AbilityParameters {
 			maxHealing = 15;
 			maxManaCost = 6;
 		}
+		else if (x == AbilityTargetOption.TARGET_LOCATION)
+		{
+			range = 20;
+			minDamage = 5;
+			maxDamage = 15;
+		}
 		else
 		{
 

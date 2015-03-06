@@ -32,6 +32,40 @@ public class CharacterStats {
 	public int hitMod = 0, critMod = 0, dodgeMod = 0;
 	public float attackRateMod = 1f, moveSpeedMod = 1f;
 
+    public CharacterStats() {
+
+    }
+
+	public void SetModifiersNeutral()
+	{
+		healthMod = 0;
+		manaMod = 0;
+		strMod = 0;
+		agiMod = 0;
+		intMod = 0;
+		damageMod = 0;
+		armorMod = 0;
+		magResMod = 0;
+		hitMod = 0;
+		critMod = 0;
+		dodgeMod = 0;
+		attackRateMod = 1f;
+		moveSpeedMod = 1f;
+	}
+
+    public CharacterStats(int level) {
+        baseMaxHealth = 60 * level;
+        baseMaxMana = 30 * level;
+        baseStrength = 5 * level;
+        baseAgility = 5 * level;
+        baseIntelligence = 3 * level;
+        expYield = 4 * level;
+        InitializeEquipment();
+        CalculateCombatStats();
+        InitializeCombatStats();
+    }
+
+
 	//base stat properties
 	public string Name
 	{
@@ -286,7 +320,7 @@ public class CharacterStats {
 		dodgeRate = calculateDodgeRate ();
 		attackRate = calculateAttackRate();
 		attackRange = weapon.attackRange;
-		moveSpeed = 2.0f * moveSpeedMod;
+		moveSpeed = 4.0f * moveSpeedMod;
 	}
 
 	public void InitializeProgressionStats ()
@@ -343,9 +377,18 @@ public class CharacterStats {
 
 	public void ResolveBuffs ()
 	{
-		foreach (Buff buff in buffs)
+		if (buffs.Count > 0)
 		{
-			buff.Resolve();
+			for (int i = 0; i < buffs.Count; i++)
+			{
+				Buff buff = buffs.ToArray()[i];
+				buff.Resolve();
+				/*if (buff.elapsedTime > buff.duration)
+				{
+					RemoveBuff(buff);
+					buff = null;
+				}*/
+			}
 		}
 	}
 

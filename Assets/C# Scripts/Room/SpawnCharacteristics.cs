@@ -10,7 +10,7 @@ public class SpawnCharacteristics{
     private static int spawnChance = 2;
     private static int doorsEntered = 1;
     private static int maxEnemies = 2;
-    private static int averageCharacterLevel;
+    private static int averageCharacterLevel = 1;
     private static int diffPerEnemy;
     private static int testCounter = 0;
     private static int maxEnemyLevel;
@@ -74,6 +74,10 @@ public class SpawnCharacteristics{
         {
             averageEnemyLevel = l;
         }
+		else
+		{
+			averageEnemyLevel = 1;
+		}
     }
 
     public static int getAvgCharacterLevel() {
@@ -101,18 +105,15 @@ public class SpawnCharacteristics{
     }
 
     private static void calculateEnemyLevel() {
-        if(testCounter % 3 == 0)
-        {
-            averageCharacterLevel++;
-            Debug.Log("Increasing character level to " + averageCharacterLevel);
-        }
+        averageCharacterLevel = CharacterCollection.getAverageLevel();
         averageEnemyLevel = averageCharacterLevel;
 
         int totalHeroLevel = averageCharacterLevel * CharacterCollection.NumberOfHeroes();
         int totalEnemyLevel = averageEnemyLevel * maxEnemies;
         int levelDifference = totalHeroLevel - totalEnemyLevel;
         diffPerEnemy = levelDifference / maxEnemies;
-        maxEnemyLevel = averageCharacterLevel + (int) ((double) averageCharacterLevel * .3);
+        maxEnemyLevel = (Math.Max ((averageCharacterLevel + (int) ((double) averageCharacterLevel * .3)), 1));
+        Debug.Log("Max Enemy Level is " + maxEnemyLevel);
         testCounter++;
     }
 
@@ -134,11 +135,13 @@ public class SpawnCharacteristics{
         if(bound < 0)
         {
             int temp = Math.Max(averageEnemyLevel + UnityEngine.Random.Range(bound, 0), 1);
+            Debug.Log("Temp is " + temp);
             return Math.Min(temp, maxEnemyLevel);
         }
         else
         {
             int temp = Math.Max(averageEnemyLevel + UnityEngine.Random.Range(0, bound), 1);
+            Debug.Log("Temp is " + temp);
             return Math.Min(temp, maxEnemyLevel);
         }
 

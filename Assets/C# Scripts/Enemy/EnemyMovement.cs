@@ -35,12 +35,25 @@ public class EnemyMovement : MonoBehaviour {
 	void Update () {
         if(!thisCharacter.isPaused)
         {
+            thisCharacter.getCharacter().animation.enabled = true;
             death();
+            
             if(target == null)
             {
                 checkForTarget();
+                thisCharacter.setAggro(true);
+            }
+            else if(target.isDead)
+            {
+                target = null;
+                thisCharacter.setAggro(false);
+            }
+            else if(!target.isenemy)
+            {
+                thisCharacter.setAggro(true);
             }
             move();
+
             AttackCooldownDecrement();
             currentPosition = thisCharacter.getCharacterPosition();
             target = thisCharacter.Target;
@@ -48,6 +61,10 @@ public class EnemyMovement : MonoBehaviour {
             {
                 targetPosition = target.getCharacterPosition();
             }
+        }
+        else
+        {
+            thisCharacter.getCharacter().animation.enabled = false;
         }
 	}
 
@@ -89,7 +106,7 @@ public class EnemyMovement : MonoBehaviour {
 
 	private void move () {
 		// when enemy detects a target
-		if (Vector3.Distance (currentPosition, targetPosition) < detectRange && Vector3.Distance (currentPosition, targetPosition) > attackRange) {
+		if (target != null && Vector3.Distance (currentPosition, targetPosition) < detectRange && Vector3.Distance (currentPosition, targetPosition) > attackRange) {
 			thisCharacter.getCharacter ().animation.Play ("Run");
 			moveBetweenPositions (currentPosition, targetPosition, chasingSpeed);
 		} 
@@ -97,7 +114,7 @@ public class EnemyMovement : MonoBehaviour {
 			attack ();
 		}
 		// when enemy doesn't detect a target
-		else if (Vector3.Distance (currentPosition, targetPosition) > detectRange) {
+		else if (target == null || Vector3.Distance (currentPosition, targetPosition) > detectRange) {
 			// outside of patrol range and target is not detected
 			if (Vector3.Distance (currentPosition, originalPosition) > patrolRange) {
 				thisCharacter.getCharacter ().animation.Play ("Walk");
@@ -157,7 +174,7 @@ public class EnemyMovement : MonoBehaviour {
 	}
 
 	private void death() {
-		if (thisCharacter.stats.CurrentHealth == 0) {
+		if (thisCharacter.isDead == true) {
             //Destroy(this.gameObject);
             EnemyCollection.removeAndDestroyEnemy(thisCharacter);
 			Debug.Log("EnemyMovement.Death()");
@@ -178,11 +195,14 @@ public class EnemyMovement : MonoBehaviour {
     private void checkForTarget() {
         for(int i = 0; i < CharacterCollection.NumberOfHeroes(); i++)
         {
-            if(Vector3.Distance (currentPosition, CharacterCollection.getHero(i).getCharacterPosition()) < detectRange)
+            if(!CharacterCollection.getHero(i).isDead)
             {
-                target = CharacterCollection.getHero(i);
-                targetPosition = target.getCharacterPosition();
-                return;
+                if (Vector3.Distance(currentPosition, CharacterCollection.getHero(i).getCharacterPosition()) < detectRange)
+                {
+                    target = CharacterCollection.getHero(i);
+                    targetPosition = target.getCharacterPosition();
+                    return;
+                }
             }
         }
     }

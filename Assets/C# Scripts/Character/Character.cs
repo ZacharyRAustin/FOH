@@ -23,7 +23,8 @@ public class Character : MonoBehaviour
     public Image Damage_image;
     private int status = CharacterStatus.WAITING;
 
-
+    private bool isAggrod = false;
+    private float detectRange = 5f;
 
     // ---properties---
     public Character Target {
@@ -207,18 +208,35 @@ public class Character : MonoBehaviour
         pause_string = "GAME IS PAUSED";
         if (isPaused == false)
         {
+            if(!isenemy)
+            {
+                character.setEnabled(true);
+            }
             pause_string = "";
-			stats.CalculateCombatStats();
             DeathCheck();
-            stats.ResolveBuffs();
-            actionQueue.Resolve();
-            AttackCooldownDecrement();
-			SpellCooldownDecrement();
-            character_gui_update();
-            //if(target != null)
-            //{
-            //	moveToTarget();
-            //}
+            if(!isDead)
+            {
+                checkForAggro();
+				stats.SetModifiersNeutral();
+				stats.CalculateCombatStats();
+                stats.ResolveBuffs();
+                actionQueue.Resolve();
+                AttackCooldownDecrement();
+                SpellCooldownDecrement();
+                character_gui_update();
+				statPrintCheck();
+            }
+            else
+            {
+                character.idle();
+            }
+        }
+        else
+        {
+            if(!isenemy)
+            {
+                character.setEnabled(false);
+            }
         }
         removeVelocities();
 
@@ -315,6 +333,7 @@ public class Character : MonoBehaviour
             else if (spell.targetOption == AbilityTargetOption.TARGET_LOCATION)
             {
                 Debug.Log("Target location");
+				currentSpell = spell;
             }
             else if (spell.targetOption == AbilityTargetOption.NONE)
             {
@@ -365,7 +384,11 @@ public class Character : MonoBehaviour
     }
 
     public void setTarget(Character c) {
-        target = c;
+        if((c.isenemy && !isenemy) || (!c.isenemy && isenemy))
+        {
+            target = c;
+        }
+        
     }
 
     private int moveToTarget() {
@@ -411,6 +434,7 @@ public class Character : MonoBehaviour
             character.idle();
             actionQueue.Pop();
             Debug.Log("Character " + name + " completed movement order");
+			MyConsole.NewMessage("Character " + name + " completed movement order");
         }
         else
         {
@@ -427,7 +451,7 @@ public class Character : MonoBehaviour
 
         if (attackTarget.isDead == true || attackTarget == null)
         {
-            character.idle();
+            //character.idle();
             Debug.Log("Attack target of " + stats.Name + " is dead. Cancelling attack order");
             actionQueue.Pop();
         }
@@ -464,20 +488,33 @@ public class Character : MonoBehaviour
         Character targetCharacter = currentOrder.targetCharacter;
         Vector3 targetLocation = currentOrder.targetLocation;
         RandomAbility spell = currentOrder.spell;
+		Vector3 targetVector = Vector3.zero;
+		float targetDistance = 0f;
 
-        Vector3 characterVector = targetCharacter.getCharacterPosition() - character.transform.localPosition;
-        float targetDistance = characterVector.magnitude;
+		//Debug.Log ("Resolving cast order");
 
+		if (spell.targetOption == AbilityTargetOption.TARGET_ALLY || spell.targetOption == AbilityTargetOption.TARGET_ENEMY)
+		{
+			targetVector = targetCharacter.getCharacterPosition() - character.transform.localPosition;
+			targetDistance = targetVector.magnitude;
+		}
+		else if (spell.targetOption == AbilityTargetOption.TARGET_LOCATION)
+		{
+			targetVector = targetLocation - character.transform.localPosition;
+			targetDistance = targetVector.magnitude;
+		}
+        
         if (stats.CurrentMana < spell.manaCost)
         {
             Debug.Log("Not enough mana!");
+			actionQueue.Pop();
         }
         else if (targetDistance > spell.range)
         {
 			character.run();
-            characterVector.Normalize();
-            character.transform.localPosition += characterVector * Time.deltaTime * stats.MoveSpeed;
-			character.transform.rotation = Quaternion.LookRotation(characterVector, new Vector3(0, 0, -1.0f));
+            targetVector.Normalize();
+            character.transform.localPosition += targetVector * Time.deltaTime * stats.MoveSpeed;
+			character.transform.rotation = Quaternion.LookRotation(targetVector, new Vector3(0, 0, -1.0f));
         }
         else
         {
@@ -492,9 +529,12 @@ public class Character : MonoBehaviour
                 Debug.Log("Spell " + spell.name + " resolving");
                 spell.Resolve(targetCharacter, targetLocation);
                 actionQueue.Pop();
-				if (targetCharacter.isenemy)
+				if (targetCharacter != null)
 				{
-					Enqueue(targetCharacter);
+					if (targetCharacter.isenemy)
+					{
+						Enqueue(targetCharacter);
+					}
 				}
             }
         }
@@ -512,6 +552,7 @@ public class Character : MonoBehaviour
     public void character_gui_update() {
         barDisplay_1 = stats.CurrentHealth * 100 / stats.MaxHealth;
         barDisplay = stats.CurrentMana;
+
         if (((stats.CurrentHealth * 100) / stats.MaxHealth) > 40)
         {
 
@@ -541,6 +582,7 @@ public class Character : MonoBehaviour
 
 
     }
+
 	public void GainExp (int exp)
 	{
 		if (isenemy == false)
@@ -565,6 +607,34 @@ public class Character : MonoBehaviour
 		Debug.Log (stats.Name + " has advanced to level " + stats.Level + "!");
 		Debug.Log (stats.Name + " has " + stats.UnallocatedStatPoints + " stat points to spend.");
 	}
+
+    public int getLevel() {
+        return stats.Level;
+    }
+
+    public void setAggro(bool a) {
+        isAggrod = a;
+    }
+
+    public bool isAggro() {
+        return isAggrod;
+    }
+
+    public void checkForAggro() {
+        for(int i = 0; i < EnemyCollection.NumberOfEnemies(); i++)
+        {
+            if(!EnemyCollection.getEnemy(i).isDead)
+            {
+                if(Vector3.Distance(getCharacterPosition(), EnemyCollection.getEnemy(i).getCharacterPosition()) < detectRange)
+                {
+                    if(EnemyCollection.getEnemy(i).isAggro())
+                    {
+                        Enqueue(EnemyCollection.getEnemy(i));
+                    }
+                }
+            }
+        }
+    }
 
 	private int CalculateHPMPBoxWidth (float stat)
 	{
@@ -591,6 +661,14 @@ public class Character : MonoBehaviour
 		}
 	}
 
+	void statPrintCheck()
+	{
+		if (Input.GetButtonDown("Print Stats"))
+		{
+			Debug.Log ("Strength: " + stats.Strength);
+			Debug.Log ("Agility: " + stats.Agility);
+		}
+	}
 }
 
 

@@ -77,19 +77,19 @@ public class InputManager {
 			}
 			else //player right clicked on a character, issue attack order
 			{
-				if (characterUnderMouse.isenemy)
-				{
-					if (Input.GetButton ("Queue"))
-					{
-						selected.Enqueue(characterUnderMouse);
-						//Debug.Log ("Queueing attack order on " + characterUnderMouse.name);
-					}
-					else
-					{
-						selected.Overwrite(characterUnderMouse);
-						//Debug.Log ("Clearing queue, queueing attack order on " + characterUnderMouse.name);
-					}
-				}
+                if (characterUnderMouse.isenemy)
+                {
+                    if (Input.GetButton("Queue"))
+                    {
+                        selected.Enqueue(characterUnderMouse);
+                        //Debug.Log ("Queueing attack order on " + characterUnderMouse.name);
+                    }
+                    else
+                    {
+                        selected.Overwrite(characterUnderMouse);
+                        //Debug.Log ("Clearing queue, queueing attack order on " + characterUnderMouse.name);
+                    }
+                }
 			}
 		}
 
@@ -314,7 +314,23 @@ public class InputManager {
 					}
 				}
 			}
-
+			else if (spell.targetOption == AbilityTargetOption.TARGET_LOCATION)
+			{
+				if (Input.GetMouseButtonDown(0))
+				{
+					if (Input.GetButton ("Queue"))
+					{
+						selected.Enqueue(spell, null, mousePosition);
+						Debug.Log ("Queueing position-targeted spell at " + mousePosition.x + ", " + mousePosition.y);
+					}
+					else
+					{
+						selected.Overwrite (spell, null, mousePosition);
+						Debug.Log ("Casting position-targeted spell at " + mousePosition.x + ", " + mousePosition.y);
+						Debug.Log ("Player casting: " + selected.playerCasting);
+					}
+				}
+			}
 		}
 	}
 }

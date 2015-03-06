@@ -100,21 +100,25 @@ public class CharacterCollection {
         //SpawnCharacteristics.setAvgCharacterLevel(getAverageLevel());
     }
 
-    private static int getAverageLevel() {
+    public static int getAverageLevel() {
         int ret = 0;
         foreach(Character c in heroes)
         {
-            //ret += c.
+            ret += c.getLevel();
         }
 
-        return 1;
+        if(ret == 0)
+        {
+            return 1;
+        }
+        return ret / CharacterCollection.NumberOfHeroes();
     }
 
 	public static void heroExpGain(int exp)
 	{
 		foreach(Character c in heroes)
 		{
-			c.GainExp(exp);
+		//	c.GainExp(exp);
 		}
 	}
 }
