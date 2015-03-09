@@ -17,6 +17,12 @@ public class GameManager : MonoBehaviour {
 	public Character characterPrefab2;
 	public Character characterPrefab3;
 	public Character trollPrefab;
+	public string stringToEditA = "";
+	public string stringToEditB = "";
+	public string stringToEditC = "";
+	public bool userHasHitReturnA = false;
+	public bool userHasHitReturnB = false;
+	public bool userHasHitReturnC = false;
     
 
 	private EquipmentGenerator equipmentGenerator = new EquipmentGenerator();
@@ -42,7 +48,9 @@ public class GameManager : MonoBehaviour {
 	// Use this for initialization
 
 	void Start () {
-		//damageimage.color = flashColour;
+
+
+
 		count_1 = 0;
 		style_font.fontSize = 10;
 		style_font.fontStyle = FontStyle.Normal;
@@ -300,8 +308,30 @@ public class GameManager : MonoBehaviour {
 				
 				
 				MyConsole.DrawConsole ();
+
+
+		Event e = Event.current;
+		if (e.keyCode == KeyCode.Return) {
+						userHasHitReturnA = true;
+			playerCharA.name = stringToEditA;
+			playerCharB.name = stringToEditB;
+			playerCharC.name = stringToEditC;
+				}
+				else if (false == userHasHitReturnA) {
+			GUI.BeginGroup(new Rect(Screen.width/2 - 40, Screen.height/2 - 30,300, 30));
+			GUI.Label(new Rect(0,0,300,30),"Name your players and Press Enter");
+			GUI.EndGroup();
+
+			stringToEditA = GUI.TextField (new Rect (Screen.width/2, Screen.height/2, 100, 20), stringToEditA, 25);
+			stringToEditB = GUI.TextField (new Rect (Screen.width/2, Screen.height/2 + 20, 100, 20), stringToEditB, 25);
+			stringToEditC = GUI.TextField (new Rect (Screen.width/2, Screen.height/2 + 40, 100, 20), stringToEditC, 25);
+				}
 		        
-		}
+	
+	
+	
+}
+
 
     private void RestartGame() {
         Destroy(roomInstance.gameObject);
