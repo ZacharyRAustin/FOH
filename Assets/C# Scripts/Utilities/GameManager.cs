@@ -140,26 +140,26 @@ public class GameManager : MonoBehaviour {
 
 		if (Input.GetButtonDown ("Generate Equipment"))
 	    {
-			playerCharA.stats.weapon = equipmentGenerator.GenerateWeapon(3);
+			playerCharA.stats.weapon = EquipmentGenerator.GenerateWeapon(3);
 			Debug.Log ("Hero A got a " + playerCharA.stats.weapon.name + "!");
 			MyConsole.NewMessage("Hero A got a " + playerCharA.stats.weapon.name + "!");
-			playerCharA.stats.gear[0] = equipmentGenerator.GenerateArmor(1);
-			playerCharA.stats.gear[1] = equipmentGenerator.GenerateArmor(2);
-			playerCharA.stats.gear[2] = equipmentGenerator.GenerateArmor(0);
+			playerCharA.stats.gear[0] = EquipmentGenerator.GenerateArmor(1);
+			playerCharA.stats.gear[1] = EquipmentGenerator.GenerateArmor(2);
+			playerCharA.stats.gear[2] = EquipmentGenerator.GenerateArmor(0);
 
-			playerCharB.stats.weapon = equipmentGenerator.GenerateWeapon(3);
+			playerCharB.stats.weapon = EquipmentGenerator.GenerateWeapon(3);
 			Debug.Log ("Hero B got a " + playerCharB.stats.weapon.name + "!");
 			MyConsole.NewMessage("Hero B got a " + playerCharB.stats.weapon.name + "!");
-			playerCharB.stats.gear[0] = equipmentGenerator.GenerateArmor(10);
-			playerCharB.stats.gear[1] = equipmentGenerator.GenerateArmor(2);
-			playerCharB.stats.gear[2] = equipmentGenerator.GenerateArmor(1);
+			playerCharB.stats.gear[0] = EquipmentGenerator.GenerateArmor(10);
+			playerCharB.stats.gear[1] = EquipmentGenerator.GenerateArmor(2);
+			playerCharB.stats.gear[2] = EquipmentGenerator.GenerateArmor(1);
 
-			playerCharC.stats.weapon = equipmentGenerator.GenerateWeapon(3);
+			playerCharC.stats.weapon = EquipmentGenerator.GenerateWeapon(3);
 			Debug.Log ("Hero C got a " + playerCharC.stats.weapon.name + "!");
 			MyConsole.NewMessage("Hero C got a " + playerCharC.stats.weapon.name + "!");
-			playerCharC.stats.gear[0] = equipmentGenerator.GenerateArmor(10);
-			playerCharC.stats.gear[1] = equipmentGenerator.GenerateArmor(2);
-			playerCharC.stats.gear[2] = equipmentGenerator.GenerateArmor(1);
+			playerCharC.stats.gear[0] = EquipmentGenerator.GenerateArmor(10);
+			playerCharC.stats.gear[1] = EquipmentGenerator.GenerateArmor(2);
+			playerCharC.stats.gear[2] = EquipmentGenerator.GenerateArmor(1);
 		}
 
 		if (Input.GetButtonDown ("Buff Test"))
