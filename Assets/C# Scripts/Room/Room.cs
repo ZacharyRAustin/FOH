@@ -30,6 +30,10 @@ public class Room : MonoBehaviour {
         {
             GenerateNextRoom();
         }
+        else if(Input.GetButtonDown("Enter Room") && !SpawnCharacteristics.canLeaveRoom())
+        {
+            Debug.Log("There are still enemies =============================");
+        }
     }
 
     public void GenerateNextRoom() {

@@ -203,7 +203,7 @@ public class Character : MonoBehaviour
 
     // Update is called once per frame
     void Update() {
-        count_times = 0;
+        //count_times = 0;
         pos_bar = Camera.main.WorldToScreenPoint(character.transform.localPosition);
         pause_string = "GAME IS PAUSED";
         if (isPaused == false)
@@ -228,7 +228,10 @@ public class Character : MonoBehaviour
             }
             else
             {
-                character.idle();
+                if(!isenemy)
+                {
+                    character.idle();
+                }
             }
         }
         else
@@ -323,17 +326,20 @@ public class Character : MonoBehaviour
             else if (spell.targetOption == AbilityTargetOption.TARGET_ALLY)
             {
                 Debug.Log("Target ally");
+				MyConsole.NewMessage("Target ally");
                 currentSpell = spell;
             }
             else if (spell.targetOption == AbilityTargetOption.TARGET_ENEMY)
             {
                 Debug.Log("Target enemy");
+				MyConsole.NewMessage("Target enemy");
                 currentSpell = spell;
             }
             else if (spell.targetOption == AbilityTargetOption.TARGET_LOCATION)
             {
                 Debug.Log("Target location");
 				currentSpell = spell;
+				MyConsole.NewMessage("Target location");
             }
             else if (spell.targetOption == AbilityTargetOption.NONE)
             {
@@ -453,6 +459,7 @@ public class Character : MonoBehaviour
         {
             //character.idle();
             Debug.Log("Attack target of " + stats.Name + " is dead. Cancelling attack order");
+			//MyConsole.NewMessage("Attack target of " + stats.Name + " is dead. Cancelling attack order");
             actionQueue.Pop();
         }
 		else
@@ -476,9 +483,12 @@ public class Character : MonoBehaviour
         	        combatManager.Hit(this, attackTarget);
             	    attackTarget.is_selected = true;
             	    Debug.Log("Character " + stats.Name + " attacks " + attackTarget.stats.Name + ".");
+					MyConsole.NewMessage("Character " + stats.Name + " attacks " + attackTarget.stats.Name + ".");
             	    Debug.Log(attackTarget.stats.Name + "'s HP is now " + attackTarget.stats.CurrentHealth);
+					MyConsole.NewMessage(attackTarget.stats.Name + "'s HP is now " + attackTarget.stats.CurrentHealth);
             	    attackCooldown = stats.AttackRate;
 					Debug.Log("Attack cooldown: " + attackCooldown);
+					//MyConsole.NewMessage("Attack cooldown: " + attackCooldown);
             	}
         	}
 		}
@@ -527,6 +537,7 @@ public class Character : MonoBehaviour
             else
             {
                 Debug.Log("Spell " + spell.name + " resolving");
+				MyConsole.NewMessage("Spell " + spell.name + " resolving");
                 spell.Resolve(targetCharacter, targetLocation);
                 actionQueue.Pop();
 				if (targetCharacter != null)
@@ -589,6 +600,7 @@ public class Character : MonoBehaviour
 		{
             stats.CurrentExp += exp;
 			Debug.Log (stats.Name + " has gained " + exp + " exp! (" + stats.CurrentExp + "/" + stats.MaxExp + ")");
+			MyConsole.NewMessage(stats.Name + " has gained " + exp + " exp! (" + stats.CurrentExp + "/" + stats.MaxExp + ")");
 			if (stats.CurrentExp >= stats.MaxExp)
 			{
 				stats.CurrentExp -= stats.MaxExp;
@@ -605,7 +617,9 @@ public class Character : MonoBehaviour
 		stats.CurrentMana = stats.MaxMana;
 
 		Debug.Log (stats.Name + " has advanced to level " + stats.Level + "!");
+		MyConsole.NewMessage(stats.Name + " has advanced to level " + stats.Level + "!");
 		Debug.Log (stats.Name + " has " + stats.UnallocatedStatPoints + " stat points to spend.");
+		MyConsole.NewMessage(stats.Name + " has " + stats.UnallocatedStatPoints + " stat points to spend.");
 	}
 
     public int getLevel() {

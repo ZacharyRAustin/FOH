@@ -72,6 +72,10 @@ public class CharacterInstance : MonoBehaviour {
 	}
 
     public void setEnabled(bool e) {
-        anim.enabled = e;
+		if (anim == null) {
+			animation.enabled = e;
+		} else {
+			anim.enabled = e;
+		}
     }
 }

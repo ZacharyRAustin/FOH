@@ -111,7 +111,7 @@ public class CharacterCollection {
         {
             return 1;
         }
-        return ret / CharacterCollection.NumberOfHeroes();
+        return System.Math.Max(ret / CharacterCollection.NumberOfHeroes(), 1);
     }
 
 	public static void heroExpGain(int exp)
