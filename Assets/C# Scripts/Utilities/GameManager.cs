@@ -203,7 +203,7 @@ public class GameManager : MonoBehaviour {
 		playerCharA.position_y_health= 10;
 		playerCharA.position_y = 40;
 		playerCharA.isenemy = false;
-		playerCharA.image_name = "hero_image";
+		playerCharA.image_name = "Hero1_image";
 		playerCharA.tag = "Hero A";
 		playerCharA.name = "Hero A";
 		playerCharA.stats.Name = "Hero A";
@@ -220,7 +220,7 @@ public class GameManager : MonoBehaviour {
 		playerCharB.position_y_health = 70;
 		playerCharB.position_y = 100;
 		playerCharB.isenemy = false;
-		playerCharB.image_name = "hero_image";
+		playerCharB.image_name = "Hero2_image";
 		playerCharB.tag = "Hero B";
 		playerCharB.name = "Hero B";
 		playerCharB.stats.Name = "Hero B";
@@ -243,7 +243,7 @@ public class GameManager : MonoBehaviour {
 		playerCharC.position_y_health = 130;
 		playerCharC.position_y = 160;
 		playerCharC.isenemy = false;
-		playerCharC.image_name = "hero_image";
+		playerCharC.image_name = "Hero3_image";
 		playerCharC.stats.Name = "Hero C";
 		playerCharC.stats.InitializeBaseStats ();
 		playerCharC.stats.InitializeEquipment ();
