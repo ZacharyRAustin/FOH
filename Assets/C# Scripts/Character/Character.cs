@@ -503,7 +503,13 @@ public class Character : MonoBehaviour
         	    {
         	        character.transform.rotation = Quaternion.LookRotation(attackVector, new Vector3(0, 0, -1.0f));
         	        character.attack();
-        	        combatManager.Hit(this, attackTarget);
+					if (stats.AttackRange > 2f) {
+						GameObject basicAttackProjectile = (GameObject) Object.Instantiate(Resources.Load("frameBall"), character.transform.localPosition, Quaternion.identity);
+						BasicAttackProjectile projectileScript = basicAttackProjectile.GetComponent<BasicAttackProjectile>();
+						projectileScript.targetLocation = attackTarget.getCharacterPosition();
+					}
+        	   
+					combatManager.Hit(this, attackTarget);
             	    attackTarget.is_selected = true;
             	    Debug.Log("Character " + stats.Name + " attacks " + attackTarget.stats.Name + ".");
 					MyConsole.NewMessage("Character " + stats.Name + " attacks " + attackTarget.stats.Name + ".");
