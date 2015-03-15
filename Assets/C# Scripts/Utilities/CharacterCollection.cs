@@ -121,4 +121,19 @@ public class CharacterCollection {
 		//	c.GainExp(exp);
 		}
 	}
+
+    public static int getCumulativeLevel() {
+        int ret = 0;
+        foreach (Character c in heroes)
+        {
+            ret += c.getLevel();
+        }
+
+        if(ret == 0)
+        {
+            return 1;
+        }
+
+        return ret;
+    }
 }

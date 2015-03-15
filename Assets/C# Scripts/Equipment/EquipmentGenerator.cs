@@ -8,7 +8,7 @@ public class EquipmentGenerator {
 	public Wand basicWand = new Wand ("Basic Wand", 1, 60, 0, 1f);
 	public Armor basicArmor = new Armor ("Basic Armor", 1);
 
-	public Weapon GenerateWeapon(int lvl)
+	public static Weapon GenerateWeapon(int lvl)
 	{
 		int r = Random.Range (1, 4);
 		if (r == 1)
@@ -30,7 +30,7 @@ public class EquipmentGenerator {
 		}
 	}
 
-	public Armor GenerateArmor(int lvl)
+	public static Armor GenerateArmor(int lvl)
 	{
 		return new Armor (lvl);
 	}
