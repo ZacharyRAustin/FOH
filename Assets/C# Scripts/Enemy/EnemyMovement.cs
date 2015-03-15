@@ -168,10 +168,10 @@ public class EnemyMovement : MonoBehaviour {
 	private void attack () {
 		if(attackCooldown == 0 && target != null){
 			// special attack
-			if(Random.value <= 0.33){
+			if(Random.value <= 0.10){
 				thisCharacter.getCharacter().animation.Play("Attack_01");
 				Object.Instantiate(Resources.Load("energyBlast"), targetPosition, Quaternion.identity);
-				combatManager.Hit (thisCharacter, target);
+				combatManager.specialHit (thisCharacter, target);
 			}else {
             	thisCharacter.getCharacter().animation.Play("Attack_02");
 				combatManager.Hit (thisCharacter, target);				
