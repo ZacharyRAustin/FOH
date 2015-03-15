@@ -136,4 +136,16 @@ public class CharacterCollection {
 
         return ret;
     }
+
+    public static void nextRoomRegen() {
+        foreach (Character c in heroes)
+        {
+            int toAdd =(int) (c.stats.MaxMana * .2);
+            c.stats.CurrentMana += toAdd;
+            if(c.stats.CurrentMana > c.stats.MaxMana)
+            {
+                c.stats.CurrentMana = c.stats.MaxMana;
+            }
+        }
+    }
 }
