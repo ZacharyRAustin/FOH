@@ -17,7 +17,12 @@ public class SpawnCharacteristics{
     private static int enemyCumulativeLevel = 0;
 
     public static bool canLeaveRoom() {
+        print();
         return EnemyCollection.allEnemiesDead() && nearDoor && doorNum > -1;
+    }
+
+    public static void print() {
+        Debug.Log("All enemies dead: " + EnemyCollection.allEnemiesDead() + " and near door " + nearDoor + " with number " + doorNum);
     }
 
     public static void setNearDoor(bool near, int pos) {
