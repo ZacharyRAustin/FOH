@@ -17,6 +17,7 @@ public class GameManager : MonoBehaviour {
 	public Character characterPrefab2;
 	public Character characterPrefab3;
 	public Character trollPrefab;
+	public Character golemPrefab;
 	public string stringToEditA = "";
 	public string stringToEditB = "";
 	public string stringToEditC = "";
