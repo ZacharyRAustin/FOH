@@ -58,9 +58,9 @@ public class DropSystem{
     private static void addLoot() {
         for(int i = 0; i < maxSpawn; i++)
         {
-            if(Random.Range(0, 1) < 0.45)
+            if(Random.Range(0, 101) < 45)
             {
-                if(Random.Range(0, 1) > 0.5)
+                if(Random.Range(0, 101) > 50)
                 {
                     generateRandomAbility();
                 }

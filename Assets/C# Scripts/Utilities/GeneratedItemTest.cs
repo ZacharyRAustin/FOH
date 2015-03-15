@@ -11,8 +11,9 @@ public class GeneratedItemTest{
 
             for(int j = 0; j < 10; j++)
             {
-                SpawnCharacteristics.testLeveling(i);
-                f.writeLine("For Level: " + i + " iteration " + j);
+                SpawnCharacteristics.setAvgEnemyLevel(i);
+                DropSystem.GenerateLoot();
+                
                 List<RandomAbility> abilities = DropSystem.getGeneratedAbilities();
                 for(int k = 0; k < abilities.Count; k++)
                 {
@@ -23,8 +24,13 @@ public class GeneratedItemTest{
                 {
                     items.Add("Item: " + equip[h].name + " with level " + equip[h].level);
                 }
-                items.Add("\n\n");
-                f.writeAllLines(items);
+                if(items.Count != 0)
+                {
+                    f.writeLine("For Level: " + i + " iteration " + j);
+                    f.writeLine("Average Enemy Level: " + SpawnCharacteristics.getAvgEnemyLevel());
+                    items.Add("\n\n");
+                    f.writeAllLines(items);
+                }
 
                 items.Clear();
             }
