@@ -89,6 +89,9 @@ public class InputManager {
                         selected.Overwrite(characterUnderMouse);
                         //Debug.Log ("Clearing queue, queueing attack order on " + characterUnderMouse.name);
                     }
+
+                    selected.Target = characterUnderMouse;
+                    Debug.Log("Selected hero " + selected.stats.Name + " has target " + selected.Target.stats.Name);
                 }
 			}
 		}

@@ -24,6 +24,10 @@ public class EnemyMovement : MonoBehaviour {
 	//combat system
 	private CombatManager combatManager = new CombatManager();
 	private float attackCooldown = 0f;
+    private int prevHealth;
+
+    private bool ignoreDetectRange = false;
+    private bool isAttachking = false;
 
 	// --- start and update functions---
 
@@ -40,20 +44,27 @@ public class EnemyMovement : MonoBehaviour {
             
             if(target == null)
             {
+                Debug.Log("Target is null");
                 checkForTarget();
-                thisCharacter.setAggro(true);
             }
             else if(target.isDead)
             {
                 target = null;
+                ignoreDetectRange = false;
                 thisCharacter.setAggro(false);
+                isAttachking = false;
             }
             else if(!target.isenemy)
             {
                 thisCharacter.setAggro(true);
             }
-            move();
 
+            if (thisCharacter.stats.CurrentHealth != prevHealth && !isAttachking)
+            {
+                findAttacker();
+            }
+
+            move();
             AttackCooldownDecrement();
             currentPosition = thisCharacter.getCharacterPosition();
             target = thisCharacter.Target;
@@ -61,6 +72,9 @@ public class EnemyMovement : MonoBehaviour {
             {
                 targetPosition = target.getCharacterPosition();
             }
+
+            prevHealth = thisCharacter.stats.CurrentHealth;
+
         }
         else
         {
@@ -75,6 +89,7 @@ public class EnemyMovement : MonoBehaviour {
 	private void enemyInitialization () {
 		// initialize this enemy character
 		thisCharacter = GetComponent<Character> ();
+        prevHealth = thisCharacter.stats.CurrentHealth;
 		originalPosition = thisCharacter.getCharacterPosition();
 		currentPosition = originalPosition;
 		// initialize target of this character
@@ -106,9 +121,10 @@ public class EnemyMovement : MonoBehaviour {
 
 	private void move () {
 		// when enemy detects a target
-		if (target != null && Vector3.Distance (currentPosition, targetPosition) < detectRange && Vector3.Distance (currentPosition, targetPosition) > attackRange) {
+		if (target != null && (Vector3.Distance (currentPosition, targetPosition) < detectRange || ignoreDetectRange) && Vector3.Distance (currentPosition, targetPosition) > attackRange) {
 			thisCharacter.getCharacter ().animation.Play ("Run");
 			moveBetweenPositions (currentPosition, targetPosition, chasingSpeed);
+            isAttachking = true;
 		} 
 		else if (target != null && Vector3.Distance (currentPosition, targetPosition) < attackRange) {
 			attack ();
@@ -201,6 +217,25 @@ public class EnemyMovement : MonoBehaviour {
                 {
                     target = CharacterCollection.getHero(i);
                     targetPosition = target.getCharacterPosition();
+                    thisCharacter.setAggro(true);
+                    return;
+                }
+            }
+        }
+    }
+
+    private void findAttacker() {
+        for (int i = 0; i < CharacterCollection.NumberOfHeroes(); i++)
+        {
+            Character hero = CharacterCollection.getHero(i);
+            if (!hero.isDead)
+            {
+                if(hero.Target != null && hero.Target.stats.Name.Equals(thisCharacter.stats.Name))
+                {
+                    target = CharacterCollection.getHero(i);
+                    targetPosition = target.getCharacterPosition();
+                    thisCharacter.setAggro(true);
+                    ignoreDetectRange = true;
                     return;
                 }
             }
