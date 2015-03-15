@@ -105,7 +105,8 @@ public class GameManager : MonoBehaviour {
 
         if(Input.GetButtonDown("Level Test"))
         {
-            LevelingTest.PerformTest();
+            //LevelingTest.PerformTest();
+            GeneratedItemTest.PerformTest();
         }
 
 		if (Input.GetButtonDown("Generate Abilities"))
