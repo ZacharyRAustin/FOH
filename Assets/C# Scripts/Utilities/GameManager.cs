@@ -50,7 +50,7 @@ public class GameManager : MonoBehaviour {
 	void Start () {
 
 
-
+		levelchange.start ();
 		count_1 = 0;
 		style_font.fontSize = 10;
 		style_font.fontStyle = FontStyle.Normal;
@@ -307,8 +307,9 @@ public class GameManager : MonoBehaviour {
 				
 				
 				MyConsole.DrawConsole ();
-
-
+				levelchange.Drawlayout ();
+		
+		
 		Event e = Event.current;
 		if (e.keyCode == KeyCode.Return) {
 						userHasHitReturnA = true;
@@ -326,9 +327,9 @@ public class GameManager : MonoBehaviour {
 			stringToEditC = GUI.TextField (new Rect (Screen.width/2, Screen.height/2 + 40, 100, 20), stringToEditC, 25);
 				}
 		        
+
 	
-	
-	
+	 
 }
 
 
@@ -341,10 +342,13 @@ public class GameManager : MonoBehaviour {
 		if (playerCharA.count_times == 0 && playerCharB.count_times == 0 && playerCharC.count_times == 0) {
 			damageimage.color = flashColour_1;
 
+
 		} else if((playerCharA.stats.CurrentHealth*100/playerCharA.stats.MaxHealth <= 40)&& (playerCharA.count_times >= 0) ||
 		          (playerCharB.stats.CurrentHealth*100/playerCharB.stats.MaxHealth <= 40)&& (playerCharB.count_times >= 0) ||
 		          (playerCharC.stats.CurrentHealth*100/playerCharC.stats.MaxHealth <= 40)&& (playerCharC.count_times >= 0)){
 			damageimage.color = flashColour;
+//			levelchange.push_abilities("power up");
+//			levelchange.showlayout();
 		}
 		
 		
@@ -365,7 +369,16 @@ public class GameManager : MonoBehaviour {
 		playerCharA.is_selected = false;
 		playerCharB.is_selected = false;
 		playerCharC.is_selected = false;
-
+		if (playerCharA.isclick == true) {
+			inputManager.selected = playerCharA;
+				}
+		if (playerCharB.isclick == true) {
+			inputManager.selected = playerCharB;	
+		}
+		if (playerCharC.isclick == true) {
+			//levelchange.clear();
+			inputManager.selected = playerCharC;
+		}
 		if (playerCharA == inputManager.selected)
 		{
 			playerCharA.is_selected = true;
