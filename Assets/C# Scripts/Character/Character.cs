@@ -20,6 +20,7 @@ public class Character : MonoBehaviour
     private GameObject cube;
     public bool isPaused;
     public bool isDead = false;
+	public bool isclick = false;
     public Image Damage_image;
     private int status = CharacterStatus.WAITING;
 
@@ -40,6 +41,7 @@ public class Character : MonoBehaviour
 
 
     public int count_times;
+	public Color greenme = new Color(0f, 1f, 0f, 0.7f);
     public Color flashColour = new Color(1f, 0f, 0f, 0.1f);
     public Color flashColour_1 = new Color(1f, 0f, 0f, 0.0f);
 
@@ -111,13 +113,21 @@ public class Character : MonoBehaviour
 						GUI.TextArea(new Rect((i+1) * Screen.width / 8, 0, Screen.width / 8, 40), truncatedCooldownTime.ToString());
 					}
 					GUI.EndGroup();
+					GUI.BeginGroup(new Rect(pos_bar.x - 10, (Screen.height - pos_bar.y) - 40, 20, 5));
+					GUI.Box(new Rect(0, 0, 20, 5), emptyTex);
+					GUI.BeginGroup(new Rect(0, 0, 20 * (stats.CurrentHealth) / (stats.MaxHealth), 5));
+					GUI.Box(new Rect(0, 0, 20, 5), new GUIContent(""), style);
+					GUI.EndGroup();
+					GUI.EndGroup();
                 }
-                GUI.BeginGroup(new Rect(pos_bar.x - 10, (Screen.height - pos_bar.y) - 80, 20, 5));
-                GUI.Box(new Rect(0, 0, 20, 5), emptyTex);
-                GUI.BeginGroup(new Rect(0, 0, 20 * (stats.CurrentHealth) / (stats.MaxHealth), 5));
-                GUI.Box(new Rect(0, 0, 20, 5), new GUIContent(""), style);
-                GUI.EndGroup();
-                GUI.EndGroup();
+				else{
+				GUI.BeginGroup(new Rect(pos_bar.x - 10, (Screen.height - pos_bar.y) - 80, 20, 5));
+				GUI.Box(new Rect(0, 0, 20, 5), emptyTex);
+				GUI.BeginGroup(new Rect(0, 0, 20 * (stats.CurrentHealth) / (stats.MaxHealth), 5));
+				GUI.Box(new Rect(0, 0, 20, 5), new GUIContent(""), style);
+				GUI.EndGroup();
+				GUI.EndGroup();
+				}
             }
             if (isenemy == false)
             { 
@@ -130,7 +140,14 @@ public class Character : MonoBehaviour
 
 
                 GUI.BeginGroup(new Rect(position_x, position_y_health, width_x + 100, 80));
-                GUI.DrawTexture(new Rect(0, 0, 60, 60), image_texture);
+				if (GUI.Button(new Rect(0, 0, 60, 60), image_texture)){
+						isclick = true;
+					//MyConsole.NewMessage("clicked");
+				}
+				else{
+					isclick = false;
+				}
+//                GUI.DrawTexture(new Rect(0, 0, 60, 60), image_texture);
                 GUI.BeginGroup(new Rect(60, 0, width_x + 40, size.y));
 				GUI.TextArea(new Rect(width_x, 0, CalculateHPMPBoxWidth((float) stats.MaxHealth), size.y), (stats.CurrentHealth).ToString(),style_no);
 				GUI.Box(new Rect(0, 0, width_x, size.y), emptyTex);
@@ -210,7 +227,7 @@ public class Character : MonoBehaviour
         image_texture = Resources.Load<Texture2D>(image_name);
 
         fullTex = new Texture2D(1, 1);
-        fullTex.SetPixel(1, 1, greencolor);
+        fullTex.SetPixel(1, 1, greenme);
         fullTex_mana = new Texture2D(1, 1);
         fullTex_mana.SetPixel(1, 1, bluecolor);
 		fullTex_experience= new Texture2D(1, 1);

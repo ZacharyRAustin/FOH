@@ -196,6 +196,12 @@ public class EnemyMovement : MonoBehaviour {
 			Debug.Log("EnemyMovement.Death()");
 			CharacterCollection.heroExpGain(thisCharacter.stats.ExpYield);
 		}
+		int k = EnemyCollection.NumberOfEnemies ();
+		if ( k == 0) {
+						levelchange.push_abilities ("power up");
+						levelchange.push_abilities("increase strength");
+						levelchange.showlayout ();
+				}
 	}
 
 	private void moveBetweenPositions (Vector3 currentPosition, Vector3 targetPosition, float duration) {
