@@ -167,8 +167,15 @@ public class EnemyMovement : MonoBehaviour {
 
 	private void attack () {
 		if(attackCooldown == 0 && target != null){
-            thisCharacter.getCharacter().animation.Play("Attack_02");
-			combatManager.Hit (thisCharacter, target);				
+			// special attack
+			if(Random.value <= 0.33){
+				thisCharacter.getCharacter().animation.Play("Attack_01");
+				Object.Instantiate(Resources.Load("energyBlast"), targetPosition, Quaternion.identity);
+				combatManager.Hit (thisCharacter, target);
+			}else {
+            	thisCharacter.getCharacter().animation.Play("Attack_02");
+				combatManager.Hit (thisCharacter, target);				
+			}
 			attackCooldown = thisCharacter.stats.AttackRate;
 		}
 	}
