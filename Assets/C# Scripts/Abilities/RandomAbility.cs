@@ -253,9 +253,9 @@ public class RandomAbility {
 		{
 			Vector3 spellProjectileDirection = targetLocation - caster.transform.localPosition;
 			spellProjectileDirection.Normalize();
-			GameObject spellProjectile = (GameObject) Object.Instantiate(Resources.Load("SpellProjectile"), caster.getCharacterPosition(), Quaternion.identity);
+			GameObject spellProjectile = (GameObject) Object.Instantiate(Resources.Load("ErekiBall2"), caster.getCharacterPosition(), Quaternion.identity);
 			SpellProjectile projectileScript = spellProjectile.GetComponent<SpellProjectile>();
-			projectileScript.velocity = 15;
+			projectileScript.velocity = 10;
 			projectileScript.targetLocation = targetLocation;
 			projectileScript.spell = this;
 		

@@ -17,7 +17,21 @@ public class GameManager : MonoBehaviour {
 	public Character characterPrefab2;
 	public Character characterPrefab3;
 	public Character trollPrefab;
+	public string stringToEditA = "";
+	public string stringToEditB = "";
+	public string stringToEditC = "";
+	public bool userHasHitReturnA = false;
+	public bool userHasHitReturnB = false;
+	public bool userHasHitReturnC = false;
+	public bool GameOver = false;
+	private bool aggro = false;
     
+	public AudioClip gameOverClip;
+	public AudioClip battleClip;
+	public AudioClip bossBattleClip;
+	public AudioClip loadingClip;
+	public AudioClip titleClip;
+	private AudioSource audioSource;
 
 	private EquipmentGenerator equipmentGenerator = new EquipmentGenerator();
 
@@ -42,11 +56,14 @@ public class GameManager : MonoBehaviour {
 	// Use this for initialization
 
 	void Start () {
-		//damageimage.color = flashColour;
+
+
+
 		count_1 = 0;
 		style_font.fontSize = 10;
 		style_font.fontStyle = FontStyle.Normal;
 
+		audioSource = GetComponent<AudioSource> ();
         Random.seed = seed;
         EnemyGenerator.Initialize(trollPrefab, enemyMaterial);
         SpawnCharacteristics.prepareForSpawn();
@@ -71,6 +88,12 @@ public class GameManager : MonoBehaviour {
 		SetHeroIsSelected ();
 		count_1 += 1;
 		flashred ();
+		//GameOverCheck ();
+		//AggroCheck ();
+
+		playerCharA.count_times = 0;
+		playerCharB.count_times = 0;
+		playerCharC.count_times = 0;
 
 		if (EnemyCollection.NumberOfEnemies() > 0)
 		{
@@ -103,6 +126,7 @@ public class GameManager : MonoBehaviour {
 			s.SetAbility(param);
 			playerCharA.stats.AddAbility(s);
 			Debug.Log ("Hero A got a new ability!");
+			MyConsole.NewMessage("Hero A got a new ability!");
 			s.Print ();
 			s.caster = playerCharA;
 
@@ -111,6 +135,7 @@ public class GameManager : MonoBehaviour {
 			s.SetAbility(param);
 			playerCharB.stats.AddAbility(s);
 			Debug.Log ("Hero B got a new ability!");
+			MyConsole.NewMessage("Hero B got a new ability!");
 			s.Print ();
 			s.caster = playerCharB;
 
@@ -119,6 +144,7 @@ public class GameManager : MonoBehaviour {
 			s.SetAbility(param);
 			playerCharC.stats.AddAbility(s);
 			Debug.Log ("Hero C got a new ability!");
+			MyConsole.NewMessage("Hero C got a new ability!");
 			s.Print ();
 			s.caster = playerCharC;
 		}
@@ -127,18 +153,21 @@ public class GameManager : MonoBehaviour {
 	    {
 			playerCharA.stats.weapon = equipmentGenerator.GenerateWeapon(3);
 			Debug.Log ("Hero A got a " + playerCharA.stats.weapon.name + "!");
+			MyConsole.NewMessage("Hero A got a " + playerCharA.stats.weapon.name + "!");
 			playerCharA.stats.gear[0] = equipmentGenerator.GenerateArmor(1);
 			playerCharA.stats.gear[1] = equipmentGenerator.GenerateArmor(2);
 			playerCharA.stats.gear[2] = equipmentGenerator.GenerateArmor(0);
 
 			playerCharB.stats.weapon = equipmentGenerator.GenerateWeapon(3);
 			Debug.Log ("Hero B got a " + playerCharB.stats.weapon.name + "!");
+			MyConsole.NewMessage("Hero B got a " + playerCharB.stats.weapon.name + "!");
 			playerCharB.stats.gear[0] = equipmentGenerator.GenerateArmor(10);
 			playerCharB.stats.gear[1] = equipmentGenerator.GenerateArmor(2);
 			playerCharB.stats.gear[2] = equipmentGenerator.GenerateArmor(1);
 
 			playerCharC.stats.weapon = equipmentGenerator.GenerateWeapon(3);
 			Debug.Log ("Hero C got a " + playerCharC.stats.weapon.name + "!");
+			MyConsole.NewMessage("Hero C got a " + playerCharC.stats.weapon.name + "!");
 			playerCharC.stats.gear[0] = equipmentGenerator.GenerateArmor(10);
 			playerCharC.stats.gear[1] = equipmentGenerator.GenerateArmor(2);
 			playerCharC.stats.gear[2] = equipmentGenerator.GenerateArmor(1);
@@ -175,7 +204,6 @@ public class GameManager : MonoBehaviour {
 	}
 
     private void BeginGame() {
-		MyConsole.NewMessage("watsupp2");
         roomInstance = Instantiate(roomPrefab) as Room;
         roomInstance.Generate();
         playerCharA = Instantiate (characterPrefab1) as Character;
@@ -186,7 +214,7 @@ public class GameManager : MonoBehaviour {
 		playerCharA.position_y_health= 10;
 		playerCharA.position_y = 40;
 		playerCharA.isenemy = false;
-		playerCharA.image_name = "hero_image";
+		playerCharA.image_name = "Hero1_image";
 		playerCharA.tag = "Hero A";
 		playerCharA.name = "Hero A";
 		playerCharA.stats.Name = "Hero A";
@@ -194,6 +222,7 @@ public class GameManager : MonoBehaviour {
 		playerCharA.stats.InitializeEquipment ();
 		playerCharA.stats.CalculateCombatStats ();
 		playerCharA.stats.InitializeCombatStats ();
+		playerCharA.stats.InitializeProgressionStats ();
 
 		playerCharB = Instantiate (characterPrefab2) as Character;
 		playerCharB.characterPrefab.name = "Hero B Prefab";
@@ -203,7 +232,7 @@ public class GameManager : MonoBehaviour {
 		playerCharB.position_y_health = 70;
 		playerCharB.position_y = 100;
 		playerCharB.isenemy = false;
-		playerCharB.image_name = "hero_image";
+		playerCharB.image_name = "Hero2_image";
 		playerCharB.tag = "Hero B";
 		playerCharB.name = "Hero B";
 		playerCharB.stats.Name = "Hero B";
@@ -226,7 +255,7 @@ public class GameManager : MonoBehaviour {
 		playerCharC.position_y_health = 130;
 		playerCharC.position_y = 160;
 		playerCharC.isenemy = false;
-		playerCharC.image_name = "hero_image";
+		playerCharC.image_name = "Hero3_image";
 		playerCharC.stats.Name = "Hero C";
 		playerCharC.stats.InitializeBaseStats ();
 		playerCharC.stats.InitializeEquipment ();
@@ -290,8 +319,30 @@ public class GameManager : MonoBehaviour {
 				
 				
 				MyConsole.DrawConsole ();
+
+
+		Event e = Event.current;
+		if (e.keyCode == KeyCode.Return) {
+						userHasHitReturnA = true;
+			playerCharA.name = stringToEditA;
+			playerCharB.name = stringToEditB;
+			playerCharC.name = stringToEditC;
+				}
+				else if (false == userHasHitReturnA) {
+			GUI.BeginGroup(new Rect(Screen.width/2 - 40, Screen.height/2 - 30,300, 30));
+			GUI.Label(new Rect(0,0,300,30),"Name your players and Press Enter");
+			GUI.EndGroup();
+
+			stringToEditA = GUI.TextField (new Rect (Screen.width/2, Screen.height/2, 100, 20), stringToEditA, 25);
+			stringToEditB = GUI.TextField (new Rect (Screen.width/2, Screen.height/2 + 20, 100, 20), stringToEditB, 25);
+			stringToEditC = GUI.TextField (new Rect (Screen.width/2, Screen.height/2 + 40, 100, 20), stringToEditC, 25);
+				}
 		        
-		}
+	
+	
+	
+}
+
 
     private void RestartGame() {
         Destroy(roomInstance.gameObject);
@@ -301,6 +352,7 @@ public class GameManager : MonoBehaviour {
 	public void flashred(){
 		if (playerCharA.count_times == 0 && playerCharB.count_times == 0 && playerCharC.count_times == 0) {
 			damageimage.color = flashColour_1;
+
 		} else if((playerCharA.stats.CurrentHealth*100/playerCharA.stats.MaxHealth <= 40)&& (playerCharA.count_times >= 0) ||
 		          (playerCharB.stats.CurrentHealth*100/playerCharB.stats.MaxHealth <= 40)&& (playerCharB.count_times >= 0) ||
 		          (playerCharC.stats.CurrentHealth*100/playerCharC.stats.MaxHealth <= 40)&& (playerCharC.count_times >= 0)){
@@ -337,6 +389,49 @@ public class GameManager : MonoBehaviour {
 		else if (playerCharC == inputManager.selected)
 		{
 			playerCharC.is_selected = true;
+		}
+	}
+
+	private void GameOverCheck()
+	{
+		if (GameOver == false)
+		{
+			if (playerCharA.stats.CurrentHealth <= 0 && playerCharB.stats.CurrentHealth <= 0 && playerCharC.stats.CurrentHealth <= 0)
+			{
+				GameOver = true;
+				audioSource.clip = gameOverClip;
+				audioSource.Play();
+				audioSource.volume = .5f;
+			}
+		}
+	}
+
+	//Trying to use this to set the battle music to play when an enemy aggros. Currently is not working
+	private void AggroCheck()
+	{
+		if (aggro == false)
+		{
+			Debug.Log ("Aggro = false");
+			for (int ii = 0; ii < EnemyCollection.NumberOfEnemies(); ii++)
+			{
+				Character enemy = EnemyCollection.getEnemy(ii);
+				if (enemy.Target != null)
+				{
+					if (Vector3.Distance (enemy.transform.localPosition, enemy.Target.transform.localPosition) > enemy.GetComponent<EnemyMovement>().detectRange)
+					{
+						Debug.Log ("Aggro = true");
+						aggro = true;
+					}
+				}
+			}
+
+			if (aggro == true)
+			{
+				Debug.Log ("Aggro! Play music!");
+				audioSource.clip = battleClip;
+				audioSource.volume = .5f;
+				audioSource.Play();
+			}
 		}
 	}
 }

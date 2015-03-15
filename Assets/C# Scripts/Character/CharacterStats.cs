@@ -354,6 +354,7 @@ public class CharacterStats {
 		else
 		{
 			Debug.Log ("This character already has 5 abilities!");
+			MyConsole.NewMessage("This character already has 5 abilities!");
 		}
 	}
 
@@ -395,6 +396,7 @@ public class CharacterStats {
 	public void PrintEquipment ()
 	{
 		Debug.Log (name + "'s equipment: ");
+		MyConsole.NewMessage(name + "'s equipment: ");
 		weapon.Print ();
 		gear [0].Print ();
 		gear [1].Print ();
