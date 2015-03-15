@@ -14,6 +14,7 @@ public static class levelchange
 	private static Texture2D image_texture;
 	private static Texture2D image_texture1;
 	private static Texture2D image_texture2;
+	private static string player_name;
 
 	public static void start(){
 		image_texture = new Texture2D(1024, 1024, TextureFormat.DXT1, false);
@@ -35,28 +36,29 @@ public static class levelchange
 		if (close == false) {
 			GUILayout.BeginArea (new Rect (Screen.width/3, Screen.height - 500, 400, 330),style1);
 			if (GUI.Button(new Rect(20, 250, 60, 60), image_texture)){
+				player_name = "playerCharA";
 				
 			}
 			else{
-				
+				player_name = "";
 			}
 			if (GUI.Button(new Rect(100, 250, 60, 60), image_texture1)){
-				
+				player_name = "playerCharB";
 			}						
 			else{
-				
+				player_name = "";
 			}
 			if (GUI.Button(new Rect(180, 250, 60, 60), image_texture2)){
-				
+				player_name = "playerCharC";
 			}
 			else{
-				
+				player_name = "";
 			}
 			foreach(string s in buttons){
 				//GUI.Label(new Rect(20, 250, 60, 60), "chec");
 				if(i < 4){
 					if (GUI.Button(new Rect((i)*90 + 20, 20, 80, 60), s)){
-						MyConsole.NewMessage(s);
+						//MyConsole.NewMessage(s);
 
 						//GUILayout.BeginArea (new Rect (20, 250, 400, 250),style1);
 
