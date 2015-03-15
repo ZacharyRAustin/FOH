@@ -84,5 +84,11 @@ public class DropSystem{
         }
     }
 
+    public static List<Equipment> getGeneratedEquipment() {
+        return equipment;
+    }
 
+    public static List<RandomAbility> getGeneratedAbilities() {
+        return abilities;
+    }
 }
