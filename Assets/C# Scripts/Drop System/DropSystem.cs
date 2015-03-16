@@ -12,6 +12,7 @@ public class DropSystem{
     private static void generateRandomAbility() {
         AbilityParameters p = new AbilityParameters(Random.Range(1, 5));
         RandomAbility s = new RandomAbility();
+		//levelchange.push_abilities (s.name);
         s.SetAbility(p);
         abilities.Add(s);
     }
@@ -19,7 +20,9 @@ public class DropSystem{
     private static void generateRandomEquipment() {
         if (Random.value <= 0.5)
         {
-            equipment.Add(EquipmentGenerator.GenerateWeapon(getNextLevel()));
+            Equipment a = (EquipmentGenerator.GenerateWeapon(getNextLevel()));
+			MyConsole.NewMessage(a.name);
+			equipment.Add(a);
         }
         else
         {
@@ -39,6 +42,7 @@ public class DropSystem{
         equipment.Clear();
         abilities.Clear();
         calcAverageLevel();
+		levelchange.showlayout ();
 
         float v = Random.value;
         if(v <= 0.25)
@@ -56,33 +60,43 @@ public class DropSystem{
     }
 
     private static void addLoot() {
+
         for(int i = 0; i < maxSpawn; i++)
         {
             if(Random.Range(0, 101) < 45)
             {
                 if(Random.Range(0, 101) > 50)
                 {
-                    generateRandomAbility();
+					generateRandomAbility();
+					MyConsole.NewMessage("Generated ability");
+
                 }
                 else
                 {
-                    generateRandomEquipment();
+					generateRandomEquipment();
                 }
             }
         }
     }
 
     public static void printGenerated() {
+		MyConsole.NewMessage ("printGenerated");
+
         foreach(Equipment e in equipment)
         {
-            Debug.Log("Generated " + e.name + " with level " + e.level);
+			levelchange.push_equipment(e);
+			MyConsole.NewMessage("Generated " + e.name + " with level " + e.level);
         }
 
         foreach(RandomAbility r in abilities)
         {
-            Debug.Log("Genereated " + r.name);
+			levelchange.push_abilities(r);
+            MyConsole.NewMessage("Genereated " + r.name);
         }
+
     }
+
+
 
     public static List<Equipment> getGeneratedEquipment() {
         return equipment;

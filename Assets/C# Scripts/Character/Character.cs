@@ -75,6 +75,7 @@ public class Character : MonoBehaviour
     GUIStyle style_mana = new GUIStyle();
     GUIStyle style_name = new GUIStyle();
 	GUIStyle style_no = new GUIStyle();
+	GUIStyle style_experience = new GUIStyle ();
 	public bool isattack;
 
 
@@ -87,10 +88,13 @@ public class Character : MonoBehaviour
 
         fullTex_mana.Apply();
         fullTex.Apply();
+		fullTex_experience.Apply ();
         style.normal.background = fullTex;
         style_mana.normal.background = fullTex_mana;
+		style_experience.normal.background = fullTex_experience;
         style_font.fontSize = 50;
         style_name.fontSize = 30;
+		style_name.normal.textColor = graycolor;
 		style_no.fontSize = 15;
 		float width_x = (Screen.width / 6);
         GUI.BeginGroup(new Rect((Screen.width / 3), (Screen.height / 2), width_x * 2 + 100, 1000));
@@ -172,8 +176,8 @@ public class Character : MonoBehaviour
 				GUI.Box(new Rect(0, 0, width_x, size.y), emptyTex);
 				//GUI.TextArea (new Rect (0,0,60, size.y), character.name);
 				//draw the filled-in part:
-				GUI.BeginGroup(new Rect(0, 0, width_x * (stats.CurrentExp) / (stats.MaxExp), size.y));
-				GUI.Box(new Rect(0, 0, width_x, size.y), new GUIContent(""), style_mana);
+				GUI.BeginGroup(new Rect(0, 0, width_x , size.y));
+				GUI.Box(new Rect(0, 0, width_x * (stats.CurrentExp)/(stats.MaxExp), size.y), new GUIContent(""), style_experience);
 				GUI.EndGroup();
 				GUI.EndGroup();
 
@@ -231,7 +235,8 @@ public class Character : MonoBehaviour
         fullTex_mana = new Texture2D(1, 1);
         fullTex_mana.SetPixel(1, 1, bluecolor);
 		fullTex_experience= new Texture2D(1, 1);
-		fullTex_experience.SetPixel(1, 1, graycolor);
+		fullTex_experience.SetPixel(1, 1, yellowcolor);
+
 		
 		
 		//int[] left_array = {10, 40, 70,100,130,160,190,220,250};

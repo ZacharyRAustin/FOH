@@ -4,6 +4,7 @@ using System.Collections;
 public class EnemyMovement : MonoBehaviour {
 	private Character thisCharacter;
 	private Character target;
+	private DropSystem drop;
 
 	private Vector3 originalPosition;
 	private Vector3 currentPosition;
@@ -20,6 +21,7 @@ public class EnemyMovement : MonoBehaviour {
 	private float patrolSpeed = 40.0f;
 	private float chasingSpeed = 20.0f;
 	private int patrolSwitch;
+
 
 	//combat system
 	private CombatManager combatManager = new CombatManager();
@@ -205,9 +207,9 @@ public class EnemyMovement : MonoBehaviour {
 		}
 		int k = EnemyCollection.NumberOfEnemies ();
 		if ( k == 0) {
-						levelchange.push_abilities ("power up");
-						levelchange.push_abilities("increase strength");
-						levelchange.showlayout ();
+//						levelchange.push_abilities ("power up");
+//						levelchange.push_abilities("increase strength");
+//						
 				}
 	}
 
