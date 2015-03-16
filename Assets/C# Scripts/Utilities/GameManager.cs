@@ -408,7 +408,10 @@ public class GameManager : MonoBehaviour {
 						if (b != null) {
 								//playerCharA.stats.AddAbility(a);
 								if ((b.name).Contains ("Armor")) {
-										playerCharA.stats.gear [2] = (Armor)b;
+					levelchange.armor_selection();
+					int f = levelchange.armor_output();
+					playerCharA.stats.gear[f] = (Armor)b;
+					levelchange.armor_clear();
 								} else {
 										playerCharA.stats.weapon = (Weapon)b;
 								}
@@ -432,7 +435,10 @@ public class GameManager : MonoBehaviour {
 						if (b != null) {
 								//playerCharA.stats.AddAbility(a);
 								if ((b.name).Contains ("Armor")) {
-										playerCharB.stats.gear [2] = (Armor)b;
+					levelchange.armor_selection();
+					int f = levelchange.armor_output();
+					playerCharB.stats.gear[f] = (Armor)b;
+					levelchange.armor_clear();
 								} else {
 										playerCharB.stats.weapon = (Weapon)b;
 								}
@@ -454,7 +460,10 @@ public class GameManager : MonoBehaviour {
 				if (b!= null){
 					//playerCharA.stats.AddAbility(a);
 					if((b.name).Contains("Armor")){
-						playerCharC.stats.gear[2] = (Armor)b;
+					levelchange.armor_selection();
+					int f = levelchange.armor_output();
+					playerCharC.stats.gear[f] = (Armor)b;
+					levelchange.armor_clear();
 					}
 					else{
 						playerCharC.stats.weapon = (Weapon)b;

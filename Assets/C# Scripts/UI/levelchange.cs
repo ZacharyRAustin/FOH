@@ -18,6 +18,8 @@ public static class levelchange
 	private static string player_name;
 	private static RandomAbility selected_ability;
 	private static Equipment selected_equipment;
+	private static bool isarmor;
+	private static int armor_no;
 
 	public static void start(){
 		image_texture = new Texture2D(1024, 1024, TextureFormat.DXT1, false);
@@ -38,7 +40,7 @@ public static class levelchange
 		int i = 0;
 		int j = 0;
 		if (close == false) {
-			GUILayout.BeginArea (new Rect (Screen.width/3, Screen.height - 500, 400, 330),style1);
+			GUILayout.BeginArea (new Rect (Screen.width/3, Screen.height - 500, 400, 400),style1);
 			if (GUI.Button(new Rect(20, 250, 60, 60), image_texture)){
 				player_name = "playerCharA";
 				MyConsole.NewMessage("BUTTON CLICKED");
@@ -109,6 +111,15 @@ public static class levelchange
 			else{
 				close = false;
 			}
+			if(isarmor == true){
+				for (int k=0; k < 3;k++){
+					if(GUI.Button(new Rect((k)*90 + 20, 320 , 50, 40), k.ToString())){
+						armor_no = k;
+						isarmor = false;
+				}
+			}
+			}
+
 			GUILayout.EndArea();
 		} 
 		else{
@@ -189,6 +200,17 @@ public static class levelchange
 	public static void clear_abilityfromlist(RandomAbility a){
 		buttons.Remove (a);
 		
+	}
+
+	public static void armor_selection(){
+		isarmor = true;
+
+	}
+	public static int armor_output(){
+		return armor_no;
+	}
+	public static void armor_clear(){
+			armor_no = 0;
 	}
 }
 
