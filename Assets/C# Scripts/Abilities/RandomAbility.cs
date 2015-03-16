@@ -7,7 +7,7 @@ public class RandomAbility {
 	public Character caster;
 	public int targetOption;
 	public float range, castTime, coolDown = 10f;
-	public int manaCost, damage, healing;
+	public int manaCost = 10, damage, healing;
 	public Buff buff;
 	public float buffMagnitude, buffTime;
 	public float remainingCooldownTime = 0f;
@@ -234,6 +234,7 @@ public class RandomAbility {
 		Debug.Log ("RandomAbility.Resolve");
 		caster.stats.CurrentMana -= manaCost;
 		remainingCooldownTime = coolDown;
+		Vector3 zOffset = new Vector3 (0, 0, -2.0f);
 
 		if (targetOption == AbilityTargetOption.TARGET_ALLY || targetOption == AbilityTargetOption.TARGET_ENEMY || targetOption == AbilityTargetOption.SELF)
 		{
@@ -247,6 +248,11 @@ public class RandomAbility {
 				appliedBuff.target = targetChar;
 				appliedBuff.elapsedTime = 0f;
 				targetChar.stats.AddBuff(appliedBuff);
+			}
+			if (targetOption == AbilityTargetOption.TARGET_ALLY || targetOption == AbilityTargetOption.SELF){
+				Object.Instantiate(Resources.Load("buffEffect"), targetChar.getCharacterPosition() + zOffset, Quaternion.identity);
+			}else{
+				Object.Instantiate(Resources.Load("debuffEffect"), targetChar.getCharacterPosition() + zOffset, Quaternion.identity);
 			}
 		}
 		else if (targetOption == AbilityTargetOption.TARGET_LOCATION)

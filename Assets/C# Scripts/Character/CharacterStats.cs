@@ -276,9 +276,9 @@ public class CharacterStats {
 	{
 		baseMaxHealth = 50;
 		baseMaxMana = 30;
-		baseStrength = 5;
-		baseAgility = 5;
-		baseIntelligence = 5;
+		baseStrength = 10;
+		baseAgility = 10;
+		baseIntelligence = 10;
 	}
 
 	public void InitializeTrollBaseStats()
@@ -293,12 +293,12 @@ public class CharacterStats {
 
 	public void InitializeEquipment ()
 	{
-		weapon = equipmentGenerator.basicSword;
-		gear [0] = equipmentGenerator.basicArmor;
-		gear [1] = equipmentGenerator.basicArmor;
-		gear [2] = equipmentGenerator.basicArmor;
-	}
-
+				weapon = equipmentGenerator.basicSword;
+				gear [0] = equipmentGenerator.basicArmor;
+				gear [1] = equipmentGenerator.basicArmor;
+				gear [2] = equipmentGenerator.basicArmor;
+	
+		}
 	public void InitializeCombatStats ()
 	{
 		currentHealth = maxHealth;
@@ -334,9 +334,11 @@ public class CharacterStats {
 	// Ability and Buff list management
 	public RandomAbility GetAbility (int index)
 	{
+		MyConsole.NewMessage ("ability added");
 		if(-1 < index && index < abilities.Count)
 		{
 			return abilities.ToArray()[index];
+
 		}
 		else
 		{
@@ -350,6 +352,7 @@ public class CharacterStats {
 		if (abilities.Count < 5)
 		{
 			abilities.Add (s);
+			MyConsole.NewMessage("add ability");
 		}
 		else
 		{
@@ -395,12 +398,12 @@ public class CharacterStats {
 
 	public void PrintEquipment ()
 	{
-		Debug.Log (name + "'s equipment: ");
-		MyConsole.NewMessage(name + "'s equipment: ");
-		weapon.Print ();
-		gear [0].Print ();
-		gear [1].Print ();
-		gear [2].Print ();
+	//	Debug.Log (name + "'s equipment: ");
+	//	MyConsole.NewMessage(name + "'s equipment: " + weapon.name);
+	//	weapon.Print ();
+	//	gear [0].Print ();
+	//	gear [1].Print ();
+	//	gear [2].Print ();
 	}
 
 	public void LevelHealth()

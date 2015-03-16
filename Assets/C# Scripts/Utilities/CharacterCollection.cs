@@ -124,4 +124,31 @@ public class CharacterCollection {
 			}
 		}
 	}
+
+    public static int getCumulativeLevel() {
+        int ret = 0;
+        foreach (Character c in heroes)
+        {
+            ret += c.getLevel();
+        }
+
+        if(ret == 0)
+        {
+            return 1;
+        }
+
+        return ret;
+    }
+
+    public static void nextRoomRegen() {
+        foreach (Character c in heroes)
+        {
+            int toAdd =(int) (c.stats.MaxMana * .2);
+            c.stats.CurrentMana += toAdd;
+            if(c.stats.CurrentMana > c.stats.MaxMana)
+            {
+                c.stats.CurrentMana = c.stats.MaxMana;
+            }
+        }
+    }
 }

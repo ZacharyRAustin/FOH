@@ -15,7 +15,10 @@ public class Utilities {
 
     public static void prepareForGeneration() {
         CharacterCollection.prepareCharactersForSpawn();
+        CharacterCollection.nextRoomRegen();
         EnemyCollection.removeAll();
         SpawnCharacteristics.prepareForSpawn();
+        DropSystem.GenerateLoot();
+        DropSystem.printGenerated();
     }
 }

@@ -4,6 +4,7 @@ using System.Collections;
 public class EnemyMovement : MonoBehaviour {
 	private Character thisCharacter;
 	private Character target;
+	private DropSystem drop;
 
 	private Vector3 originalPosition;
 	private Vector3 currentPosition;
@@ -21,9 +22,14 @@ public class EnemyMovement : MonoBehaviour {
 	private float chasingSpeed = 20.0f;
 	private int patrolSwitch;
 
+
 	//combat system
 	private CombatManager combatManager = new CombatManager();
 	private float attackCooldown = 0f;
+    private int prevHealth;
+
+    private bool ignoreDetectRange = false;
+    private bool isAttachking = false;
 
 	// --- start and update functions---
 
@@ -40,20 +46,27 @@ public class EnemyMovement : MonoBehaviour {
             
             if(target == null)
             {
+                Debug.Log("Target is null");
                 checkForTarget();
-                thisCharacter.setAggro(true);
             }
             else if(target.isDead)
             {
                 target = null;
+                ignoreDetectRange = false;
                 thisCharacter.setAggro(false);
+                isAttachking = false;
             }
             else if(!target.isenemy)
             {
                 thisCharacter.setAggro(true);
             }
-            move();
 
+            if (thisCharacter.stats.CurrentHealth != prevHealth && !isAttachking)
+            {
+                findAttacker();
+            }
+
+            move();
             AttackCooldownDecrement();
             currentPosition = thisCharacter.getCharacterPosition();
             target = thisCharacter.Target;
@@ -61,6 +74,9 @@ public class EnemyMovement : MonoBehaviour {
             {
                 targetPosition = target.getCharacterPosition();
             }
+
+            prevHealth = thisCharacter.stats.CurrentHealth;
+
         }
         else
         {
@@ -75,6 +91,7 @@ public class EnemyMovement : MonoBehaviour {
 	private void enemyInitialization () {
 		// initialize this enemy character
 		thisCharacter = GetComponent<Character> ();
+        prevHealth = thisCharacter.stats.CurrentHealth;
 		originalPosition = thisCharacter.getCharacterPosition();
 		currentPosition = originalPosition;
 		// initialize target of this character
@@ -106,9 +123,10 @@ public class EnemyMovement : MonoBehaviour {
 
 	private void move () {
 		// when enemy detects a target
-		if (target != null && Vector3.Distance (currentPosition, targetPosition) < detectRange && Vector3.Distance (currentPosition, targetPosition) > attackRange) {
+		if (target != null && (Vector3.Distance (currentPosition, targetPosition) < detectRange || ignoreDetectRange) && Vector3.Distance (currentPosition, targetPosition) > attackRange) {
 			thisCharacter.getCharacter ().animation.Play ("Run");
 			moveBetweenPositions (currentPosition, targetPosition, chasingSpeed);
+            isAttachking = true;
 		} 
 		else if (target != null && Vector3.Distance (currentPosition, targetPosition) < attackRange) {
 			attack ();
@@ -167,8 +185,15 @@ public class EnemyMovement : MonoBehaviour {
 
 	private void attack () {
 		if(attackCooldown == 0 && target != null){
-            thisCharacter.getCharacter().animation.Play("Attack_02");
-			combatManager.Hit (thisCharacter, target);				
+			// special attack
+			if(Random.value <= 0.10){
+				thisCharacter.getCharacter().animation.Play("Attack_01");
+				Object.Instantiate(Resources.Load("energyBlast"), targetPosition, Quaternion.identity);
+				combatManager.specialHit (thisCharacter, target);
+			}else {
+            	thisCharacter.getCharacter().animation.Play("Attack_02");
+				combatManager.Hit (thisCharacter, target);				
+			}
 			attackCooldown = thisCharacter.stats.AttackRate;
 		}
 	}
@@ -180,6 +205,12 @@ public class EnemyMovement : MonoBehaviour {
 			Debug.Log("EnemyMovement.Death()");
 			CharacterCollection.heroExpGain(thisCharacter.stats.ExpYield);
 		}
+		int k = EnemyCollection.NumberOfEnemies ();
+		if ( k == 0) {
+//						levelchange.push_abilities ("power up");
+//						levelchange.push_abilities("increase strength");
+//						
+				}
 	}
 
 	private void moveBetweenPositions (Vector3 currentPosition, Vector3 targetPosition, float duration) {
@@ -201,6 +232,25 @@ public class EnemyMovement : MonoBehaviour {
                 {
                     target = CharacterCollection.getHero(i);
                     targetPosition = target.getCharacterPosition();
+                    thisCharacter.setAggro(true);
+                    return;
+                }
+            }
+        }
+    }
+
+    private void findAttacker() {
+        for (int i = 0; i < CharacterCollection.NumberOfHeroes(); i++)
+        {
+            Character hero = CharacterCollection.getHero(i);
+            if (!hero.isDead)
+            {
+                if(hero.Target != null && hero.Target.stats.Name.Equals(thisCharacter.stats.Name))
+                {
+                    target = CharacterCollection.getHero(i);
+                    targetPosition = target.getCharacterPosition();
+                    thisCharacter.setAggro(true);
+                    ignoreDetectRange = true;
                     return;
                 }
             }
