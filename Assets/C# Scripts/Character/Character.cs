@@ -255,6 +255,7 @@ public class Character : MonoBehaviour
         //count_times = 0;
         pos_bar = Camera.main.WorldToScreenPoint(character.transform.localPosition);
         pause_string = "GAME IS PAUSED";
+		stats.SetCaster (this);
         if (isPaused == false)
         {
             if (!isenemy)
@@ -489,7 +490,6 @@ public class Character : MonoBehaviour
             character.idle();
             actionQueue.Pop();
             Debug.Log("Character " + name + " completed movement order");
-            MyConsole.NewMessage("Character " + name + " completed movement order");
         }
         else
         {
@@ -537,12 +537,12 @@ public class Character : MonoBehaviour
                         projectileScript.targetLocation = attackTarget.getCharacterPosition();
                     }
 
+					//Debug.Log(name + " attacks " + attackTarget.name + "!");
+					//MyConsole.NewMessage(name + " attacks " + attackTarget.name + "!");
                     combatManager.Hit(this, attackTarget);
                     attackTarget.is_selected = true;
-                    Debug.Log("Character " + stats.Name + " attacks " + attackTarget.stats.Name + ".");
-                    MyConsole.NewMessage("Character " + stats.Name + " attacks " + attackTarget.stats.Name + ".");
-                    Debug.Log(attackTarget.stats.Name + "'s HP is now " + attackTarget.stats.CurrentHealth);
-                    MyConsole.NewMessage(attackTarget.stats.Name + "'s HP is now " + attackTarget.stats.CurrentHealth);
+                    //Debug.Log(attackTarget.stats.Name + "'s HP is now " + attackTarget.stats.CurrentHealth);
+                    //MyConsole.NewMessage(attackTarget.stats.Name + "'s HP is now " + attackTarget.stats.CurrentHealth);
                     attackCooldown = stats.AttackRate;
                     //Debug.Log("Attack cooldown: " + attackCooldown);
                 }
@@ -572,7 +572,7 @@ public class Character : MonoBehaviour
 
         if (stats.CurrentMana < spell.manaCost)
         {
-            Debug.Log("Not enough mana!");
+			MyConsole.NewMessage ("Not enough mana!");
             actionQueue.Pop();
         }
         else if (targetDistance > spell.range)
@@ -654,8 +654,9 @@ public class Character : MonoBehaviour
         if (isenemy == false)
         {
             stats.CurrentExp += exp;
-            Debug.Log(stats.Name + " has gained " + exp + " exp! (" + stats.CurrentExp + "/" + stats.MaxExp + ")");
-            MyConsole.NewMessage(stats.Name + " has gained " + exp + " exp! (" + stats.CurrentExp + "/" + stats.MaxExp + ")");
+			MyConsole.NewMessage ("");
+            Debug.Log(name + " has gained " + exp + " exp! (" + stats.CurrentExp + "/" + stats.MaxExp + ")");
+            MyConsole.NewMessage(name + " has gained " + exp + " exp! (" + stats.CurrentExp + "/" + stats.MaxExp + ")");
             if (stats.CurrentExp >= stats.MaxExp)
             {
                 stats.CurrentExp -= stats.MaxExp;
@@ -671,9 +672,10 @@ public class Character : MonoBehaviour
         stats.CurrentMana = stats.MaxMana;
 
         Debug.Log(stats.Name + " has advanced to level " + stats.Level + "!");
-        MyConsole.NewMessage(stats.Name + " has advanced to level " + stats.Level + "!");
+		MyConsole.NewMessage ("");
+        MyConsole.NewMessage(name + " has advanced to level " + stats.Level + "!");
         Debug.Log(stats.Name + " has " + stats.UnallocatedStatPoints + " stat points to spend.");
-        MyConsole.NewMessage(stats.Name + " has " + stats.UnallocatedStatPoints + " stat points to spend.");
+        MyConsole.NewMessage(name + " has " + stats.UnallocatedStatPoints + " stat points to spend.");
     }
 
     public int getLevel() {

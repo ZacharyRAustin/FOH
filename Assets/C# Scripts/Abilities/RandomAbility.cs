@@ -7,7 +7,7 @@ public class RandomAbility {
 	public Character caster;
 	public int targetOption;
 	public float range, castTime, coolDown = 10f;
-	public int manaCost, damage, healing;
+	public int manaCost = 10, damage, healing;
 	public Buff buff;
 	public float buffMagnitude, buffTime;
 	public float remainingCooldownTime = 0f;

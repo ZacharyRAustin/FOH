@@ -10,18 +10,17 @@ public class Room : MonoBehaviour {
     public Door doorPrefab;
     public RoomObstacle obstaclePrefab;
     public float obstacleChance;
-	private GameManager gameManager;
-	private AudioSource audioSource;
-	public AudioClip loadingClip;
+	public AudioManager audioManager;
+	public AudioClip fightClip;
 	public AudioClip bossClip;
 
     private RoomCell[,] cells;
     private List<RoomWall> walls = new List<RoomWall>();
     private List<Door> doors = new List<Door>();
-    private List<RoomObstacle> obstacles = new List<RoomObstacle>();
+	private List<RoomObstacle> obstacles = new List<RoomObstacle>();
 
     void Start() {
-
+		audioManager = FindObjectOfType<AudioManager> ();
     }
     void OnGUI() {
         GUI.BeginGroup(new Rect(0, Screen.height-50, 100, 100));
@@ -50,13 +49,14 @@ public class Room : MonoBehaviour {
         GenerateRandomObjects();
         SpawnCharacters(SpawnCharacteristics.getDoorPosition());
 
-		//gameManager = FindObjectOfType<GameManager> ();
-
-		//audioSource = gameManager.gameObject.GetComponent<AudioSource> ();
-		//audioSource.clip = loadingClip;
-		//audioSource.volume = .5f;
-		//audioSource.Play ();
-
+		if (SpawnCharacteristics.isBossFight())
+		{
+			audioManager.BossSong();
+		}
+		else
+		{
+			audioManager.RandSong ();
+		}
     }
 
     private void GenerateRandomObjects(int x, int y) {        

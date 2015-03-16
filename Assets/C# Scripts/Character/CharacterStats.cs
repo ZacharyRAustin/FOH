@@ -276,9 +276,9 @@ public class CharacterStats {
 	{
 		baseMaxHealth = 50;
 		baseMaxMana = 30;
-		baseStrength = 5;
-		baseAgility = 5;
-		baseIntelligence = 5;
+		baseStrength = 10;
+		baseAgility = 10;
+		baseIntelligence = 10;
 	}
 
 	public void InitializeTrollBaseStats()
@@ -303,6 +303,14 @@ public class CharacterStats {
 	{
 		currentHealth = maxHealth;
 		currentMana = maxMana;
+	}
+
+	public void SetCaster(Character c)
+	{
+		foreach (RandomAbility elt in abilities)
+		{
+			elt.caster = c;
+		}
 	}
 
 	public void CalculateCombatStats ()
@@ -398,12 +406,12 @@ public class CharacterStats {
 
 	public void PrintEquipment ()
 	{
-		Debug.Log (name + "'s equipment: ");
-		MyConsole.NewMessage(name + "'s equipment: " + weapon.name);
-		weapon.Print ();
-		gear [0].Print ();
-		gear [1].Print ();
-		gear [2].Print ();
+	//	Debug.Log (name + "'s equipment: ");
+	//	MyConsole.NewMessage(name + "'s equipment: " + weapon.name);
+	//	weapon.Print ();
+	//	gear [0].Print ();
+	//	gear [1].Print ();
+	//	gear [2].Print ();
 	}
 
 	public void LevelHealth()

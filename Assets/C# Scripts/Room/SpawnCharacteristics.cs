@@ -160,7 +160,7 @@ public class SpawnCharacteristics{
 
     public static void prepareForSpawn() {
         isBoss = false;
-        if(UnityEngine.Random.Range(0, 101) < 9)
+        if(UnityEngine.Random.Range(0, 100) < 9)
         {
             isBoss = true;
             maxEnemies = 1;

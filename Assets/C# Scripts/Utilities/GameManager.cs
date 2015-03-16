@@ -10,6 +10,7 @@ public class GameManager : MonoBehaviour
     public Room roomPrefab;
     private Room roomInstance;
     public RandomAbility get_ab;
+    public AudioManager audioManager;
 
     private InputManager inputManager = new InputManager();
 
@@ -29,14 +30,6 @@ public class GameManager : MonoBehaviour
     public bool userHasHitReturnC = false;
     public bool GameOver = false;
     private bool aggro = false;
-
-
-    public AudioClip gameOverClip;
-    public AudioClip battleClip;
-    public AudioClip bossBattleClip;
-    public AudioClip loadingClip;
-    public AudioClip titleClip;
-    private AudioSource audioSource;
 
     private EquipmentGenerator equipmentGenerator = new EquipmentGenerator();
 
@@ -67,8 +60,6 @@ public class GameManager : MonoBehaviour
         count_1 = 0;
         style_font.fontSize = 10;
         style_font.fontStyle = FontStyle.Normal;
-
-        audioSource = GetComponent<AudioSource>();
         Random.seed = seed;
         EnemyGenerator.Initialize(trollPrefab, enemyMaterial);
         EnemyGenerator.InitializeBoss(golemPrefab);
@@ -367,7 +358,6 @@ public class GameManager : MonoBehaviour
             //			levelchange.showlayout();
         }
 
-
     }
 
     private void RemoveHero(Character hero) {
@@ -378,161 +368,143 @@ public class GameManager : MonoBehaviour
         EnemyCollection.removeEnemy(enemy);
     }
 
-    private void GameOverCheck() {
-        if (GameOver == false)
+
+    private void SetHeroIsSelected() {
+        playerCharA.is_selected = false;
+        playerCharB.is_selected = false;
+        playerCharC.is_selected = false;
+        if (playerCharA.isclick == true)
         {
-            if (playerCharA.stats.CurrentHealth <= 0 && playerCharB.stats.CurrentHealth <= 0 && playerCharC.stats.CurrentHealth <= 0)
-            {
-                GameOver = true;
-                audioSource.clip = gameOverClip;
-                audioSource.Play();
-                audioSource.volume = .5f;
-            }
+            inputManager.selected = playerCharA;
+        }
+        if (playerCharB.isclick == true)
+        {
+            inputManager.selected = playerCharB;
+        }
+        if (playerCharC.isclick == true)
+        {
+            //levelchange.clear();
+            inputManager.selected = playerCharC;
+        }
+        if (playerCharA == inputManager.selected)
+        {
+            playerCharA.is_selected = true;
+        }
+        else if (playerCharB == inputManager.selected)
+        {
+            playerCharB.is_selected = true;
+        }
+        else if (playerCharC == inputManager.selected)
+        {
+            playerCharC.is_selected = true;
         }
     }
 
-    //Trying to use this to set the battle music to play when an enemy aggros. Currently is not working
-    private void AggroCheck() {
-        if (aggro == false)
+
+    public void update_characters() {
+        string name_of_char = levelchange.getplayer();
+        RandomAbility a = new RandomAbility();
+        Equipment b = new Equipment();
+        a = levelchange.getselectedability();
+        b = levelchange.getselectedequipment();
+        //MyConsole.NewMessage ("Called" + name_of_char);
+        if (name_of_char == "playerCharA")
         {
-            Debug.Log("Aggro = false");
-            for (int ii = 0; ii < EnemyCollection.NumberOfEnemies(); ii++)
+            if (a != null)
             {
-                Character enemy = EnemyCollection.getEnemy(ii);
-                if (enemy.Target != null)
+                playerCharA.stats.AddAbility(a);
+                levelchange.clear_abilityfromlist(a);
+                levelchange.clear_ability();
+                levelchange.clear_name();
+
+            }
+            if (b != null)
+            {
+                //playerCharA.stats.AddAbility(a);
+                if ((b.name).Contains("Armor"))
                 {
-                    if (Vector3.Distance(enemy.transform.localPosition, enemy.Target.transform.localPosition) > enemy.GetComponent<EnemyMovement>().detectRange)
-                    {
-                        Debug.Log("Aggro = true");
-                        aggro = true;
-                    }
+                    levelchange.armor_selection();
+                    int f = levelchange.armor_output();
+                    playerCharA.stats.gear[f] = (Armor)b;
+                    levelchange.armor_clear();
                 }
+                else
+                {
+                    playerCharA.stats.weapon = (Weapon)b;
+                }
+                playerCharA.stats.PrintEquipment();
+                levelchange.clear_equipfromlist(b);
+                levelchange.clear_equipment();
+                levelchange.clear_name();
             }
 
-            if (aggro == true)
+            //			MyConsole.NewMessage("checkedA");
+            //			get_ab = playerCharA.stats.GetAbility(0);
+
+        }
+        else if (name_of_char == "playerCharB")
+        {
+            if (a != null)
             {
-                Debug.Log("Aggro! Play music!");
-                audioSource.clip = battleClip;
-                audioSource.volume = .5f;
-                audioSource.Play();
+                playerCharB.stats.AddAbility(a);
+                levelchange.clear_abilityfromlist(a);
+                levelchange.clear_ability();
+                levelchange.clear_name();
+
             }
+            if (b != null)
+            {
+                //playerCharA.stats.AddAbility(a);
+                if ((b.name).Contains("Armor"))
+                {
+                    levelchange.armor_selection();
+                    int f = levelchange.armor_output();
+                    playerCharB.stats.gear[f] = (Armor)b;
+                    levelchange.armor_clear();
+                }
+                else
+                {
+                    playerCharB.stats.weapon = (Weapon)b;
+                }
+                playerCharB.stats.PrintEquipment();
+                levelchange.clear_equipfromlist(b);
+                levelchange.clear_equipment();
+                levelchange.clear_name();
+
+            }
+        }
+        else if (name_of_char == "playerCharC")
+        {
+            if (a != null)
+            {
+                playerCharC.stats.AddAbility(a);
+                levelchange.clear_abilityfromlist(a);
+                levelchange.clear_ability();
+                levelchange.clear_name();
+
+            }
+            if (b != null)
+            {
+                //playerCharA.stats.AddAbility(a);
+                if ((b.name).Contains("Armor"))
+                {
+                    levelchange.armor_selection();
+                    int f = levelchange.armor_output();
+                    playerCharC.stats.gear[f] = (Armor)b;
+                    levelchange.armor_clear();
+                }
+                else
+                {
+                    playerCharC.stats.weapon = (Weapon)b;
+                }
+                playerCharC.stats.PrintEquipment();
+                levelchange.clear_equipfromlist(b);
+                levelchange.clear_equipment();
+                levelchange.clear_name();
+
+            }
+
         }
     }
 
-
-	private void SetHeroIsSelected ()
-	{
-		playerCharA.is_selected = false;
-		playerCharB.is_selected = false;
-		playerCharC.is_selected = false;
-		if (playerCharA.isclick == true) {
-			inputManager.selected = playerCharA;
-				}
-		if (playerCharB.isclick == true) {
-			inputManager.selected = playerCharB;	
-		}
-		if (playerCharC.isclick == true) {
-			//levelchange.clear();
-			inputManager.selected = playerCharC;
-		}
-		if (playerCharA == inputManager.selected)
-		{
-			playerCharA.is_selected = true;
-		}
-		else if (playerCharB == inputManager.selected)
-		{
-			playerCharB.is_selected = true;
-		}
-		else if (playerCharC == inputManager.selected)
-		{
-			playerCharC.is_selected = true;
-		}
-	}
-	public void update_characters(){
-		string name_of_char = levelchange.getplayer ();
-		RandomAbility a = new RandomAbility ();
-		Equipment b = new Equipment ();
-		a = levelchange.getselectedability();
-		b = levelchange.getselectedequipment();
-		//MyConsole.NewMessage ("Called" + name_of_char);
-		if (name_of_char == "playerCharA") {
-						if (a != null) {
-								playerCharA.stats.AddAbility (a);
-				levelchange.clear_abilityfromlist(a);
-				levelchange.clear_ability ();
-								levelchange.clear_name ();
-							
-						}	
-						if (b != null) {
-								//playerCharA.stats.AddAbility(a);
-								if ((b.name).Contains ("Armor")) {
-					levelchange.armor_selection();
-					int f = levelchange.armor_output();
-					playerCharA.stats.gear[f] = (Armor)b;
-					levelchange.armor_clear();
-								} else {
-										playerCharA.stats.weapon = (Weapon)b;
-								}
-								playerCharA.stats.PrintEquipment ();
-								levelchange.clear_equipfromlist(b);
-								levelchange.clear_equipment ();
-								levelchange.clear_name ();
-						}
-
-//			MyConsole.NewMessage("checkedA");
-//			get_ab = playerCharA.stats.GetAbility(0);
-
-				} else if (name_of_char == "playerCharB") {
-						if (a != null) {
-								playerCharB.stats.AddAbility (a);
-				levelchange.clear_abilityfromlist(a);
-				levelchange.clear_ability ();
-								levelchange.clear_name ();
-								
-			}
-						if (b != null) {
-								//playerCharA.stats.AddAbility(a);
-								if ((b.name).Contains ("Armor")) {
-					levelchange.armor_selection();
-					int f = levelchange.armor_output();
-					playerCharB.stats.gear[f] = (Armor)b;
-					levelchange.armor_clear();
-								} else {
-										playerCharB.stats.weapon = (Weapon)b;
-								}
-								playerCharB.stats.PrintEquipment ();
-								levelchange.clear_equipfromlist(b);
-								levelchange.clear_equipment ();
-								levelchange.clear_name ();
-				
-						}
-				}
-		else if (name_of_char == "playerCharC") {
-				if (a != null){
-					playerCharC.stats.AddAbility(a);
-					levelchange.clear_abilityfromlist(a);
-					levelchange.clear_ability();
-					levelchange.clear_name();
-					
-			}
-				if (b!= null){
-					//playerCharA.stats.AddAbility(a);
-					if((b.name).Contains("Armor")){
-					levelchange.armor_selection();
-					int f = levelchange.armor_output();
-					playerCharC.stats.gear[f] = (Armor)b;
-					levelchange.armor_clear();
-					}
-					else{
-						playerCharC.stats.weapon = (Weapon)b;
-					}
-					playerCharC.stats.PrintEquipment();
-					levelchange.clear_equipfromlist(b);
-					levelchange.clear_equipment();
-					levelchange.clear_name();
-			
-		}
-
-		}
-		}
 }

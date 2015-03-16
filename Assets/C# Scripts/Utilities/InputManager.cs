@@ -36,6 +36,11 @@ public class InputManager {
 		SpellTarget ();
 		AllocateStatPoints ();
 
+		if (Input.GetButtonDown("View Equipment"))
+		{
+			ViewEquipment();
+		}
+
 		if (Input.GetButtonDown ("Select Character A"))
 		{
 			selected = CharacterCollection.getHero(0);
@@ -102,6 +107,7 @@ public class InputManager {
 
 						if (isCharacterUnderMouse) {
 								for (int i = 0; i <= 2; i++) {
+					if (CharacterCollection.getHero(i) != null){
 										if (CharacterCollection.getHero (i) == characterUnderMouse) {
 												selected = characterUnderMouse;
 												Debug.Log (selected.is_selected);
@@ -111,7 +117,7 @@ public class InputManager {
 										} else {
 												CharacterCollection.getHero (i).is_selected = false;
 										}
-		
+					}
 								}
 						}
 				}
@@ -225,29 +231,29 @@ public class InputManager {
 			{
 				selected.stats.LevelHealth();
 				selected.stats.UnallocatedStatPoints -= 1;
-				Debug.Log ("Raised HP. " + selected.stats.Name + "'s Max HP is now " + (selected.stats.MaxHealth + 5) + ".");
-				MyConsole.NewMessage("Raised HP. " + selected.stats.Name + "'s Max HP is now " + (selected.stats.MaxHealth + 5) + ".");
+				Debug.Log ("Raised HP. " + selected.name + "'s Max HP is now " + (selected.stats.MaxHealth + 5) + ".");
+				MyConsole.NewMessage("Raised HP. " + selected.name + "'s Max HP is now " + (selected.stats.MaxHealth + 5) + ".");
 				Debug.Log (selected.stats.UnallocatedStatPoints + " points left to spend.");
 				MyConsole.NewMessage(selected.stats.UnallocatedStatPoints + " points left to spend.");
-				selected.stats.InitializeCombatStats();
+				selected.stats.CalculateCombatStats();
 			}
 			else if (Input.GetButtonDown("Level Mana"))
 			{
 				selected.stats.LevelMana();
 				selected.stats.UnallocatedStatPoints -= 1;
-				Debug.Log ("Raised Mana. " + selected.stats.Name + "'s Max Mana is now " + (selected.stats.MaxMana + 5) + ".");
-				MyConsole.NewMessage("Raised Mana. " + selected.stats.Name + "'s Max Mana is now " + (selected.stats.MaxMana + 5) + ".");
+				Debug.Log ("Raised Mana. " + selected.name + "'s Max Mana is now " + (selected.stats.MaxMana + 5) + ".");
+				MyConsole.NewMessage("Raised Mana. " + selected.name + "'s Max Mana is now " + (selected.stats.MaxMana + 5) + ".");
 				Debug.Log (selected.stats.UnallocatedStatPoints + " points left to spend.");
 				MyConsole.NewMessage(selected.stats.UnallocatedStatPoints + " points left to spend.");
 
-				selected.stats.InitializeCombatStats();
+				selected.stats.CalculateCombatStats();
 			}
 			else if (Input.GetButtonDown("Level Strength"))
 			{
 				selected.stats.LevelStrength();
 				selected.stats.UnallocatedStatPoints -= 1;
-				Debug.Log ("Raised Strength. " + selected.stats.Name + "'s Strength is now " + (selected.stats.Strength + 1) + ".");
-				MyConsole.NewMessage("Raised Strength. " + selected.stats.Name + "'s Strength is now " + (selected.stats.Strength + 1) + ".");
+				Debug.Log ("Raised Strength. " + selected.name + "'s Strength is now " + (selected.stats.Strength + 1) + ".");
+				MyConsole.NewMessage("Raised Strength. " + selected.name + "'s Strength is now " + (selected.stats.Strength + 1) + ".");
 				Debug.Log (selected.stats.UnallocatedStatPoints + " points left to spend.");
 				MyConsole.NewMessage(selected.stats.UnallocatedStatPoints + " points left to spend.");
 				selected.stats.CalculateCombatStats();
@@ -256,8 +262,8 @@ public class InputManager {
 			{
 				selected.stats.LevelAgility();
 				selected.stats.UnallocatedStatPoints -= 1;
-				Debug.Log ("Raised Agility. " + selected.stats.Name + "'s Agility is now " + (selected.stats.Agility + 1) + ".");
-				MyConsole.NewMessage("Raised Agility. " + selected.stats.Name + "'s Agility is now " + (selected.stats.Agility + 1) + ".");
+				Debug.Log ("Raised Agility. " + selected.name + "'s Agility is now " + (selected.stats.Agility + 1) + ".");
+				MyConsole.NewMessage("Raised Agility. " + selected.name + "'s Agility is now " + (selected.stats.Agility + 1) + ".");
 				Debug.Log (selected.stats.UnallocatedStatPoints + " points left to spend.");
 				MyConsole.NewMessage(selected.stats.UnallocatedStatPoints + " points left to spend.");
 				selected.stats.CalculateCombatStats();
@@ -266,8 +272,8 @@ public class InputManager {
 			{
 				selected.stats.LevelIntelligence();
 				selected.stats.UnallocatedStatPoints -= 1;
-				Debug.Log ("Raised Intelligence. " + selected.stats.Name + "'s Intelligence is now " + (selected.stats.Intelligence + 1) + ".");
-				MyConsole.NewMessage("Raised Intelligence. " + selected.stats.Name + "'s Intelligence is now " + (selected.stats.Intelligence + 1) + ".");
+				Debug.Log ("Raised Intelligence. " + selected.name + "'s Intelligence is now " + (selected.stats.Intelligence + 1) + ".");
+				MyConsole.NewMessage("Raised Intelligence. " + selected.name + "'s Intelligence is now " + (selected.stats.Intelligence + 1) + ".");
 				Debug.Log (selected.stats.UnallocatedStatPoints + " points left to spend.");
 				MyConsole.NewMessage(selected.stats.UnallocatedStatPoints + " points left to spend.");
 				selected.stats.CalculateCombatStats();
@@ -277,80 +283,104 @@ public class InputManager {
 
 	void SpellTarget ()
 	{
-		RandomAbility spell = selected.currentSpell;
-		if (selected.playerCasting)
+		if (selected != null){
+			RandomAbility spell = selected.currentSpell;
+			if (selected.playerCasting)
+			{
+				if (spell.targetOption == AbilityTargetOption.TARGET_ALLY)
+				{
+					if (Input.GetMouseButtonDown (0))
+					{
+						CharacterMouseCheck();
+						if (isCharacterUnderMouse)
+						{
+							for (int i = 0; i <= 2; i++)
+							{
+        	                    if (CharacterCollection.getHero(i) == characterUnderMouse)
+								{
+									Debug.Log ("Casting " + spell.name + " on " + characterUnderMouse.stats.Name);
+									MyConsole.NewMessage("Casting " + spell.name + " on " + characterUnderMouse.stats.Name);
+									if (Input.GetButton ("Queue"))
+									{
+										selected.Enqueue (spell, characterUnderMouse, new Vector3());
+									}
+									else
+									{
+										selected.Overwrite (spell, characterUnderMouse, new Vector3());
+									}
+									selected.playerCasting = false;
+								}
+							}
+						}
+					}
+				}
+				else if (spell.targetOption == AbilityTargetOption.TARGET_ENEMY)
+				{
+					if (Input.GetMouseButtonDown (0))
+					{
+						CharacterMouseCheck();
+						if (isCharacterUnderMouse)
+						{
+							for (int i = 0; i < EnemyCollection.NumberOfEnemies(); i++)
+							{
+								if (EnemyCollection.getEnemy(i) == characterUnderMouse)
+								{
+									Debug.Log ("Casting " + spell.name + " on " + characterUnderMouse.stats.Name);
+									MyConsole.NewMessage("Casting " + spell.name + " on " + characterUnderMouse.stats.Name);
+									if (Input.GetButton ("Queue"))
+									{
+										selected.Enqueue (spell, characterUnderMouse, new Vector3());
+									}
+									else
+									{
+										selected.Overwrite (spell, characterUnderMouse, new Vector3());
+									}
+									selected.playerCasting = false;
+								}
+							}
+						}
+					}
+				}
+				else if (spell.targetOption == AbilityTargetOption.TARGET_LOCATION)
+				{
+					if (Input.GetMouseButtonDown(0))
+					{
+						if (Input.GetButton ("Queue"))
+						{
+							selected.Enqueue(spell, null, mousePosition);
+							Debug.Log ("Queueing position-targeted spell at " + mousePosition.x + ", " + mousePosition.y);
+						}
+						else
+						{
+							selected.Overwrite (spell, null, mousePosition);
+							Debug.Log ("Casting position-targeted spell at " + mousePosition.x + ", " + mousePosition.y);
+							Debug.Log ("Player casting: " + selected.playerCasting);
+						}
+					}
+				}
+			}
+		}
+	}	
+
+	void ViewEquipment()
+	{
+		if (selected != null)
 		{
-			if (spell.targetOption == AbilityTargetOption.TARGET_ALLY)
+			MyConsole.NewMessage("");
+			MyConsole.NewMessage(selected.name + "'s gear:");
+			MyConsole.NewMessage ("");
+
+			selected.stats.weapon.Print();
+			MyConsole.NewMessage ("");
+			//selected.stats.weapon.PrintStats();
+
+			for (int i = 0; i <= 2; i++)
 			{
-				if (Input.GetMouseButtonDown (0))
-				{
-					CharacterMouseCheck();
-					if (isCharacterUnderMouse)
-					{
-						for (int i = 0; i <= 2; i++)
-						{
-                            if (CharacterCollection.getHero(i) == characterUnderMouse)
-							{
-								Debug.Log ("Casting " + spell.name + " on " + characterUnderMouse.stats.Name);
-								MyConsole.NewMessage("Casting " + spell.name + " on " + characterUnderMouse.stats.Name);
-								if (Input.GetButton ("Queue"))
-								{
-									selected.Enqueue (spell, characterUnderMouse, new Vector3());
-								}
-								else
-								{
-									selected.Overwrite (spell, characterUnderMouse, new Vector3());
-								}
-								selected.playerCasting = false;
-							}
-						}
-					}
-				}
+				MyConsole.NewMessage(selected.stats.gear[i].name);
+				selected.stats.gear[i].PrintStats();
+				MyConsole.NewMessage ("");
 			}
-			else if (spell.targetOption == AbilityTargetOption.TARGET_ENEMY)
-			{
-				if (Input.GetMouseButtonDown (0))
-				{
-					CharacterMouseCheck();
-					if (isCharacterUnderMouse)
-					{
-						for (int i = 0; i < EnemyCollection.NumberOfEnemies(); i++)
-						{
-							if (EnemyCollection.getEnemy(i) == characterUnderMouse)
-							{
-								Debug.Log ("Casting " + spell.name + " on " + characterUnderMouse.stats.Name);
-								MyConsole.NewMessage("Casting " + spell.name + " on " + characterUnderMouse.stats.Name);
-								if (Input.GetButton ("Queue"))
-								{
-									selected.Enqueue (spell, characterUnderMouse, new Vector3());
-								}
-								else
-								{
-									selected.Overwrite (spell, characterUnderMouse, new Vector3());
-								}
-								selected.playerCasting = false;
-							}
-						}
-					}
-				}
-			}
-			else if (spell.targetOption == AbilityTargetOption.TARGET_LOCATION)
-			{
-				if (Input.GetMouseButtonDown(0))
-				{
-					if (Input.GetButton ("Queue"))
-					{
-						selected.Enqueue(spell, null, mousePosition);
-						Debug.Log ("Queueing position-targeted spell at " + mousePosition.x + ", " + mousePosition.y);
-					}
-					else
-					{
-						selected.Overwrite (spell, null, mousePosition);
-						Debug.Log ("Casting position-targeted spell at " + mousePosition.x + ", " + mousePosition.y);
-						Debug.Log ("Player casting: " + selected.playerCasting);
-					}
-				}
-			}
+			MyConsole.NewMessage("");
 		}
 	}
 }

@@ -40,7 +40,7 @@ public static class levelchange
 		int i = 0;
 		int j = 0;
 		if (close == false) {
-			GUILayout.BeginArea (new Rect (Screen.width/3, Screen.height - 500, 400, 400),style1);
+			GUILayout.BeginArea (new Rect (Screen.width/3, Screen.height - 500, 400, 330),style1);
 			if (GUI.Button(new Rect(20, 250, 60, 60), image_texture)){
 				player_name = "playerCharA";
 				MyConsole.NewMessage("BUTTON CLICKED");
@@ -119,7 +119,6 @@ public static class levelchange
 				}
 			}
 			}
-
 			GUILayout.EndArea();
 		} 
 		else{

@@ -151,4 +151,18 @@ public class CharacterCollection {
             }
         }
     }
+
+	public static bool GameOverCheck()
+	{
+		bool GameOver = true;
+		foreach (Character c in heroes)
+		{
+			if (c.stats.CurrentHealth > 0)
+			{
+				GameOver = false;
+			}
+		}
+
+		return GameOver;
+	}
 }
