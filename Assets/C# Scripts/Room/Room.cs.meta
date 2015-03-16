@@ -7,8 +7,7 @@ MonoImporter:
   - wallPrefab: {instanceID: 0}
   - doorPrefab: {instanceID: 0}
   - obstaclePrefab: {instanceID: 0}
-  - gameManager: {instanceID: 0}
-  - loadingClip: {fileID: 8300000, guid: def7aa632fb723849a336f00c42c5348, type: 3}
+  - fightClip: {fileID: 8300000, guid: 4d20cc1b8ea815045a019930672cd97a, type: 3}
   - bossClip: {fileID: 8300000, guid: 41acf118f87ff3242a255f5296a76d9b, type: 3}
   executionOrder: 0
   icon: {instanceID: 0}

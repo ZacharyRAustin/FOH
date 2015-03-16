@@ -9,22 +9,22 @@ public class Weapon : Equipment {
 
 	public void Print ()
 	{
-		Debug.Log (name);
-		Debug.Log ("Damage: " + damage);
+		MyConsole.NewMessage (name);
+		MyConsole.NewMessage ("Damage: " + damage);
 
 		if (magicAttack)
 		{
-			Debug.Log ("Attack Type: Magical");
+			MyConsole.NewMessage ("Attack Type: Magical");
 		}
 		else
 		{
-			Debug.Log ("Attack Type: Physical");
+			MyConsole.NewMessage ("Attack Type: Physical");
 		}
 
-		Debug.Log ("Hit Rate: " + hitRate);
-		Debug.Log ("Crit Rate: " + critRate);
-		Debug.Log ("Range: " + attackRange);
-		Debug.Log ("Attack Time: " + attackRate);
+		MyConsole.NewMessage ("Hit Rate: " + hitRate);
+		MyConsole.NewMessage ("Crit Rate: " + critRate);
+		MyConsole.NewMessage ("Range: " + attackRange);
+		MyConsole.NewMessage ("Attack Time: " + attackRate);
 		PrintStats ();
 	}
 

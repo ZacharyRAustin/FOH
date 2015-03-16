@@ -111,33 +111,35 @@ public class Equipment {
 	{
 		// if printing a weapon, call this after the weapon's print function, that includes name, damage, etc
 		// if printing armor, just separately print the name and then call PrintStats()
+		Debug.Log ("Print stats");
+
 		if (health != 0)
 		{
-			Debug.Log ("Health +" + health);
+			MyConsole.NewMessage ("Health +" + health);
 		}
 		if (mana != 0)
 		{
-			Debug.Log ("Mana +" + mana);
+			MyConsole.NewMessage ("Mana +" + mana);
 		}
 		if (strength != 0)
 		{
-			Debug.Log ("Strength +" + strength);
+			MyConsole.NewMessage ("Strength +" + strength);
 		}
 		if (agility != 0)
 		{
-			Debug.Log ("Agility +" + agility);
+			MyConsole.NewMessage ("Agility +" + agility);
 		}
 		if (intelligence != 0)
 		{
-			Debug.Log ("Intelligence +" + intelligence);
+			MyConsole.NewMessage ("Intelligence +" + intelligence);
 		}
 		if (armor != 0)
 		{
-			Debug.Log ("Armor +" + armor);
+			MyConsole.NewMessage ("Armor +" + armor);
 		}
 		if (magicResist != 0)
 		{
-			Debug.Log ("Magic Resistance +" + magicResist);
+			MyConsole.NewMessage ("Magic Resistance +" + magicResist);
 		}
 	}
 }
