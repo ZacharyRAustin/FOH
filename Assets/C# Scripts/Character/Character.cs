@@ -181,12 +181,8 @@ public class Character : MonoBehaviour
                 GUI.Box(new Rect(0, 0, width_x, size.y), emptyTex);
                 //GUI.TextArea (new Rect (0,0,60, size.y), character.name);
                 //draw the filled-in part:
-                //<<<<<<< HEAD
-                //                GUI.BeginGroup(new Rect(0, 0, width_x , size.y));
-                //                GUI.Box(new Rect(0, 0, width_x * (stats.CurrentExp)/(stats.MaxExp), size.y), new GUIContent(""), style_experience);
-                //=======
-                GUI.BeginGroup(new Rect(0, 0, width_x * (stats.CurrentExp) / (stats.MaxExp), size.y));
-                GUI.Box(new Rect(0, 0, width_x, size.y), new GUIContent(""), style_mana);
+                GUI.BeginGroup(new Rect(0, 0, width_x, size.y));
+                GUI.Box(new Rect(0, 0, width_x * (stats.CurrentExp) / (stats.MaxExp), size.y), new GUIContent(""), style_experience);
                 GUI.EndGroup();
                 GUI.EndGroup();
 
