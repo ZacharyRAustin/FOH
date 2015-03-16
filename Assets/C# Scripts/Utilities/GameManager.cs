@@ -58,6 +58,7 @@ public class GameManager : MonoBehaviour {
 
         Random.seed = seed;
         EnemyGenerator.Initialize(trollPrefab, enemyMaterial);
+		EnemyGenerator.InitializeBoss(golemPrefab);
         SpawnCharacteristics.prepareForSpawn();
         BeginGame();
 		CharacterCollection.addHero (playerCharA);
