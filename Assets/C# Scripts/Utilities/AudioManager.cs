@@ -10,6 +10,8 @@ public class AudioManager : MonoBehaviour {
 	public AudioClip softClip;
 	public AudioSource audioSource;
 
+	private bool GameOver = false;
+
 	// Use this for initialization
 	void Start () {
 
@@ -21,21 +23,28 @@ public class AudioManager : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-	
+		if (CharacterCollection.GameOverCheck() && !GameOver)
+		{
+			GameOverSong();
+			GameOver = true;
+		}
 	}
 
 	public void BossSong()
 	{
-		audioSource.Stop ();
+		//audioSource.Stop ();
 		audioSource.clip = bossClip;
 		audioSource.Play ();
 	}
 
 	public void FightSong()
 	{
-		audioSource.Stop ();
-		audioSource.clip = fightClip;
-		audioSource.Play ();
+		if (audioSource.clip != fightClip)
+		{
+			//audioSource.Stop ();
+			audioSource.clip = fightClip;
+			audioSource.Play ();
+		}
 	}
 
 	public void GameOverSong()
@@ -46,16 +55,22 @@ public class AudioManager : MonoBehaviour {
 
 	public void MainSong()
 	{
-		audioSource.Stop ();
-		audioSource.clip = mainClip;
-		audioSource.Play ();
+		if (audioSource.clip != mainClip)
+		{
+			//audioSource.Stop ();
+			audioSource.clip = mainClip;
+			audioSource.Play ();
+		}
 	}
 
 	public void SoftSong()
 	{
-		audioSource.Stop ();
-		audioSource.clip = softClip;
-		audioSource.Play ();
+		if (audioSource.clip != softClip)
+		{
+			//audioSource.Stop ();
+			audioSource.clip = softClip;
+			audioSource.Play ();
+		}
 	}
 
 	public void RandSong()

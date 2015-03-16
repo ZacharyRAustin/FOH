@@ -49,15 +49,20 @@ public class CombatManager {
 
 		if (crit && hit)
 		{
-			Debug.Log ("Crit!");
+			MyConsole.NewMessage ("");
+			MyConsole.NewMessage ("CRITICAL HIT!");
+			MyConsole.NewMessage (attacker.name + " crits " + defender.name + " for " + attackDamage + " damage!");
 		}
 		else if (hit)
 		{
-			Debug.Log ("Hit!");
+			//Debug.Log (attacker.name + " hits " + defender.name + " for " + attackDamage + " damage!");
+			MyConsole.NewMessage ("");
+			MyConsole.NewMessage (attacker.name + " hits " + defender.name + " for " + attackDamage + " damage!");
 		}
 		else
 		{
-			Debug.Log ("Miss!");
+			MyConsole.NewMessage ("");
+			MyConsole.NewMessage (attacker.name + " missed!");
 		}
 
 	}
@@ -101,15 +106,17 @@ public class CombatManager {
 		
 		if (crit && hit)
 		{
-			Debug.Log ("Crit!");
+			MyConsole.NewMessage ("CRITICAL HIT!");
+			MyConsole.NewMessage (attacker.name + " crits " + defender.name + " for " + attackDamage + " damage!");
 		}
 		else if (hit)
 		{
-			Debug.Log ("Hit!");
+			Debug.Log (attacker.name + " hits " + defender.name + " for " + attackDamage + " damage!");
+			MyConsole.NewMessage (attacker.name + " hits " + defender.name + " for " + attackDamage + " damage!");
 		}
 		else
 		{
-			Debug.Log ("Miss!");
+			MyConsole.NewMessage (attacker.name + " missed!");
 		}
 		
 	}
