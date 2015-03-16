@@ -19,6 +19,10 @@ public class SpawnCharacteristics{
 
     public static bool canLeaveRoom() {
         print();
+        if(doorNum > -1)
+        {
+            nearDoor = true;
+        }
         return EnemyCollection.allEnemiesDead() && nearDoor && doorNum > -1;
     }
 
