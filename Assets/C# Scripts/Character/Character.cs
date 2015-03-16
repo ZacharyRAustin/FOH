@@ -94,6 +94,7 @@ public class Character : MonoBehaviour
 		style_experience.normal.background = fullTex_experience;
         style_font.fontSize = 50;
         style_name.fontSize = 30;
+		style_name.normal.textColor = graycolor;
 		style_no.fontSize = 15;
 		float width_x = (Screen.width / 6);
         GUI.BeginGroup(new Rect((Screen.width / 3), (Screen.height / 2), width_x * 2 + 100, 1000));

@@ -14,6 +14,7 @@ public class SpawnCharacteristics{
     private static int diffPerEnemy;
     private static int testCounter = 0;
     private static int maxEnemyLevel;
+    private static int enemyCumulativeLevel = 0;
 
     public static bool canLeaveRoom() {
         print();
@@ -141,13 +142,17 @@ public class SpawnCharacteristics{
         {
             int temp = Math.Max(averageEnemyLevel + UnityEngine.Random.Range(bound, 0), 1);
             Debug.Log("Temp is " + temp);
-            return Math.Min(temp, maxEnemyLevel);
+            int ret = Math.Min(temp, maxEnemyLevel);
+            enemyCumulativeLevel += ret;
+            return ret;
         }
         else
         {
             int temp = Math.Max(averageEnemyLevel + UnityEngine.Random.Range(0, bound), 1);
             Debug.Log("Temp is " + temp);
-            return Math.Min(temp, maxEnemyLevel);
+            int ret = Math.Min(temp, maxEnemyLevel);
+            enemyCumulativeLevel += ret;
+            return ret;
         }
 
     }
@@ -156,12 +161,21 @@ public class SpawnCharacteristics{
         increaseDoorsEntered();
         calculateMaxEnemies();
         calculateEnemyLevel();
+        enemyCumulativeLevel = 0;
     }
 
     public static int testLeveling(int heroLevel) {
         averageCharacterLevel = heroLevel;
         calculateMaxEnemies();
         calculateEnemyLevel();
+        return maxEnemies;
+    }
+
+    public static int getCumulativeLevelDifference() {
+        return enemyCumulativeLevel - CharacterCollection.getCumulativeLevel();
+    }
+
+    public static int getMaxEnemies() {
         return maxEnemies;
     }
 }

@@ -8,6 +8,7 @@ public class GameManager : MonoBehaviour {
 	public string text;
     public Room roomPrefab;
     private Room roomInstance;
+	public RandomAbility get_ab;
 
 	private InputManager inputManager = new InputManager();
 
@@ -79,7 +80,7 @@ public class GameManager : MonoBehaviour {
 		SetHeroIsSelected ();
 		count_1 += 1;
 		flashred ();
-
+		update_characters ();
 		playerCharA.count_times = 0;
 		playerCharB.count_times = 0;
 		playerCharC.count_times = 0;
@@ -140,26 +141,26 @@ public class GameManager : MonoBehaviour {
 
 		if (Input.GetButtonDown ("Generate Equipment"))
 	    {
-			playerCharA.stats.weapon = equipmentGenerator.GenerateWeapon(3);
+			playerCharA.stats.weapon = EquipmentGenerator.GenerateWeapon(3);
 			Debug.Log ("Hero A got a " + playerCharA.stats.weapon.name + "!");
 			MyConsole.NewMessage("Hero A got a " + playerCharA.stats.weapon.name + "!");
-			playerCharA.stats.gear[0] = equipmentGenerator.GenerateArmor(1);
-			playerCharA.stats.gear[1] = equipmentGenerator.GenerateArmor(2);
-			playerCharA.stats.gear[2] = equipmentGenerator.GenerateArmor(0);
+			playerCharA.stats.gear[0] = EquipmentGenerator.GenerateArmor(1);
+			playerCharA.stats.gear[1] = EquipmentGenerator.GenerateArmor(2);
+			playerCharA.stats.gear[2] = EquipmentGenerator.GenerateArmor(0);
 
-			playerCharB.stats.weapon = equipmentGenerator.GenerateWeapon(3);
+			playerCharB.stats.weapon = EquipmentGenerator.GenerateWeapon(3);
 			Debug.Log ("Hero B got a " + playerCharB.stats.weapon.name + "!");
 			MyConsole.NewMessage("Hero B got a " + playerCharB.stats.weapon.name + "!");
-			playerCharB.stats.gear[0] = equipmentGenerator.GenerateArmor(10);
-			playerCharB.stats.gear[1] = equipmentGenerator.GenerateArmor(2);
-			playerCharB.stats.gear[2] = equipmentGenerator.GenerateArmor(1);
+			playerCharB.stats.gear[0] = EquipmentGenerator.GenerateArmor(10);
+			playerCharB.stats.gear[1] = EquipmentGenerator.GenerateArmor(2);
+			playerCharB.stats.gear[2] = EquipmentGenerator.GenerateArmor(1);
 
-			playerCharC.stats.weapon = equipmentGenerator.GenerateWeapon(3);
+			playerCharC.stats.weapon = EquipmentGenerator.GenerateWeapon(3);
 			Debug.Log ("Hero C got a " + playerCharC.stats.weapon.name + "!");
 			MyConsole.NewMessage("Hero C got a " + playerCharC.stats.weapon.name + "!");
-			playerCharC.stats.gear[0] = equipmentGenerator.GenerateArmor(10);
-			playerCharC.stats.gear[1] = equipmentGenerator.GenerateArmor(2);
-			playerCharC.stats.gear[2] = equipmentGenerator.GenerateArmor(1);
+			playerCharC.stats.gear[0] = EquipmentGenerator.GenerateArmor(10);
+			playerCharC.stats.gear[1] = EquipmentGenerator.GenerateArmor(2);
+			playerCharC.stats.gear[2] = EquipmentGenerator.GenerateArmor(1);
 		}
 
 		if (Input.GetButtonDown ("Buff Test"))
@@ -326,10 +327,7 @@ public class GameManager : MonoBehaviour {
 			stringToEditB = GUI.TextField (new Rect (Screen.width/2, Screen.height/2 + 20, 100, 20), stringToEditB, 25);
 			stringToEditC = GUI.TextField (new Rect (Screen.width/2, Screen.height/2 + 40, 100, 20), stringToEditC, 25);
 				}
-		        
 
-	
-	 
 }
 
 
@@ -392,4 +390,82 @@ public class GameManager : MonoBehaviour {
 			playerCharC.is_selected = true;
 		}
 	}
+	public void update_characters(){
+		string name_of_char = levelchange.getplayer ();
+		RandomAbility a = new RandomAbility ();
+		Equipment b = new Equipment ();
+		a = levelchange.getselectedability();
+		b = levelchange.getselectedequipment();
+		//MyConsole.NewMessage ("Called" + name_of_char);
+		if (name_of_char == "playerCharA") {
+						if (a != null) {
+								playerCharA.stats.AddAbility (a);
+				levelchange.clear_abilityfromlist(a);
+				levelchange.clear_ability ();
+								levelchange.clear_name ();
+							
+						}	
+						if (b != null) {
+								//playerCharA.stats.AddAbility(a);
+								if ((b.name).Contains ("Armor")) {
+										playerCharA.stats.gear [2] = (Armor)b;
+								} else {
+										playerCharA.stats.weapon = (Weapon)b;
+								}
+								playerCharA.stats.PrintEquipment ();
+								levelchange.clear_equipfromlist(b);
+								levelchange.clear_equipment ();
+								levelchange.clear_name ();
+						}
+
+//			MyConsole.NewMessage("checkedA");
+//			get_ab = playerCharA.stats.GetAbility(0);
+
+				} else if (name_of_char == "playerCharB") {
+						if (a != null) {
+								playerCharB.stats.AddAbility (a);
+				levelchange.clear_abilityfromlist(a);
+				levelchange.clear_ability ();
+								levelchange.clear_name ();
+								
+			}
+						if (b != null) {
+								//playerCharA.stats.AddAbility(a);
+								if ((b.name).Contains ("Armor")) {
+										playerCharB.stats.gear [2] = (Armor)b;
+								} else {
+										playerCharB.stats.weapon = (Weapon)b;
+								}
+								playerCharB.stats.PrintEquipment ();
+								levelchange.clear_equipfromlist(b);
+								levelchange.clear_equipment ();
+								levelchange.clear_name ();
+				
+						}
+				}
+		else if (name_of_char == "playerCharC") {
+				if (a != null){
+					playerCharC.stats.AddAbility(a);
+					levelchange.clear_abilityfromlist(a);
+					levelchange.clear_ability();
+					levelchange.clear_name();
+					
+			}
+				if (b!= null){
+					//playerCharA.stats.AddAbility(a);
+					if((b.name).Contains("Armor")){
+						playerCharC.stats.gear[2] = (Armor)b;
+					}
+					else{
+						playerCharC.stats.weapon = (Weapon)b;
+					}
+					playerCharC.stats.PrintEquipment();
+					levelchange.clear_equipfromlist(b);
+					levelchange.clear_equipment();
+					levelchange.clear_name();
+			
+		}
+
+		}
+		}
 }

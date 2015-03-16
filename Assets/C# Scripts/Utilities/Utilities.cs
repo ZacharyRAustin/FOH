@@ -17,5 +17,7 @@ public class Utilities {
         CharacterCollection.prepareCharactersForSpawn();
         EnemyCollection.removeAll();
         SpawnCharacteristics.prepareForSpawn();
+        DropSystem.GenerateLoot();
+        DropSystem.printGenerated();
     }
 }
