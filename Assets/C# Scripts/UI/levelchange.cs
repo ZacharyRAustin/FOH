@@ -73,7 +73,7 @@ public static class levelchange
                 //GUI.Label(new Rect(20, 250, 60, 60), "chec");
                 if (i < 4)
                 {
-                    if (GUI.Button(new Rect((i) * 90 + 20, 20, 130, 60), s.name))
+                    if (GUI.Button(new Rect((i) * 140 + 20, 20, 130, 60), s.name))
                     {
                         if (selected_ability == null)
                         {
@@ -98,7 +98,7 @@ public static class levelchange
                 if (j < 4)
                 {
 
-                    if (GUI.Button(new Rect((j) * 90 + 20, 90, 130, 60), r.name))
+                    if (GUI.Button(new Rect((j) * 140 + 20, 90, 130, 60), r.name))
                     {
                         if (selected_equipment == null)
                         {

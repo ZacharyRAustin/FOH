@@ -32,6 +32,7 @@ public class Room : MonoBehaviour {
         if(Input.GetButtonDown("Enter Room") && SpawnCharacteristics.canLeaveRoom())
         {
             GenerateNextRoom();
+            Utilities.pause(true);
         }
         else if(Input.GetButtonDown("Enter Room") && !SpawnCharacteristics.canLeaveRoom())
         {
