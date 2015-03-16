@@ -254,7 +254,15 @@ public class Room : MonoBehaviour {
 
     private void SpawnEnemies(int x, int y) {
         Vector3 v = new Vector3(x - sizeX * 0.5f, y - sizeY * 0.5f, 0f);
-        int ret = EnemyGenerator.generateEnemy(v);
+        int ret;
+        if(SpawnCharacteristics.isBossFight())
+        {
+            ret = EnemyGenerator.generateEnemyBoss(v);
+        }
+        else
+        {
+            ret = EnemyGenerator.generateEnemy(v);
+        }
         if(ret > 0)
         {
             EnemyCollection.getEnemy(ret).transform.parent = transform;

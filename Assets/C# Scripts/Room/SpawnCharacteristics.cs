@@ -15,6 +15,7 @@ public class SpawnCharacteristics{
     private static int testCounter = 0;
     private static int maxEnemyLevel;
     private static int enemyCumulativeLevel = 0;
+    private static bool isBoss = false;
 
     public static bool canLeaveRoom() {
         print();
@@ -158,8 +159,17 @@ public class SpawnCharacteristics{
     }
 
     public static void prepareForSpawn() {
+        isBoss = false;
+        if(UnityEngine.Random.Range(0, 101) < 9)
+        {
+            isBoss = true;
+            maxEnemies = 1;
+        }
+        else
+        {
+            calculateMaxEnemies();
+        }
         increaseDoorsEntered();
-        calculateMaxEnemies();
         calculateEnemyLevel();
         enemyCumulativeLevel = 0;
     }
@@ -177,5 +187,9 @@ public class SpawnCharacteristics{
 
     public static int getMaxEnemies() {
         return maxEnemies;
+    }
+
+    public static bool isBossFight() {
+        return isBoss;
     }
 }
