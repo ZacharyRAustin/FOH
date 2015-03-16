@@ -59,6 +59,7 @@ public class Character : MonoBehaviour
     public Texture2D image_texture;
     public Texture2D fullTex;
     public Texture2D fullTex_mana;
+	public Texture2D fullTex_experience;
     public bool isenemy;
     public bool is_selected;
     public Vector2 pos_bar;
@@ -71,7 +72,8 @@ public class Character : MonoBehaviour
     GUIStyle style = new GUIStyle();
     GUIStyle style_mana = new GUIStyle();
     GUIStyle style_name = new GUIStyle();
-    public bool isattack;
+	GUIStyle style_no = new GUIStyle();
+	public bool isattack;
 
 
 
@@ -87,9 +89,8 @@ public class Character : MonoBehaviour
         style_mana.normal.background = fullTex_mana;
         style_font.fontSize = 50;
         style_name.fontSize = 30;
-
-
-        float width_x = (Screen.width / 6);
+		style_no.fontSize = 15;
+		float width_x = (Screen.width / 6);
         GUI.BeginGroup(new Rect((Screen.width / 3), (Screen.height / 2), width_x * 2 + 100, 1000));
         GUI.Label(new Rect(0, 0, width_x * 2, 1000), pause_string, style_font);
         GUI.EndGroup();
@@ -119,20 +120,28 @@ public class Character : MonoBehaviour
                 GUI.EndGroup();
             }
             if (isenemy == false)
-            {
+            { 
+				if(playerCasting == true){
+		     
+					GUI.BeginGroup(new Rect(0,Screen.height/2+200,100,100));
+					GUI.TextArea(new Rect(0,0,100,100),(currentSpell.castTime).ToString());
+					GUI.EndGroup();
+				}
+
+
                 GUI.BeginGroup(new Rect(position_x, position_y_health, width_x + 100, 80));
                 GUI.DrawTexture(new Rect(0, 0, 60, 60), image_texture);
                 GUI.BeginGroup(new Rect(60, 0, width_x + 40, size.y));
-                GUI.TextArea(new Rect(width_x, 0, CalculateHPMPBoxWidth((float) stats.MaxHealth), size.y), (stats.CurrentHealth).ToString());
-                GUI.Box(new Rect(0, 0, width_x, size.y), emptyTex);
+				GUI.TextArea(new Rect(width_x, 0, CalculateHPMPBoxWidth((float) stats.MaxHealth), size.y), (stats.CurrentHealth).ToString(),style_no);
+				GUI.Box(new Rect(0, 0, width_x, size.y), emptyTex);
                 //draw the filled-in part:
                 GUI.BeginGroup(new Rect(0, 0, width_x * (stats.CurrentHealth) / (stats.MaxHealth), size.y));
                 GUI.Box(new Rect(0, 0, width_x, size.y), new GUIContent(""), style);
                 GUI.EndGroup();
                 GUI.EndGroup();
 
-                GUI.BeginGroup(new Rect(60, 30, width_x + 40, size.y));
-				GUI.TextArea(new Rect(width_x, 0, CalculateHPMPBoxWidth((float) stats.MaxMana), size.y), (stats.CurrentMana).ToString());
+                GUI.BeginGroup(new Rect(60,20, width_x + 40, size.y));
+				GUI.TextArea(new Rect(width_x, 0, CalculateHPMPBoxWidth((float) stats.MaxMana), size.y), (stats.CurrentMana).ToString(),style_no);
                 GUI.Box(new Rect(0, 0, width_x, size.y), emptyTex);
                 //GUI.TextArea (new Rect (0,0,60, size.y), character.name);
                 //draw the filled-in part:
@@ -140,30 +149,42 @@ public class Character : MonoBehaviour
                 GUI.Box(new Rect(0, 0, width_x, size.y), new GUIContent(""), style_mana);
                 GUI.EndGroup();
                 GUI.EndGroup();
-                GUI.EndGroup();
-            }
-            else //is enemy
-            {
+
+				GUI.BeginGroup(new Rect(60,40, width_x + 40, size.y));
+				GUI.TextArea(new Rect(width_x, 0, CalculateHPMPBoxWidth((float) stats.MaxMana), size.y), (stats.CurrentExp).ToString(),style_no);
+				GUI.Box(new Rect(0, 0, width_x, size.y), emptyTex);
+				//GUI.TextArea (new Rect (0,0,60, size.y), character.name);
+				//draw the filled-in part:
+				GUI.BeginGroup(new Rect(0, 0, width_x * (stats.CurrentExp) / (stats.MaxExp), size.y));
+				GUI.Box(new Rect(0, 0, width_x, size.y), new GUIContent(""), style_mana);
+				GUI.EndGroup();
+				GUI.EndGroup();
+
+				GUI.EndGroup();
+				
+			}
+			else //is enemy
+			{
 				int healthBoxWidth = CalculateHPMPBoxWidth((float) stats.MaxHealth);
                 GUI.BeginGroup(new Rect(Screen.width - width_x - 100, position_y_health, width_x + 100, 80));
                 GUI.DrawTexture(new Rect(width_x + 40, 0, 60, 60), image_texture);
-                GUI.BeginGroup(new Rect(0, 0, width_x + 40, size.y));
-				GUI.TextArea(new Rect(40 - healthBoxWidth, 0, healthBoxWidth, size.y), (stats.CurrentHealth).ToString());
-                GUI.Box(new Rect(40, 0, width_x, size.y), emptyTex);
+                GUI.BeginGroup(new Rect(0, 0, width_x + 40, 20));
+				GUI.TextArea(new Rect(40 - healthBoxWidth, 0, healthBoxWidth, 20), (stats.CurrentHealth).ToString());
+                GUI.Box(new Rect(40, 0, width_x, 20), emptyTex);
                 //draw the filled-in part:
-                GUI.BeginGroup(new Rect(40, 0, width_x * (stats.CurrentHealth) / (stats.MaxHealth), size.y));
-                GUI.Box(new Rect(0, 0, width_x, size.y), new GUIContent(""), style);
+                GUI.BeginGroup(new Rect(40, 0, width_x * (stats.CurrentHealth) / (stats.MaxHealth), 20));
+                GUI.Box(new Rect(0, 0, width_x, 20), new GUIContent(""), style);
                 GUI.EndGroup();
                 GUI.EndGroup();
 
 				int manaBoxWidth = CalculateHPMPBoxWidth((float) stats.MaxMana);
-                GUI.BeginGroup(new Rect(0, 30, width_x + 40, size.y));
-				GUI.TextArea(new Rect(40 - manaBoxWidth, 0, manaBoxWidth, size.y), (stats.CurrentMana).ToString());
-                GUI.Box(new Rect(40, 0, width_x, size.y), emptyTex);
+                GUI.BeginGroup(new Rect(0, 30, width_x + 40, 20));
+				GUI.TextArea(new Rect(40 - manaBoxWidth, 0, manaBoxWidth, 20), (stats.CurrentMana).ToString());
+                GUI.Box(new Rect(40, 0, width_x, 20), emptyTex);
                 //GUI.TextArea (new Rect (0,0,60, size.y), character.name);
                 //draw the filled-in part:
-                GUI.BeginGroup(new Rect(40, 0, width_x * (stats.CurrentMana) / (stats.MaxMana), size.y));
-                GUI.Box(new Rect(0, 0, width_x, size.y), new GUIContent(""), style_mana);
+                GUI.BeginGroup(new Rect(40, 0, width_x * (stats.CurrentMana) / (stats.MaxMana), 20));
+                GUI.Box(new Rect(0, 0, width_x, 20), new GUIContent(""), style_mana);
                 GUI.EndGroup();
                 GUI.EndGroup();
                 GUI.EndGroup();
@@ -184,7 +205,7 @@ public class Character : MonoBehaviour
         barDisplay = stats.CurrentMana;
 
         pos = new Vector2(20, 0);
-        size = new Vector2(80, 20);
+        size = new Vector2(80, 15);
         image_texture = new Texture2D(1024, 1024, TextureFormat.DXT1, false);
         image_texture = Resources.Load<Texture2D>(image_name);
 
@@ -192,9 +213,11 @@ public class Character : MonoBehaviour
         fullTex.SetPixel(1, 1, greencolor);
         fullTex_mana = new Texture2D(1, 1);
         fullTex_mana.SetPixel(1, 1, bluecolor);
-
-
-        //int[] left_array = {10, 40, 70,100,130,160,190,220,250};
+		fullTex_experience= new Texture2D(1, 1);
+		fullTex_experience.SetPixel(1, 1, graycolor);
+		
+		
+		//int[] left_array = {10, 40, 70,100,130,160,190,220,250};
     }
 
     public void SetCastTime(float castTime) {
@@ -225,6 +248,7 @@ public class Character : MonoBehaviour
                 SpellCooldownDecrement();
                 character_gui_update();
 				statPrintCheck();
+				stats.MaxExp = 5 + stats.Level*5;
             }
             else
             {
@@ -461,6 +485,7 @@ public class Character : MonoBehaviour
             Debug.Log("Attack target of " + stats.Name + " is dead. Cancelling attack order");
 			//MyConsole.NewMessage("Attack target of " + stats.Name + " is dead. Cancelling attack order");
             actionQueue.Pop();
+			//Debug.Log ("actionQueue.Count(): " + actionQueue.Count());
         }
 		else
 		{
@@ -480,15 +505,20 @@ public class Character : MonoBehaviour
         	    {
         	        character.transform.rotation = Quaternion.LookRotation(attackVector, new Vector3(0, 0, -1.0f));
         	        character.attack();
-        	        combatManager.Hit(this, attackTarget);
+					if (stats.AttackRange > 2f) {
+						GameObject basicAttackProjectile = (GameObject) Object.Instantiate(Resources.Load("frameBall"), character.transform.localPosition, Quaternion.identity);
+						BasicAttackProjectile projectileScript = basicAttackProjectile.GetComponent<BasicAttackProjectile>();
+						projectileScript.targetLocation = attackTarget.getCharacterPosition();
+					}
+        	   
+					combatManager.Hit(this, attackTarget);
             	    attackTarget.is_selected = true;
             	    Debug.Log("Character " + stats.Name + " attacks " + attackTarget.stats.Name + ".");
 					MyConsole.NewMessage("Character " + stats.Name + " attacks " + attackTarget.stats.Name + ".");
             	    Debug.Log(attackTarget.stats.Name + "'s HP is now " + attackTarget.stats.CurrentHealth);
 					MyConsole.NewMessage(attackTarget.stats.Name + "'s HP is now " + attackTarget.stats.CurrentHealth);
             	    attackCooldown = stats.AttackRate;
-					Debug.Log("Attack cooldown: " + attackCooldown);
-					//MyConsole.NewMessage("Attack cooldown: " + attackCooldown);
+                    //Debug.Log("Attack cooldown: " + attackCooldown);
             	}
         	}
 		}
@@ -641,7 +671,7 @@ public class Character : MonoBehaviour
             {
                 if(Vector3.Distance(getCharacterPosition(), EnemyCollection.getEnemy(i).getCharacterPosition()) < detectRange)
                 {
-                    if(EnemyCollection.getEnemy(i).isAggro())
+                    if(EnemyCollection.getEnemy(i).isAggro() && actionQueue.Count() == 0)
                     {
                         Enqueue(EnemyCollection.getEnemy(i));
                     }
@@ -681,6 +711,7 @@ public class Character : MonoBehaviour
 		{
 			Debug.Log ("Strength: " + stats.Strength);
 			Debug.Log ("Agility: " + stats.Agility);
+			Debug.Log ("Intelligence: " + stats.Intelligence);
 		}
 	}
 }

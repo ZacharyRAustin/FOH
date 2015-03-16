@@ -29,7 +29,7 @@ public class EnemyGenerator {
             enemy.isenemy = true;
             enemy.position_y_health = 10 + 60 * EnemyCollection.NumberOfEnemies();
             enemy.position_y = 40 + 60 * EnemyCollection.NumberOfEnemies();
-            enemy.image_name = "enemy_image";
+            enemy.image_name = "troll_image";
             enemy.gameObject.AddComponent("EnemyMovement");
             EnemyCollection.addEnemy(enemy);
             return numEnemies;

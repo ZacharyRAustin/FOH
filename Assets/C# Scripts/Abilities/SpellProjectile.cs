@@ -17,6 +17,7 @@ public class SpellProjectile : MonoBehaviour {
 	void Update ()
 	{
 		velocityVector = targetLocation - transform.localPosition;
+		//velocityVector.z = 0f;
 		velocityVector.Normalize();
 		transform.localPosition += velocityVector * velocity * Time.deltaTime;
 

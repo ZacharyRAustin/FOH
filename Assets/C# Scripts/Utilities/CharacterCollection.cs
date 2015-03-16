@@ -118,7 +118,10 @@ public class CharacterCollection {
 	{
 		foreach(Character c in heroes)
 		{
-		//	c.GainExp(exp);
+			if (c.stats.CurrentHealth > 0)
+			{
+				c.GainExp(exp);
+			}
 		}
 	}
 }
