@@ -41,7 +41,7 @@ public static class levelchange
         int j = 0;
         if (close == false)
         {
-            GUILayout.BeginArea(new Rect(Screen.width / 3, Screen.height - 500, 400, 330), style1);
+            GUILayout.BeginArea(new Rect(Screen.width / 3, Screen.height - 500, 700, 400), style1);
             if (GUI.Button(new Rect(20, 250, 60, 60), image_texture))
             {
                 player_name = "playerCharA";
@@ -73,7 +73,7 @@ public static class levelchange
                 //GUI.Label(new Rect(20, 250, 60, 60), "chec");
                 if (i < 4)
                 {
-                    if (GUI.Button(new Rect((i) * 90 + 20, 20, 80, 60), s.name))
+                    if (GUI.Button(new Rect((i) * 90 + 20, 20, 130, 60), s.name))
                     {
                         if (selected_ability == null)
                         {
@@ -98,7 +98,7 @@ public static class levelchange
                 if (j < 4)
                 {
 
-                    if (GUI.Button(new Rect((j) * 90 + 20, 90, 80, 60), r.name))
+                    if (GUI.Button(new Rect((j) * 90 + 20, 90, 130, 60), r.name))
                     {
                         if (selected_equipment == null)
                         {

@@ -58,7 +58,7 @@ public class EnemyGenerator {
 			enemy.name = enemyName;
 			int temp = SpawnCharacteristics.generateNewEnemyLevel();
 			Debug.Log("Generated Level is: " + temp);
-			enemy.stats = new CharacterStats(temp);
+			enemy.stats = new CharacterStats(temp, true);
 			enemy.stats.Name = enemyName;
 			enemy.isenemy = true;
 			enemy.position_y_health = 10 + 60 * EnemyCollection.NumberOfEnemies();

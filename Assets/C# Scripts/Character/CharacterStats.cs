@@ -54,7 +54,7 @@ public class CharacterStats {
 	}
 
     public CharacterStats(int level) {
-        baseMaxHealth = 60 * level;
+        baseMaxHealth = 30 * level;
         baseMaxMana = 30 * level;
         baseStrength = 5 * level;
         baseAgility = 5 * level;
@@ -65,6 +65,30 @@ public class CharacterStats {
         InitializeCombatStats();
     }
 
+    public CharacterStats(int level, bool boss) {
+        if(boss)
+        {
+            baseMaxHealth = 45 * level;
+            baseMaxMana = 40 * level;
+            baseStrength = 8 * level;
+            baseAgility = 8 * level;
+            baseIntelligence = 5 * level;
+            expYield = 6 * level;
+        }
+        else
+        {
+            baseMaxHealth = 30 * level;
+            baseMaxMana = 30 * level;
+            baseStrength = 5 * level;
+            baseAgility = 5 * level;
+            baseIntelligence = 3 * level;
+            expYield = 4 * level;
+        }
+        
+        InitializeEquipment();
+        CalculateCombatStats();
+        InitializeCombatStats();
+    }
 
 	//base stat properties
 	public string Name
