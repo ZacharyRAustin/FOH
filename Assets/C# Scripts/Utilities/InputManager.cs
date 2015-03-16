@@ -231,29 +231,29 @@ public class InputManager {
 			{
 				selected.stats.LevelHealth();
 				selected.stats.UnallocatedStatPoints -= 1;
-				Debug.Log ("Raised HP. " + selected.stats.Name + "'s Max HP is now " + (selected.stats.MaxHealth + 5) + ".");
-				MyConsole.NewMessage("Raised HP. " + selected.stats.Name + "'s Max HP is now " + (selected.stats.MaxHealth + 5) + ".");
+				Debug.Log ("Raised HP. " + selected.name + "'s Max HP is now " + (selected.stats.MaxHealth + 5) + ".");
+				MyConsole.NewMessage("Raised HP. " + selected.name + "'s Max HP is now " + (selected.stats.MaxHealth + 5) + ".");
 				Debug.Log (selected.stats.UnallocatedStatPoints + " points left to spend.");
 				MyConsole.NewMessage(selected.stats.UnallocatedStatPoints + " points left to spend.");
-				selected.stats.InitializeCombatStats();
+				selected.stats.CalculateCombatStats();
 			}
 			else if (Input.GetButtonDown("Level Mana"))
 			{
 				selected.stats.LevelMana();
 				selected.stats.UnallocatedStatPoints -= 1;
-				Debug.Log ("Raised Mana. " + selected.stats.Name + "'s Max Mana is now " + (selected.stats.MaxMana + 5) + ".");
-				MyConsole.NewMessage("Raised Mana. " + selected.stats.Name + "'s Max Mana is now " + (selected.stats.MaxMana + 5) + ".");
+				Debug.Log ("Raised Mana. " + selected.name + "'s Max Mana is now " + (selected.stats.MaxMana + 5) + ".");
+				MyConsole.NewMessage("Raised Mana. " + selected.name + "'s Max Mana is now " + (selected.stats.MaxMana + 5) + ".");
 				Debug.Log (selected.stats.UnallocatedStatPoints + " points left to spend.");
 				MyConsole.NewMessage(selected.stats.UnallocatedStatPoints + " points left to spend.");
 
-				selected.stats.InitializeCombatStats();
+				selected.stats.CalculateCombatStats();
 			}
 			else if (Input.GetButtonDown("Level Strength"))
 			{
 				selected.stats.LevelStrength();
 				selected.stats.UnallocatedStatPoints -= 1;
-				Debug.Log ("Raised Strength. " + selected.stats.Name + "'s Strength is now " + (selected.stats.Strength + 1) + ".");
-				MyConsole.NewMessage("Raised Strength. " + selected.stats.Name + "'s Strength is now " + (selected.stats.Strength + 1) + ".");
+				Debug.Log ("Raised Strength. " + selected.name + "'s Strength is now " + (selected.stats.Strength + 1) + ".");
+				MyConsole.NewMessage("Raised Strength. " + selected.name + "'s Strength is now " + (selected.stats.Strength + 1) + ".");
 				Debug.Log (selected.stats.UnallocatedStatPoints + " points left to spend.");
 				MyConsole.NewMessage(selected.stats.UnallocatedStatPoints + " points left to spend.");
 				selected.stats.CalculateCombatStats();
@@ -262,8 +262,8 @@ public class InputManager {
 			{
 				selected.stats.LevelAgility();
 				selected.stats.UnallocatedStatPoints -= 1;
-				Debug.Log ("Raised Agility. " + selected.stats.Name + "'s Agility is now " + (selected.stats.Agility + 1) + ".");
-				MyConsole.NewMessage("Raised Agility. " + selected.stats.Name + "'s Agility is now " + (selected.stats.Agility + 1) + ".");
+				Debug.Log ("Raised Agility. " + selected.name + "'s Agility is now " + (selected.stats.Agility + 1) + ".");
+				MyConsole.NewMessage("Raised Agility. " + selected.name + "'s Agility is now " + (selected.stats.Agility + 1) + ".");
 				Debug.Log (selected.stats.UnallocatedStatPoints + " points left to spend.");
 				MyConsole.NewMessage(selected.stats.UnallocatedStatPoints + " points left to spend.");
 				selected.stats.CalculateCombatStats();
@@ -272,8 +272,8 @@ public class InputManager {
 			{
 				selected.stats.LevelIntelligence();
 				selected.stats.UnallocatedStatPoints -= 1;
-				Debug.Log ("Raised Intelligence. " + selected.stats.Name + "'s Intelligence is now " + (selected.stats.Intelligence + 1) + ".");
-				MyConsole.NewMessage("Raised Intelligence. " + selected.stats.Name + "'s Intelligence is now " + (selected.stats.Intelligence + 1) + ".");
+				Debug.Log ("Raised Intelligence. " + selected.name + "'s Intelligence is now " + (selected.stats.Intelligence + 1) + ".");
+				MyConsole.NewMessage("Raised Intelligence. " + selected.name + "'s Intelligence is now " + (selected.stats.Intelligence + 1) + ".");
 				Debug.Log (selected.stats.UnallocatedStatPoints + " points left to spend.");
 				MyConsole.NewMessage(selected.stats.UnallocatedStatPoints + " points left to spend.");
 				selected.stats.CalculateCombatStats();
@@ -366,14 +366,21 @@ public class InputManager {
 	{
 		if (selected != null)
 		{
+			MyConsole.NewMessage("");
+			MyConsole.NewMessage(selected.name + "'s gear:");
+			MyConsole.NewMessage ("");
+
 			selected.stats.weapon.Print();
+			MyConsole.NewMessage ("");
 			//selected.stats.weapon.PrintStats();
 
 			for (int i = 0; i <= 2; i++)
 			{
 				MyConsole.NewMessage(selected.stats.gear[i].name);
 				selected.stats.gear[i].PrintStats();
+				MyConsole.NewMessage ("");
 			}
+			MyConsole.NewMessage("");
 		}
 	}
 }

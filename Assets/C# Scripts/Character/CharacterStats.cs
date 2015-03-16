@@ -305,6 +305,14 @@ public class CharacterStats {
 		currentMana = maxMana;
 	}
 
+	public void SetCaster(Character c)
+	{
+		foreach (RandomAbility elt in abilities)
+		{
+			elt.caster = c;
+		}
+	}
+
 	public void CalculateCombatStats ()
 	{
 		maxHealth = baseMaxHealth + weapon.health + gear[0].health + gear[1].health + gear[2].health + healthMod;
