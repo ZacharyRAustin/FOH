@@ -10,6 +10,10 @@ public class Room : MonoBehaviour {
     public Door doorPrefab;
     public RoomObstacle obstaclePrefab;
     public float obstacleChance;
+	private GameManager gameManager;
+	private AudioSource audioSource;
+	public AudioClip loadingClip;
+	public AudioClip bossClip;
 
     private RoomCell[,] cells;
     private List<RoomWall> walls = new List<RoomWall>();
@@ -45,6 +49,14 @@ public class Room : MonoBehaviour {
         Utilities.prepareForGeneration();
         GenerateRandomObjects();
         SpawnCharacters(SpawnCharacteristics.getDoorPosition());
+
+		//gameManager = FindObjectOfType<GameManager> ();
+
+		//audioSource = gameManager.gameObject.GetComponent<AudioSource> ();
+		//audioSource.clip = loadingClip;
+		//audioSource.volume = .5f;
+		//audioSource.Play ();
+
     }
 
     private void GenerateRandomObjects(int x, int y) {        

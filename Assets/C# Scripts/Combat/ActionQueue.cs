@@ -90,6 +90,11 @@ public class ActionQueue {
 		parentChar.setCharacterIdle ();
 	}
 
+	public int Count ()
+	{
+		return actionQueue.Count;
+	}
+
 }
 
 

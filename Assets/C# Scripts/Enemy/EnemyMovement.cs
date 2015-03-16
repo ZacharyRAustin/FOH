@@ -14,7 +14,7 @@ public class EnemyMovement : MonoBehaviour {
 	private Vector3 patrolPosition3;
 	private Vector3 patrolPosition4;
 
-	private float detectRange = 5.0f;
+	public float detectRange = 5.0f;
 	private float attackRange = 1.5f;
 	private float patrolRange = 2.0f;
 	//controls the speed of the enemy

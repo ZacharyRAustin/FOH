@@ -15,17 +15,27 @@ public class GameManager : MonoBehaviour {
 	private Character selected;
 
     public Character characterPrefab1;
-	public Character characterPrefab2;
+    public Character characterPrefab2;
 	public Character characterPrefab3;
 	public Character trollPrefab;
 	public Character golemPrefab;
+
 	public string stringToEditA = "";
 	public string stringToEditB = "";
 	public string stringToEditC = "";
 	public bool userHasHitReturnA = false;
 	public bool userHasHitReturnB = false;
 	public bool userHasHitReturnC = false;
+	public bool GameOver = false;
+	private bool aggro = false;
+
     
+	public AudioClip gameOverClip;
+	public AudioClip battleClip;
+	public AudioClip bossBattleClip;
+	public AudioClip loadingClip;
+	public AudioClip titleClip;
+	private AudioSource audioSource;
 
 	private EquipmentGenerator equipmentGenerator = new EquipmentGenerator();
 
@@ -57,6 +67,7 @@ public class GameManager : MonoBehaviour {
 		style_font.fontSize = 10;
 		style_font.fontStyle = FontStyle.Normal;
 
+		audioSource = GetComponent<AudioSource> ();
         Random.seed = seed;
         EnemyGenerator.Initialize(trollPrefab, enemyMaterial);
 		EnemyGenerator.InitializeBoss(golemPrefab);
@@ -83,6 +94,7 @@ public class GameManager : MonoBehaviour {
 		count_1 += 1;
 		flashred ();
 		update_characters ();
+
 		playerCharA.count_times = 0;
 		playerCharB.count_times = 0;
 		playerCharC.count_times = 0;
@@ -215,6 +227,7 @@ public class GameManager : MonoBehaviour {
 		playerCharA.stats.InitializeEquipment ();
 		playerCharA.stats.CalculateCombatStats ();
 		playerCharA.stats.InitializeCombatStats ();
+		playerCharA.stats.InitializeProgressionStats ();
 
 		playerCharB = Instantiate (characterPrefab2) as Character;
 		playerCharB.characterPrefab.name = "Hero B Prefab";
@@ -312,8 +325,6 @@ public class GameManager : MonoBehaviour {
 				
 				MyConsole.DrawConsole ();
 				levelchange.Drawlayout ();
-		
-		
 		Event e = Event.current;
 		if (e.keyCode == KeyCode.Return) {
 						userHasHitReturnA = true;
@@ -330,7 +341,6 @@ public class GameManager : MonoBehaviour {
 			stringToEditB = GUI.TextField (new Rect (Screen.width/2, Screen.height/2 + 20, 100, 20), stringToEditB, 25);
 			stringToEditC = GUI.TextField (new Rect (Screen.width/2, Screen.height/2 + 40, 100, 20), stringToEditC, 25);
 				}
-
 }
 
 
@@ -393,6 +403,7 @@ public class GameManager : MonoBehaviour {
 			playerCharC.is_selected = true;
 		}
 	}
+
 	public void update_characters(){
 		string name_of_char = levelchange.getplayer ();
 		RandomAbility a = new RandomAbility ();
@@ -471,4 +482,49 @@ public class GameManager : MonoBehaviour {
 
 		}
 		}
+
+
+	private void GameOverCheck()
+	{
+		if (GameOver == false)
+		{
+			if (playerCharA.stats.CurrentHealth <= 0 && playerCharB.stats.CurrentHealth <= 0 && playerCharC.stats.CurrentHealth <= 0)
+			{
+				GameOver = true;
+				audioSource.clip = gameOverClip;
+				audioSource.Play();
+				audioSource.volume = .5f;
+			}
+		}
+	}
+
+	//Trying to use this to set the battle music to play when an enemy aggros. Currently is not working
+	private void AggroCheck()
+	{
+		if (aggro == false)
+		{
+			Debug.Log ("Aggro = false");
+			for (int ii = 0; ii < EnemyCollection.NumberOfEnemies(); ii++)
+			{
+				Character enemy = EnemyCollection.getEnemy(ii);
+				if (enemy.Target != null)
+				{
+					if (Vector3.Distance (enemy.transform.localPosition, enemy.Target.transform.localPosition) > enemy.GetComponent<EnemyMovement>().detectRange)
+					{
+						Debug.Log ("Aggro = true");
+						aggro = true;
+					}
+				}
+			}
+
+			if (aggro == true)
+			{
+				Debug.Log ("Aggro! Play music!");
+				audioSource.clip = battleClip;
+				audioSource.volume = .5f;
+				audioSource.Play();
+			}
+		}
+	}
+
 }

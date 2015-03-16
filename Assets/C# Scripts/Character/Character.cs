@@ -75,6 +75,7 @@ public class Character : MonoBehaviour
     GUIStyle style_mana = new GUIStyle();
     GUIStyle style_name = new GUIStyle();
 	GUIStyle style_no = new GUIStyle();
+
 	GUIStyle style_experience = new GUIStyle ();
 	public bool isattack;
 
@@ -176,8 +177,12 @@ public class Character : MonoBehaviour
 				GUI.Box(new Rect(0, 0, width_x, size.y), emptyTex);
 				//GUI.TextArea (new Rect (0,0,60, size.y), character.name);
 				//draw the filled-in part:
-				GUI.BeginGroup(new Rect(0, 0, width_x , size.y));
-				GUI.Box(new Rect(0, 0, width_x * (stats.CurrentExp)/(stats.MaxExp), size.y), new GUIContent(""), style_experience);
+//<<<<<<< HEAD
+//                GUI.BeginGroup(new Rect(0, 0, width_x , size.y));
+//                GUI.Box(new Rect(0, 0, width_x * (stats.CurrentExp)/(stats.MaxExp), size.y), new GUIContent(""), style_experience);
+//=======
+				GUI.BeginGroup(new Rect(0, 0, width_x * (stats.CurrentExp) / (stats.MaxExp), size.y));
+				GUI.Box(new Rect(0, 0, width_x, size.y), new GUIContent(""), style_mana);
 				GUI.EndGroup();
 				GUI.EndGroup();
 
@@ -236,7 +241,6 @@ public class Character : MonoBehaviour
         fullTex_mana.SetPixel(1, 1, bluecolor);
 		fullTex_experience= new Texture2D(1, 1);
 		fullTex_experience.SetPixel(1, 1, yellowcolor);
-
 		
 		
 		//int[] left_array = {10, 40, 70,100,130,160,190,220,250};
@@ -270,6 +274,7 @@ public class Character : MonoBehaviour
                 SpellCooldownDecrement();
                 character_gui_update();
 				statPrintCheck();
+				stats.MaxExp = 5 + stats.Level*5;
             }
             else
             {
@@ -506,6 +511,7 @@ public class Character : MonoBehaviour
             Debug.Log("Attack target of " + stats.Name + " is dead. Cancelling attack order");
 			//MyConsole.NewMessage("Attack target of " + stats.Name + " is dead. Cancelling attack order");
             actionQueue.Pop();
+			//Debug.Log ("actionQueue.Count(): " + actionQueue.Count());
         }
 		else
 		{
@@ -538,8 +544,7 @@ public class Character : MonoBehaviour
             	    Debug.Log(attackTarget.stats.Name + "'s HP is now " + attackTarget.stats.CurrentHealth);
 					MyConsole.NewMessage(attackTarget.stats.Name + "'s HP is now " + attackTarget.stats.CurrentHealth);
             	    attackCooldown = stats.AttackRate;
-					Debug.Log("Attack cooldown: " + attackCooldown);
-					//MyConsole.NewMessage("Attack cooldown: " + attackCooldown);
+                    //Debug.Log("Attack cooldown: " + attackCooldown);
             	}
         	}
 		}
@@ -692,7 +697,7 @@ public class Character : MonoBehaviour
             {
                 if(Vector3.Distance(getCharacterPosition(), EnemyCollection.getEnemy(i).getCharacterPosition()) < detectRange)
                 {
-                    if(EnemyCollection.getEnemy(i).isAggro())
+                    if(EnemyCollection.getEnemy(i).isAggro() && actionQueue.Count() == 0)
                     {
                         Enqueue(EnemyCollection.getEnemy(i));
                     }
@@ -732,6 +737,7 @@ public class Character : MonoBehaviour
 		{
 			Debug.Log ("Strength: " + stats.Strength);
 			Debug.Log ("Agility: " + stats.Agility);
+			Debug.Log ("Intelligence: " + stats.Intelligence);
 		}
 	}
 }
