@@ -2,272 +2,272 @@
 using System.Collections;
 using UnityEngine.UI;
 
-public class GameManager : MonoBehaviour {
+public class GameManager : MonoBehaviour
+{
 
-	public bool isPaused = true;
-	public string text;
+    public bool isPaused = true;
+    public string text;
     public Room roomPrefab;
     private Room roomInstance;
-	public RandomAbility get_ab;
+    public RandomAbility get_ab;
 
-	private InputManager inputManager = new InputManager();
+    private InputManager inputManager = new InputManager();
 
-	private Character selected;
+    private Character selected;
 
     public Character characterPrefab1;
     public Character characterPrefab2;
-	public Character characterPrefab3;
-	public Character trollPrefab;
-	public Character golemPrefab;
+    public Character characterPrefab3;
+    public Character trollPrefab;
+    public Character golemPrefab;
 
-	public string stringToEditA = "";
-	public string stringToEditB = "";
-	public string stringToEditC = "";
-	public bool userHasHitReturnA = false;
-	public bool userHasHitReturnB = false;
-	public bool userHasHitReturnC = false;
-	public bool GameOver = false;
-	private bool aggro = false;
+    public string stringToEditA = "";
+    public string stringToEditB = "";
+    public string stringToEditC = "";
+    public bool userHasHitReturnA = false;
+    public bool userHasHitReturnB = false;
+    public bool userHasHitReturnC = false;
+    public bool GameOver = false;
+    private bool aggro = false;
 
-    
-	public AudioClip gameOverClip;
-	public AudioClip battleClip;
-	public AudioClip bossBattleClip;
-	public AudioClip loadingClip;
-	public AudioClip titleClip;
-	private AudioSource audioSource;
 
-	private EquipmentGenerator equipmentGenerator = new EquipmentGenerator();
+    public AudioClip gameOverClip;
+    public AudioClip battleClip;
+    public AudioClip bossBattleClip;
+    public AudioClip loadingClip;
+    public AudioClip titleClip;
+    private AudioSource audioSource;
 
-	public int count_1;
+    private EquipmentGenerator equipmentGenerator = new EquipmentGenerator();
 
-	private Character playerCharA;
-	private Character playerCharB;
-	private Character playerCharC;
-	private Character enemy;
-	public Image damageimage;
+    public int count_1;
+
+    private Character playerCharA;
+    private Character playerCharB;
+    private Character playerCharC;
+    private Character enemy;
+    public Image damageimage;
 
     public Material enemyMaterial;
     public Material heroMaterial;
-	public Color flashColour = new Color(1f, 0f, 0f, 0.1f);
-	public Color flashColour_1 = new Color(0f, 0f, 0f, 0f);
-	public int count;
+    public Color flashColour = new Color(1f, 0f, 0f, 0.1f);
+    public Color flashColour_1 = new Color(0f, 0f, 0f, 0f);
+    public int count;
 
     private int seed = 123456789;
 
-	GUIStyle style_font = new GUIStyle();
+    GUIStyle style_font = new GUIStyle();
 
-	// Use this for initialization
+    // Use this for initialization
 
-	void Start () {
+    void Start() {
 
 
-		levelchange.start ();
-		count_1 = 0;
-		style_font.fontSize = 10;
-		style_font.fontStyle = FontStyle.Normal;
+        levelchange.start();
+        count_1 = 0;
+        style_font.fontSize = 10;
+        style_font.fontStyle = FontStyle.Normal;
 
-		audioSource = GetComponent<AudioSource> ();
+        audioSource = GetComponent<AudioSource>();
         Random.seed = seed;
         EnemyGenerator.Initialize(trollPrefab, enemyMaterial);
-		EnemyGenerator.InitializeBoss(golemPrefab);
+        EnemyGenerator.InitializeBoss(golemPrefab);
         SpawnCharacteristics.prepareForSpawn();
         BeginGame();
-		CharacterCollection.addHero (playerCharA);
-        CharacterCollection.addHero (playerCharB);
-        CharacterCollection.addHero (playerCharC);
+        CharacterCollection.addHero(playerCharA);
+        CharacterCollection.addHero(playerCharB);
+        CharacterCollection.addHero(playerCharC);
         roomInstance.SpawnCharacters(DoorPositions.SOUTH);
-		inputManager.Awake ();
-		inputManager.Select (playerCharA);
+        inputManager.Awake();
+        inputManager.Select(playerCharA);
         //for(int i = 0; i < EnemyCollection.NumberOfEnemies(); i++)
         //{
         //    EnemyCollection.getEnemy(i).setTarget(playerCharA);
         //    EnemyCollection.getEnemy(i).actionQueue.ParentChar = EnemyCollection.getEnemy(i);
         //    EnemyCollection.getEnemy(i).Enqueue(playerCharA);
         //}
-	}
-	
-	// Update is called once per frame
-	void Update () {
+    }
 
-		SetHeroIsSelected ();
-		count_1 += 1;
-		flashred ();
-		update_characters ();
+    // Update is called once per frame
+    void Update() {
 
-		playerCharA.count_times = 0;
-		playerCharB.count_times = 0;
-		playerCharC.count_times = 0;
+        SetHeroIsSelected();
+        count_1 += 1;
+        flashred();
+        update_characters();
+        playerCharA.count_times = 0;
+        playerCharB.count_times = 0;
+        playerCharC.count_times = 0;
 
-		if (EnemyCollection.NumberOfEnemies() > 0)
-		{
-        	if(EnemyCollection.getEnemy(0) != null)
-        	{
-        	    setEnemyTarget ();
-        	}
-		}
+        if (EnemyCollection.NumberOfEnemies() > 0)
+        {
+            if (EnemyCollection.getEnemy(0) != null)
+            {
+                setEnemyTarget();
+            }
+        }
 
         if (Input.GetButtonDown("Regenerate Map"))
         {
             roomInstance.GenerateNextRoom();
 
         }
-		if (Input.GetButtonDown("Pause"))
-		{
-			isPaused = !isPaused;
+        if (Input.GetButtonDown("Pause"))
+        {
+            isPaused = !isPaused;
             Utilities.pause(isPaused);
-		}
+        }
 
-        if(Input.GetButtonDown("Level Test"))
+        if (Input.GetButtonDown("Level Test"))
         {
             //LevelingTest.PerformTest();
             GeneratedItemTest.PerformTest();
         }
 
-		if (Input.GetButtonDown("Generate Abilities"))
-		{
-			AbilityParameters param = new AbilityParameters(Random.Range(1,5));
-			RandomAbility s = new RandomAbility();
-			s.SetAbility(param);
-			playerCharA.stats.AddAbility(s);
-			Debug.Log ("Hero A got a new ability!");
-			MyConsole.NewMessage("Hero A got a new ability!");
-			s.Print ();
-			s.caster = playerCharA;
+        if (Input.GetButtonDown("Generate Abilities"))
+        {
+            AbilityParameters param = new AbilityParameters(Random.Range(1, 5));
+            RandomAbility s = new RandomAbility();
+            s.SetAbility(param);
+            playerCharA.stats.AddAbility(s);
+            Debug.Log("Hero A got a new ability!");
+            MyConsole.NewMessage("Hero A got a new ability!");
+            s.Print();
+            s.caster = playerCharA;
 
-			param = new AbilityParameters(Random.Range (1,5));
-			s = new RandomAbility();
-			s.SetAbility(param);
-			playerCharB.stats.AddAbility(s);
-			Debug.Log ("Hero B got a new ability!");
-			MyConsole.NewMessage("Hero B got a new ability!");
-			s.Print ();
-			s.caster = playerCharB;
+            param = new AbilityParameters(Random.Range(1, 5));
+            s = new RandomAbility();
+            s.SetAbility(param);
+            playerCharB.stats.AddAbility(s);
+            Debug.Log("Hero B got a new ability!");
+            MyConsole.NewMessage("Hero B got a new ability!");
+            s.Print();
+            s.caster = playerCharB;
 
-			param = new AbilityParameters(Random.Range (1,5));
-			s = new RandomAbility();
-			s.SetAbility(param);
-			playerCharC.stats.AddAbility(s);
-			Debug.Log ("Hero C got a new ability!");
-			MyConsole.NewMessage("Hero C got a new ability!");
-			s.Print ();
-			s.caster = playerCharC;
-		}
+            param = new AbilityParameters(Random.Range(1, 5));
+            s = new RandomAbility();
+            s.SetAbility(param);
+            playerCharC.stats.AddAbility(s);
+            Debug.Log("Hero C got a new ability!");
+            MyConsole.NewMessage("Hero C got a new ability!");
+            s.Print();
+            s.caster = playerCharC;
+        }
 
-		if (Input.GetButtonDown ("Generate Equipment"))
-	    {
-			playerCharA.stats.weapon = EquipmentGenerator.GenerateWeapon(3);
-			Debug.Log ("Hero A got a " + playerCharA.stats.weapon.name + "!");
-			MyConsole.NewMessage("Hero A got a " + playerCharA.stats.weapon.name + "!");
-			playerCharA.stats.gear[0] = EquipmentGenerator.GenerateArmor(1);
-			playerCharA.stats.gear[1] = EquipmentGenerator.GenerateArmor(2);
-			playerCharA.stats.gear[2] = EquipmentGenerator.GenerateArmor(0);
+        if (Input.GetButtonDown("Generate Equipment"))
+        {
+            playerCharA.stats.weapon = EquipmentGenerator.GenerateWeapon(3);
+            Debug.Log("Hero A got a " + playerCharA.stats.weapon.name + "!");
+            MyConsole.NewMessage("Hero A got a " + playerCharA.stats.weapon.name + "!");
+            playerCharA.stats.gear[0] = EquipmentGenerator.GenerateArmor(1);
+            playerCharA.stats.gear[1] = EquipmentGenerator.GenerateArmor(2);
+            playerCharA.stats.gear[2] = EquipmentGenerator.GenerateArmor(0);
 
-			playerCharB.stats.weapon = EquipmentGenerator.GenerateWeapon(3);
-			Debug.Log ("Hero B got a " + playerCharB.stats.weapon.name + "!");
-			MyConsole.NewMessage("Hero B got a " + playerCharB.stats.weapon.name + "!");
-			playerCharB.stats.gear[0] = EquipmentGenerator.GenerateArmor(10);
-			playerCharB.stats.gear[1] = EquipmentGenerator.GenerateArmor(2);
-			playerCharB.stats.gear[2] = EquipmentGenerator.GenerateArmor(1);
+            playerCharB.stats.weapon = EquipmentGenerator.GenerateWeapon(3);
+            Debug.Log("Hero B got a " + playerCharB.stats.weapon.name + "!");
+            MyConsole.NewMessage("Hero B got a " + playerCharB.stats.weapon.name + "!");
+            playerCharB.stats.gear[0] = EquipmentGenerator.GenerateArmor(10);
+            playerCharB.stats.gear[1] = EquipmentGenerator.GenerateArmor(2);
+            playerCharB.stats.gear[2] = EquipmentGenerator.GenerateArmor(1);
 
-			playerCharC.stats.weapon = EquipmentGenerator.GenerateWeapon(3);
-			Debug.Log ("Hero C got a " + playerCharC.stats.weapon.name + "!");
-			MyConsole.NewMessage("Hero C got a " + playerCharC.stats.weapon.name + "!");
-			playerCharC.stats.gear[0] = EquipmentGenerator.GenerateArmor(10);
-			playerCharC.stats.gear[1] = EquipmentGenerator.GenerateArmor(2);
-			playerCharC.stats.gear[2] = EquipmentGenerator.GenerateArmor(1);
-		}
+            playerCharC.stats.weapon = EquipmentGenerator.GenerateWeapon(3);
+            Debug.Log("Hero C got a " + playerCharC.stats.weapon.name + "!");
+            MyConsole.NewMessage("Hero C got a " + playerCharC.stats.weapon.name + "!");
+            playerCharC.stats.gear[0] = EquipmentGenerator.GenerateArmor(10);
+            playerCharC.stats.gear[1] = EquipmentGenerator.GenerateArmor(2);
+            playerCharC.stats.gear[2] = EquipmentGenerator.GenerateArmor(1);
+        }
 
-		if (Input.GetButtonDown ("Buff Test"))
-		{
-			MoveSpeedBuff slow1 = new MoveSpeedBuff();
-			DodgeRateBuff evasion1 = new DodgeRateBuff();
-			AttackRateBuff attackRate1 = new AttackRateBuff();
-			slow1.duration = 5;
-			evasion1.duration = 5;
-			attackRate1.duration = 10;
-			slow1.magnitude = .5f;
-			evasion1.magnitude = 2;
-			attackRate1.magnitude = .5f;
-			slow1.target = playerCharA;
-			evasion1.target = playerCharA;
-			attackRate1.target = playerCharA;
-			playerCharA.stats.AddBuff(slow1);
-			playerCharA.stats.AddBuff(evasion1);
-			playerCharA.stats.AddBuff(attackRate1);
-		}
+        if (Input.GetButtonDown("Buff Test"))
+        {
+            MoveSpeedBuff slow1 = new MoveSpeedBuff();
+            DodgeRateBuff evasion1 = new DodgeRateBuff();
+            AttackRateBuff attackRate1 = new AttackRateBuff();
+            slow1.duration = 5;
+            evasion1.duration = 5;
+            attackRate1.duration = 10;
+            slow1.magnitude = .5f;
+            evasion1.magnitude = 2;
+            attackRate1.magnitude = .5f;
+            slow1.target = playerCharA;
+            evasion1.target = playerCharA;
+            attackRate1.target = playerCharA;
+            playerCharA.stats.AddBuff(slow1);
+            playerCharA.stats.AddBuff(evasion1);
+            playerCharA.stats.AddBuff(attackRate1);
+        }
 
-		if (Input.GetButtonDown ("View Equipment"))
-		{
-			playerCharA.stats.PrintEquipment();
-			playerCharB.stats.PrintEquipment();
-			playerCharC.stats.PrintEquipment();
-		}
+        if (Input.GetButtonDown("View Equipment"))
+        {
+            playerCharA.stats.PrintEquipment();
+            playerCharB.stats.PrintEquipment();
+            playerCharC.stats.PrintEquipment();
+        }
 
-		inputManager.Resolve ();
+        inputManager.Resolve();
 
-	}
+    }
 
     private void BeginGame() {
         roomInstance = Instantiate(roomPrefab) as Room;
         roomInstance.Generate();
-        playerCharA = Instantiate (characterPrefab1) as Character;
-		playerCharA.characterPrefab.SetParentChar(playerCharA);
-		playerCharA.characterPrefab.name = "Hero A Prefab";
+        playerCharA = Instantiate(characterPrefab1) as Character;
+        playerCharA.characterPrefab.SetParentChar(playerCharA);
+        playerCharA.characterPrefab.name = "Hero A Prefab";
         playerCharA.Generate();
-		playerCharA.actionQueue.ParentChar = playerCharA;
-		playerCharA.position_y_health= 10;
-		playerCharA.position_y = 40;
-		playerCharA.isenemy = false;
-		playerCharA.image_name = "Hero1_image";
-		playerCharA.tag = "Hero A";
-		playerCharA.name = "Hero A";
-		playerCharA.stats.Name = "Hero A";
-		playerCharA.stats.InitializeBaseStats ();
-		playerCharA.stats.InitializeEquipment ();
-		playerCharA.stats.CalculateCombatStats ();
-		playerCharA.stats.InitializeCombatStats ();
-		playerCharA.stats.InitializeProgressionStats ();
+        playerCharA.actionQueue.ParentChar = playerCharA;
+        playerCharA.position_y_health = 10;
+        playerCharA.position_y = 40;
+        playerCharA.isenemy = false;
+        playerCharA.image_name = "Hero1_image";
+        playerCharA.tag = "Hero A";
+        playerCharA.name = "Hero A";
+        playerCharA.stats.Name = "Hero A";
+        playerCharA.stats.InitializeBaseStats();
+        playerCharA.stats.InitializeEquipment();
+        playerCharA.stats.CalculateCombatStats();
+        playerCharA.stats.InitializeCombatStats();
+        playerCharA.stats.InitializeProgressionStats();
 
-		playerCharB = Instantiate (characterPrefab2) as Character;
-		playerCharB.characterPrefab.name = "Hero B Prefab";
-		playerCharB.characterPrefab.SetParentChar(playerCharB);
+        playerCharB = Instantiate(characterPrefab2) as Character;
+        playerCharB.characterPrefab.name = "Hero B Prefab";
+        playerCharB.characterPrefab.SetParentChar(playerCharB);
         playerCharB.Generate();
-		playerCharB.actionQueue.ParentChar = playerCharB;
-		playerCharB.position_y_health = 70;
-		playerCharB.position_y = 100;
-		playerCharB.isenemy = false;
-		playerCharB.image_name = "Hero2_image";
-		playerCharB.tag = "Hero B";
-		playerCharB.name = "Hero B";
-		playerCharB.stats.Name = "Hero B";
-		playerCharB.stats.InitializeBaseStats ();
-		playerCharB.stats.InitializeEquipment ();
-		playerCharB.stats.CalculateCombatStats ();
-		playerCharB.stats.InitializeCombatStats ();
-		playerCharB.stats.InitializeProgressionStats ();
-		//playerCharB.Anim = playerCharB.characterPrefab.GetComponent<Animator> ();
-		//playerCharB.Anim.SetBool ("walk 0", true);
-		//Debug.Log (playerCharB.Anim);
+        playerCharB.actionQueue.ParentChar = playerCharB;
+        playerCharB.position_y_health = 70;
+        playerCharB.position_y = 100;
+        playerCharB.isenemy = false;
+        playerCharB.image_name = "Hero2_image";
+        playerCharB.tag = "Hero B";
+        playerCharB.name = "Hero B";
+        playerCharB.stats.Name = "Hero B";
+        playerCharB.stats.InitializeBaseStats();
+        playerCharB.stats.InitializeEquipment();
+        playerCharB.stats.CalculateCombatStats();
+        playerCharB.stats.InitializeCombatStats();
+        playerCharB.stats.InitializeProgressionStats();
+        //playerCharB.Anim = playerCharB.characterPrefab.GetComponent<Animator> ();
+        //playerCharB.Anim.SetBool ("walk 0", true);
+        //Debug.Log (playerCharB.Anim);
 
-		playerCharC = Instantiate (characterPrefab3) as Character;
-		playerCharC.characterPrefab.name = "Hero C Prefab";
-		playerCharC.characterPrefab.SetParentChar(playerCharC);
+        playerCharC = Instantiate(characterPrefab3) as Character;
+        playerCharC.characterPrefab.name = "Hero C Prefab";
+        playerCharC.characterPrefab.SetParentChar(playerCharC);
         playerCharC.Generate();
-		playerCharC.actionQueue.ParentChar = playerCharC;
-		playerCharC.tag = "Hero C";
-		playerCharC.name = "Hero C";
-		playerCharC.position_y_health = 130;
-		playerCharC.position_y = 160;
-		playerCharC.isenemy = false;
-		playerCharC.image_name = "Hero3_image";
-		playerCharC.stats.Name = "Hero C";
-		playerCharC.stats.InitializeBaseStats ();
-		playerCharC.stats.InitializeEquipment ();
-		playerCharC.stats.CalculateCombatStats ();
-		playerCharC.stats.InitializeCombatStats ();
-		playerCharC.stats.InitializeProgressionStats ();
-  }
+        playerCharC.actionQueue.ParentChar = playerCharC;
+        playerCharC.tag = "Hero C";
+        playerCharC.name = "Hero C";
+        playerCharC.position_y_health = 130;
+        playerCharC.position_y = 160;
+        playerCharC.isenemy = false;
+        playerCharC.image_name = "Hero3_image";
+        playerCharC.stats.Name = "Hero C";
+        playerCharC.stats.InitializeBaseStats();
+        playerCharC.stats.InitializeEquipment();
+        playerCharC.stats.CalculateCombatStats();
+        playerCharC.stats.InitializeCombatStats();
+        playerCharC.stats.InitializeProgressionStats();
+    }
 
 
     private void setEnemyTarget() {
@@ -289,59 +289,61 @@ public class GameManager : MonoBehaviour {
             EnemyCollection.getEnemy(i).Target = closestHero;
         }
     }
-//=======
-//        //playerCharC.Anim = playerCharC.characterPrefab.GetComponent<Animator> ();
+    //=======
+    //        //playerCharC.Anim = playerCharC.characterPrefab.GetComponent<Animator> ();
 
-//        // initialize enemy
-//        enemy = Instantiate(characterPrefab) as Character;
-//        enemy.characterPrefab.name = "Enemy Prefab";
-//        enemy.characterPrefab.SetParentChar(enemy);
-//        enemy.Generate(2.7f, 5.0f);
-//        enemy.setMaterial(enemyMaterial);
-//        enemy.name = "Enemy";
-//        enemy.stats.Name = "Enemy";
-//        enemy.stats.MaxHealth = 50;
-//        enemy.stats.MaxMana = 30;
-//        enemy.stats.Strength = 10;
-//        enemy.stats.Agility = 5;
-//        enemy.stats.Intelligence = 5;
-//        enemy.stats.InitializeCombatStats ();
+    //        // initialize enemy
+    //        enemy = Instantiate(characterPrefab) as Character;
+    //        enemy.characterPrefab.name = "Enemy Prefab";
+    //        enemy.characterPrefab.SetParentChar(enemy);
+    //        enemy.Generate(2.7f, 5.0f);
+    //        enemy.setMaterial(enemyMaterial);
+    //        enemy.name = "Enemy";
+    //        enemy.stats.Name = "Enemy";
+    //        enemy.stats.MaxHealth = 50;
+    //        enemy.stats.MaxMana = 30;
+    //        enemy.stats.Strength = 10;
+    //        enemy.stats.Agility = 5;
+    //        enemy.stats.Intelligence = 5;
+    //        enemy.stats.InitializeCombatStats ();
 
-//        allies.addHero (playerCharA);
-//        allies.addHero (playerCharB);
-//        allies.addHero (playerCharC);
-//        enemies.addEnemy (enemy);
-		
-//        setEnemyTarget (enemy, allies);
+    //        allies.addHero (playerCharA);
+    //        allies.addHero (playerCharB);
+    //        allies.addHero (playerCharC);
+    //        enemies.addEnemy (enemy);
 
-//        // add enemy movement to enemy
-//        enemy.gameObject.AddComponent ("EnemyMovement");
+    //        setEnemyTarget (enemy, allies);
+
+    //        // add enemy movement to enemy
+    //        enemy.gameObject.AddComponent ("EnemyMovement");
 
 
 
-//    }
-	void OnGUI(){
-				
-				
-				MyConsole.DrawConsole ();
-				levelchange.Drawlayout ();
-		Event e = Event.current;
-		if (e.keyCode == KeyCode.Return) {
-						userHasHitReturnA = true;
-			playerCharA.name = stringToEditA;
-			playerCharB.name = stringToEditB;
-			playerCharC.name = stringToEditC;
-				}
-				else if (false == userHasHitReturnA) {
-			GUI.BeginGroup(new Rect(Screen.width/2 - 40, Screen.height/2 - 30,300, 30));
-			GUI.Label(new Rect(0,0,300,30),"Name your players and Press Enter");
-			GUI.EndGroup();
+    //    }
+    void OnGUI() {
 
-			stringToEditA = GUI.TextField (new Rect (Screen.width/2, Screen.height/2, 100, 20), stringToEditA, 25);
-			stringToEditB = GUI.TextField (new Rect (Screen.width/2, Screen.height/2 + 20, 100, 20), stringToEditB, 25);
-			stringToEditC = GUI.TextField (new Rect (Screen.width/2, Screen.height/2 + 40, 100, 20), stringToEditC, 25);
-				}
-}
+
+        MyConsole.DrawConsole();
+        levelchange.Drawlayout();
+        Event e = Event.current;
+        if (e.keyCode == KeyCode.Return)
+        {
+            userHasHitReturnA = true;
+            playerCharA.name = stringToEditA;
+            playerCharB.name = stringToEditB;
+            playerCharC.name = stringToEditC;
+        }
+        else if (false == userHasHitReturnA)
+        {
+            GUI.BeginGroup(new Rect(Screen.width / 2 - 40, Screen.height / 2 - 30, 300, 30));
+            GUI.Label(new Rect(0, 0, 300, 30), "Name your players and Press Enter");
+            GUI.EndGroup();
+
+            stringToEditA = GUI.TextField(new Rect(Screen.width / 2, Screen.height / 2, 100, 20), stringToEditA, 25);
+            stringToEditB = GUI.TextField(new Rect(Screen.width / 2, Screen.height / 2 + 20, 100, 20), stringToEditB, 25);
+            stringToEditC = GUI.TextField(new Rect(Screen.width / 2, Screen.height / 2 + 40, 100, 20), stringToEditC, 25);
+        }
+    }
 
 
     private void RestartGame() {
@@ -349,182 +351,199 @@ public class GameManager : MonoBehaviour {
         BeginGame();
     }
 
-	public void flashred(){
-		if (playerCharA.count_times == 0 && playerCharB.count_times == 0 && playerCharC.count_times == 0) {
-			damageimage.color = flashColour_1;
+    public void flashred() {
+        if (playerCharA.count_times == 0 && playerCharB.count_times == 0 && playerCharC.count_times == 0)
+        {
+            damageimage.color = flashColour_1;
 
 
-		} else if((playerCharA.stats.CurrentHealth*100/playerCharA.stats.MaxHealth <= 40)&& (playerCharA.count_times >= 0) ||
-		          (playerCharB.stats.CurrentHealth*100/playerCharB.stats.MaxHealth <= 40)&& (playerCharB.count_times >= 0) ||
-		          (playerCharC.stats.CurrentHealth*100/playerCharC.stats.MaxHealth <= 40)&& (playerCharC.count_times >= 0)){
-			damageimage.color = flashColour;
-//			levelchange.push_abilities("power up");
-//			levelchange.showlayout();
-		}
-		
-		
-	}
-
-	private void RemoveHero(Character hero)
-	{
-		CharacterCollection.removeHero (hero);
-	}
-
-	private void RemoveEnemy(Character enemy)
-	{
-		EnemyCollection.removeEnemy (enemy);
-	}
-
-	private void SetHeroIsSelected ()
-	{
-		playerCharA.is_selected = false;
-		playerCharB.is_selected = false;
-		playerCharC.is_selected = false;
-		if (playerCharA.isclick == true) {
-			inputManager.selected = playerCharA;
-				}
-		if (playerCharB.isclick == true) {
-			inputManager.selected = playerCharB;	
-		}
-		if (playerCharC.isclick == true) {
-			//levelchange.clear();
-			inputManager.selected = playerCharC;
-		}
-		if (playerCharA == inputManager.selected)
-		{
-			playerCharA.is_selected = true;
-		}
-		else if (playerCharB == inputManager.selected)
-		{
-			playerCharB.is_selected = true;
-		}
-		else if (playerCharC == inputManager.selected)
-		{
-			playerCharC.is_selected = true;
-		}
-	}
-
-	public void update_characters(){
-		string name_of_char = levelchange.getplayer ();
-		RandomAbility a = new RandomAbility ();
-		Equipment b = new Equipment ();
-		a = levelchange.getselectedability();
-		b = levelchange.getselectedequipment();
-		//MyConsole.NewMessage ("Called" + name_of_char);
-		if (name_of_char == "playerCharA") {
-						if (a != null) {
-								playerCharA.stats.AddAbility (a);
-				levelchange.clear_abilityfromlist(a);
-				levelchange.clear_ability ();
-								levelchange.clear_name ();
-							
-						}	
-						if (b != null) {
-								//playerCharA.stats.AddAbility(a);
-								if ((b.name).Contains ("Armor")) {
-										playerCharA.stats.gear [2] = (Armor)b;
-								} else {
-										playerCharA.stats.weapon = (Weapon)b;
-								}
-								playerCharA.stats.PrintEquipment ();
-								levelchange.clear_equipfromlist(b);
-								levelchange.clear_equipment ();
-								levelchange.clear_name ();
-						}
-
-//			MyConsole.NewMessage("checkedA");
-//			get_ab = playerCharA.stats.GetAbility(0);
-
-				} else if (name_of_char == "playerCharB") {
-						if (a != null) {
-								playerCharB.stats.AddAbility (a);
-				levelchange.clear_abilityfromlist(a);
-				levelchange.clear_ability ();
-								levelchange.clear_name ();
-								
-			}
-						if (b != null) {
-								//playerCharA.stats.AddAbility(a);
-								if ((b.name).Contains ("Armor")) {
-										playerCharB.stats.gear [2] = (Armor)b;
-								} else {
-										playerCharB.stats.weapon = (Weapon)b;
-								}
-								playerCharB.stats.PrintEquipment ();
-								levelchange.clear_equipfromlist(b);
-								levelchange.clear_equipment ();
-								levelchange.clear_name ();
-				
-						}
-				}
-		else if (name_of_char == "playerCharC") {
-				if (a != null){
-					playerCharC.stats.AddAbility(a);
-					levelchange.clear_abilityfromlist(a);
-					levelchange.clear_ability();
-					levelchange.clear_name();
-					
-			}
-				if (b!= null){
-					//playerCharA.stats.AddAbility(a);
-					if((b.name).Contains("Armor")){
-						playerCharC.stats.gear[2] = (Armor)b;
-					}
-					else{
-						playerCharC.stats.weapon = (Weapon)b;
-					}
-					playerCharC.stats.PrintEquipment();
-					levelchange.clear_equipfromlist(b);
-					levelchange.clear_equipment();
-					levelchange.clear_name();
-			
-		}
-
-		}
-		}
+        }
+        else if ((playerCharA.stats.CurrentHealth * 100 / playerCharA.stats.MaxHealth <= 40) && (playerCharA.count_times >= 0) ||
+                (playerCharB.stats.CurrentHealth * 100 / playerCharB.stats.MaxHealth <= 40) && (playerCharB.count_times >= 0) ||
+                (playerCharC.stats.CurrentHealth * 100 / playerCharC.stats.MaxHealth <= 40) && (playerCharC.count_times >= 0))
+        {
+            damageimage.color = flashColour;
+            //			levelchange.push_abilities("power up");
+            //			levelchange.showlayout();
+        }
 
 
-	private void GameOverCheck()
-	{
-		if (GameOver == false)
-		{
-			if (playerCharA.stats.CurrentHealth <= 0 && playerCharB.stats.CurrentHealth <= 0 && playerCharC.stats.CurrentHealth <= 0)
-			{
-				GameOver = true;
-				audioSource.clip = gameOverClip;
-				audioSource.Play();
-				audioSource.volume = .5f;
-			}
-		}
-	}
+    }
 
-	//Trying to use this to set the battle music to play when an enemy aggros. Currently is not working
-	private void AggroCheck()
-	{
-		if (aggro == false)
-		{
-			Debug.Log ("Aggro = false");
-			for (int ii = 0; ii < EnemyCollection.NumberOfEnemies(); ii++)
-			{
-				Character enemy = EnemyCollection.getEnemy(ii);
-				if (enemy.Target != null)
-				{
-					if (Vector3.Distance (enemy.transform.localPosition, enemy.Target.transform.localPosition) > enemy.GetComponent<EnemyMovement>().detectRange)
-					{
-						Debug.Log ("Aggro = true");
-						aggro = true;
-					}
-				}
-			}
+    private void RemoveHero(Character hero) {
+        CharacterCollection.removeHero(hero);
+    }
 
-			if (aggro == true)
-			{
-				Debug.Log ("Aggro! Play music!");
-				audioSource.clip = battleClip;
-				audioSource.volume = .5f;
-				audioSource.Play();
-			}
-		}
-	}
+    private void RemoveEnemy(Character enemy) {
+        EnemyCollection.removeEnemy(enemy);
+    }
 
+    private void SetHeroIsSelected() {
+        playerCharA.is_selected = false;
+        playerCharB.is_selected = false;
+        playerCharC.is_selected = false;
+        if (playerCharA.isclick == true)
+        {
+            inputManager.selected = playerCharA;
+        }
+        if (playerCharB.isclick == true)
+        {
+            inputManager.selected = playerCharB;
+        }
+        if (playerCharC.isclick == true)
+        {
+            //levelchange.clear();
+            inputManager.selected = playerCharC;
+        }
+        if (playerCharA == inputManager.selected)
+        {
+            playerCharA.is_selected = true;
+        }
+        else if (playerCharB == inputManager.selected)
+        {
+            playerCharB.is_selected = true;
+        }
+        else if (playerCharC == inputManager.selected)
+        {
+            playerCharC.is_selected = true;
+        }
+    }
+    public void update_characters() {
+        string name_of_char = levelchange.getplayer();
+        RandomAbility a = new RandomAbility();
+        Equipment b = new Equipment();
+        a = levelchange.getselectedability();
+        b = levelchange.getselectedequipment();
+        //MyConsole.NewMessage ("Called" + name_of_char);
+        if (name_of_char == "playerCharA")
+        {
+            if (a != null)
+            {
+                playerCharA.stats.AddAbility(a);
+                levelchange.clear_abilityfromlist(a);
+                levelchange.clear_ability();
+                levelchange.clear_name();
+
+            }
+            if (b != null)
+            {
+                //playerCharA.stats.AddAbility(a);
+                if ((b.name).Contains("Armor"))
+                {
+                    playerCharA.stats.gear[2] = (Armor)b;
+                }
+                else
+                {
+                    playerCharA.stats.weapon = (Weapon)b;
+                }
+                playerCharA.stats.PrintEquipment();
+                levelchange.clear_equipfromlist(b);
+                levelchange.clear_equipment();
+                levelchange.clear_name();
+            }
+
+            //			MyConsole.NewMessage("checkedA");
+            //			get_ab = playerCharA.stats.GetAbility(0);
+
+        }
+        else if (name_of_char == "playerCharB")
+        {
+            if (a != null)
+            {
+                playerCharB.stats.AddAbility(a);
+                levelchange.clear_abilityfromlist(a);
+                levelchange.clear_ability();
+                levelchange.clear_name();
+
+            }
+            if (b != null)
+            {
+                //playerCharA.stats.AddAbility(a);
+                if ((b.name).Contains("Armor"))
+                {
+                    playerCharB.stats.gear[2] = (Armor)b;
+                }
+                else
+                {
+                    playerCharB.stats.weapon = (Weapon)b;
+                }
+                playerCharB.stats.PrintEquipment();
+                levelchange.clear_equipfromlist(b);
+                levelchange.clear_equipment();
+                levelchange.clear_name();
+
+            }
+        }
+        else if (name_of_char == "playerCharC")
+        {
+            if (a != null)
+            {
+                playerCharC.stats.AddAbility(a);
+                levelchange.clear_abilityfromlist(a);
+                levelchange.clear_ability();
+                levelchange.clear_name();
+
+            }
+            if (b != null)
+            {
+                //playerCharA.stats.AddAbility(a);
+                if ((b.name).Contains("Armor"))
+                {
+                    playerCharC.stats.gear[2] = (Armor)b;
+                }
+                else
+                {
+                    playerCharC.stats.weapon = (Weapon)b;
+                }
+                playerCharC.stats.PrintEquipment();
+                levelchange.clear_equipfromlist(b);
+                levelchange.clear_equipment();
+                levelchange.clear_name();
+
+            }
+
+        }
+    }
+
+
+    private void GameOverCheck() {
+        if (GameOver == false)
+        {
+            if (playerCharA.stats.CurrentHealth <= 0 && playerCharB.stats.CurrentHealth <= 0 && playerCharC.stats.CurrentHealth <= 0)
+            {
+                GameOver = true;
+                audioSource.clip = gameOverClip;
+                audioSource.Play();
+                audioSource.volume = .5f;
+            }
+        }
+    }
+
+    //Trying to use this to set the battle music to play when an enemy aggros. Currently is not working
+    private void AggroCheck() {
+        if (aggro == false)
+        {
+            Debug.Log("Aggro = false");
+            for (int ii = 0; ii < EnemyCollection.NumberOfEnemies(); ii++)
+            {
+                Character enemy = EnemyCollection.getEnemy(ii);
+                if (enemy.Target != null)
+                {
+                    if (Vector3.Distance(enemy.transform.localPosition, enemy.Target.transform.localPosition) > enemy.GetComponent<EnemyMovement>().detectRange)
+                    {
+                        Debug.Log("Aggro = true");
+                        aggro = true;
+                    }
+                }
+            }
+
+            if (aggro == true)
+            {
+                Debug.Log("Aggro! Play music!");
+                audioSource.clip = battleClip;
+                audioSource.volume = .5f;
+                audioSource.Play();
+            }
+        }
+    }
 }
