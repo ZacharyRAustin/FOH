@@ -48,7 +48,7 @@ public class GameManager : MonoBehaviour
     public int count;
 
     private int seed = 123456789;
-
+    public bool gameover;
     GUIStyle style_font = new GUIStyle();
 
     // Use this for initialization
@@ -196,6 +196,11 @@ public class GameManager : MonoBehaviour
         }
 
         inputManager.Resolve();
+        gameover = CharacterCollection.GameOverCheck();
+        if (gameover == true)
+        {
+            playerCharA.pause_string = "GAME OVER";
+        }
 
     }
 

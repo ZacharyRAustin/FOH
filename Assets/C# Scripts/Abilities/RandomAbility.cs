@@ -238,8 +238,14 @@ public class RandomAbility {
 
 		if (targetOption == AbilityTargetOption.TARGET_ALLY || targetOption == AbilityTargetOption.TARGET_ENEMY || targetOption == AbilityTargetOption.SELF)
 		{
-			targetChar.stats.CurrentHealth -= (damage + caster.stats.Intelligence);
-			targetChar.stats.CurrentHealth += (healing + caster.stats.Intelligence);
+            if (targetChar.isenemy)
+            {
+                targetChar.stats.CurrentHealth -= (damage + caster.stats.Intelligence);
+            }
+            else
+            {
+                targetChar.stats.CurrentHealth += (healing + caster.stats.Intelligence);
+            }
 
 			if (buff != null)
 			{
